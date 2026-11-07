@@ -49,6 +49,8 @@ Todos los contenedores usan `Network=host` y escuchan solo en loopback, para alc
 
 ## Instalación en el servidor
 
+Antes de instalar, revisa [ANTES-DE-INSTALAR.md](ANTES-DE-INSTALAR.md): preparativos, revisiones, qué cambia en el servidor, riesgos y verificación.
+
 Requisitos: Podman ≥ 4.4, sesión `systemd --user` (entra por `ssh`, no `sudo su`), linger activo y journal persistente.
 
 ```bash
