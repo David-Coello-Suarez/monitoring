@@ -1,0 +1,6 @@
+[Unit]
+Description=Monitoreo: estado de servicios de usuario y puertos para node-exporter
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/monitoreo/bin/recolector.sh

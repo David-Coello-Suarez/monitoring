@@ -1,0 +1,46 @@
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unidad"
+  }
+
+  rule {
+    source_labels = ["__journal__systemd_user_unit"]
+    target_label  = "unidad_usuario"
+  }
+
+  rule {
+    source_labels = ["__journal_container_name"]
+    target_label  = "contenedor"
+  }
+
+  rule {
+    source_labels = ["__journal_syslog_identifier"]
+    target_label  = "identificador"
+  }
+
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "nivel"
+  }
+
+  rule {
+    source_labels = ["__journal__transport"]
+    target_label  = "transporte"
+  }
+}
+
+loki.source.journal "servidor" {
+  max_age       = "12h"
+  relabel_rules = loki.relabel.journal.rules
+  forward_to    = [loki.write.local.receiver]
+  labels        = { job = "journal" }
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://127.0.0.1:3100/loki/api/v1/push"
+  }
+}

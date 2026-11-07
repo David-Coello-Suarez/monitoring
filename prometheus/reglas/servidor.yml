@@ -1,0 +1,270 @@
+groups:
+  - name: host
+    rules:
+      - alert: ServidorSinMetricas
+        expr: up{job="node"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "node-exporter no responde: no hay métricas del host"
+      - alert: ObjetivoCaido
+        expr: up{job!~"node|apps|red"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Prometheus no alcanza {{ $labels.job }} ({{ $labels.instance }})"
+      - alert: CPUAlta
+        expr: 100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 90
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU sobre 90% durante 15 min ({{ $value | printf \"%.0f\" }}%)"
+      - alert: MemoriaBaja
+        expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < 0.10
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Memoria disponible bajo 10%"
+      - alert: SwapAlto
+        expr: node_memory_SwapTotal_bytes > 0 and (1 - node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes) > 0.5
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Swap sobre 50%"
+      - alert: CargaAlta
+        expr: node_load15 / on (instance) count by (instance) (node_cpu_seconds_total{mode="idle"}) > 2
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Carga de 15 min supera 2 por CPU"
+      - alert: DiscoBajo
+        expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"} < 0.15
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.mountpoint }} con menos de 15% libre"
+      - alert: DiscoSeLlenaEn24h
+        expr: |
+          predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"}[6h], 86400) < 0
+            and node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"} < 0.4
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.mountpoint }} se llenará en menos de 24 h al ritmo actual"
+      - alert: InodosBajos
+        expr: node_filesystem_files_free{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"} / node_filesystem_files{fstype!~"tmpfs|overlay|squashfs|ramfs|vfat"} < 0.10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.mountpoint }} con menos de 10% de inodos libres"
+      - alert: TemperaturaAlta
+        expr: max by (instance) ({__name__=~"node_hwmon_temp_celsius|node_thermal_zone_temp"}) > 85
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Temperatura del hardware sobre 85 °C ({{ $value | printf \"%.0f\" }} °C)"
+      - alert: DiscoSMARTFalla
+        expr: smartmon_device_smart_healthy == 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "SMART reporta falla en {{ $labels.disk }}"
+      - alert: RelojDesincronizado
+        expr: node_timex_sync_status == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El reloj del servidor no está sincronizado"
+      - alert: ServidorReiniciado
+        expr: time() - node_boot_time_seconds < 600
+        labels:
+          severity: info
+        annotations:
+          summary: "El servidor arrancó hace menos de 10 minutos"
+      - alert: ReinicioRequerido
+        expr: node_reboot_required == 1
+        for: 24h
+        labels:
+          severity: info
+        annotations:
+          summary: "Hay actualizaciones que piden reiniciar el servidor"
+      - alert: ActualizacionesPendientes
+        expr: sum by (instance) (apt_upgrades_pending) > 0
+        for: 7d
+        labels:
+          severity: info
+        annotations:
+          summary: "{{ $value }} paquetes con actualización pendiente hace más de 7 días"
+      - alert: UnidadSistemaFallida
+        expr: node_systemd_unit_state{state="failed"} == 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Servicio del sistema {{ $labels.name }} en estado failed"
+
+  - name: red
+    rules:
+      - alert: SenalWifiDebil
+        expr: node_wifi_station_signal_dbm < -75
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Señal WiFi débil en {{ $labels.device }} ({{ $value }} dBm)"
+      - alert: ErroresRed
+        expr: rate(node_network_receive_errs_total{device!="lo"}[5m]) + rate(node_network_transmit_errs_total{device!="lo"}[5m]) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Errores de red sostenidos en {{ $labels.device }}"
+      - alert: GatewayInaccesible
+        expr: probe_success{job="red",destino="gateway"} == 0
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "El servidor no alcanza el router de la LAN ({{ $labels.instance }})"
+      - alert: SinInternet
+        expr: probe_success{job="red",destino="internet"} == 0
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "El servidor no tiene salida a internet"
+
+  - name: tunel
+    rules:
+      - alert: TunelSinConexiones
+        expr: cloudflared_tunnel_ha_connections < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "El túnel de Cloudflare no tiene conexiones con el edge"
+      - alert: TunelDegradado
+        expr: cloudflared_tunnel_ha_connections < 2
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El túnel de Cloudflare tiene solo {{ $value }} conexión con el edge"
+      - alert: TunelErroresOrigen
+        expr: rate(cloudflared_tunnel_request_errors[5m]) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "cloudflared no logra entregar peticiones a las apps"
+
+  - name: apps
+    rules:
+      - alert: AppInternaCaida
+        expr: probe_success{job="apps",tipo="interna"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.app }} no responde en {{ $labels.instance }}"
+      - alert: AppExternaCaida
+        expr: probe_success{job="apps",tipo="externa"} == 0 and on (app) probe_success{job="apps",tipo="interna"} == 1
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.app }} funciona en el servidor pero no llega por Cloudflare ({{ $labels.instance }})"
+      - alert: AppLenta
+        expr: probe_duration_seconds{job="apps"} > 3
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.app }} tarda más de 3 s en responder ({{ $labels.tipo }})"
+      - alert: CertificadoPorVencer
+        expr: (probe_ssl_earliest_cert_expiry{job="apps"} - time()) / 86400 < 14
+        for: 1h
+        labels:
+          severity: info
+        annotations:
+          summary: "El certificado de {{ $labels.instance }} vence en {{ $value | printf \"%.0f\" }} días"
+
+  - name: contenedores
+    rules:
+      - alert: ContenedorUnhealthy
+        expr: podman_container_health == 1
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El contenedor {{ $labels.name }} falla su healthcheck"
+      - alert: ContenedorReiniciando
+        expr: changes(podman_container_started_seconds[15m]) > 3
+        labels:
+          severity: warning
+        annotations:
+          summary: "El contenedor {{ $labels.name }} se reinició más de 3 veces en 15 min"
+      - alert: MemoriaContenedorAlta
+        expr: podman_container_mem_usage_bytes / (podman_container_mem_limit_bytes > 0 < 1e12) > 0.9
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El contenedor {{ $labels.name }} usa más del 90% de su límite de memoria"
+
+  - name: usuario
+    rules:
+      - alert: RecolectorDetenido
+        expr: time() - node_textfile_mtime_seconds{file=~".*usuario.prom"} > 300
+        labels:
+          severity: warning
+        annotations:
+          summary: "monitoreo-recolector no actualiza los servicios de usuario hace más de 5 min"
+      - alert: UnidadUsuarioFallida
+        expr: monitoreo_unidad_usuario{active="failed"} == 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Servicio de usuario {{ $labels.unit }} en estado failed"
+      - alert: UnidadUsuarioAtascada
+        expr: monitoreo_unidad_usuario{active=~"activating|deactivating"} == 1
+        for: 20m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Servicio de usuario {{ $labels.unit }} lleva más de 20 min en {{ $labels.active }}"
+      - alert: UnidadHuerfana
+        expr: monitoreo_unidad_usuario{load="not-found",active="active"} == 1
+        for: 1h
+        labels:
+          severity: info
+        annotations:
+          summary: "{{ $labels.unit }} sigue activa pero su definición ya no existe"
+
+  - name: monitoreo
+    rules:
+      - alert: Watchdog
+        expr: vector(1)
+        labels:
+          severity: none
+        annotations:
+          summary: "El monitoreo está operativo"
+      - alert: NotificacionesFallidas
+        expr: rate(alertmanager_notifications_failed_total[10m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Alertmanager no logra enviar avisos por {{ $labels.integration }}"

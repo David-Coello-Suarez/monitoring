@@ -1,0 +1,23 @@
+[Unit]
+Description=Monitoreo: blackbox (disponibilidad de apps y red)
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=mon-blackbox
+Image=docker.io/prom/blackbox-exporter@sha256:ea1c7aa3ef3f307cd03e85f34abb604478ccb90b567fc690da0cd9776da76b13
+Label=monitoreo.upstream=prom/blackbox-exporter:v0.29.1
+Network=host
+Volume=%h/.config/monitoreo/blackbox/blackbox.yml:/etc/blackbox/blackbox.yml:ro
+Exec=--config.file=/etc/blackbox/blackbox.yml --web.listen-address=127.0.0.1:9115
+ReadOnly=true
+DropCapability=ALL
+NoNewPrivileges=true
+LogDriver=journald
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

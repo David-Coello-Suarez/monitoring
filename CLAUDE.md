@@ -1,0 +1,32 @@
+# monitoreo-servidor
+
+Monitoreo del servidor Linux Mint 22 (Ubuntu 24.04 noble, Podman 4.9.3, usuario `david_coello` uid 1000, linger activo). Se edita en la PC Windows (`C:\Users\ELITEBOOK\Desktop\Entorno\monitoreo`) y se instala en el servidor con `git clone` + `scripts/install.sh`.
+
+## Arquitectura
+
+- Host (root, apt): `prometheus-node-exporter` en `127.0.0.1:9100` con colectores systemd, wifi y textfile (`/var/lib/prometheus/node-exporter`), Cockpit en `127.0.0.1:9090`. Lo instala `scripts/install-host.sh`.
+- Usuario: Quadlet rootless en `~/.config/containers/systemd/mon-*.container`, todos con `Network=host` y escuchando solo en loopback. Prometheus usa 9091 porque Cockpit ocupa 9090.
+- `monitoreo-recolector.timer` (usuario) escribe `usuario.prom` en el directorio textfile: servicios `systemctl --user` y puertos de `ss`. El directorio tiene ACL de escritura para el usuario.
+- Alloy lee `/var/log/journal` gracias a una ACL que pone `install-host.sh`. No se toca el grupo `systemd-journal` para no reiniciar `user@1000.service`, que tumbaría las apps.
+- Secretos: archivos 600 en `~/.config/monitoreo/secretos/` y `podman secret` (`mon-telegram-token`, `mon-grafana-admin`, `mon-pg-password`).
+
+## Archivos
+
+- `scripts/generar-config.sh`: copia la configuración a `~/.config/monitoreo` y genera `objetivos/*.yml`, `reglas/especificas.yml` y `alertmanager.yml` desde `.env`. Se prueba en Windows con `MONITOREO_ENV` y `MONITOREO_CONF_DIR`.
+- `prometheus/reglas/servidor.yml`: reglas fijas. `loki/reglas/seguridad.yml`: reglas LogQL; las `expr` van como bloque `|` (un `: ` en línea rompe el YAML).
+- `grafana/dashboards/`: `resumen`, `contenedores`, `logs`, `seguridad` (propios) y `servidor-node-exporter` (1860), `postgresql` (9628), `blackbox` (13659) de grafana.com, con el datasource fijado a uid `prometheus`.
+
+## Validar antes de subir
+
+Con Podman local, sobre una configuración renderizada con `generar-config.sh`:
+
+- `promtool check config --syntax-only` y `promtool check rules`
+- `amtool check-config`
+- `loki -verify-config`, y levantar Loki para confirmar que el ruler carga las reglas
+- `alloy validate`
+- `blackbox_exporter --config.check`
+- `shellcheck -x -S warning scripts/*.sh`
+
+## Servidor
+
+Apps: minga `127.0.0.1:8081` (otsmart.circutbytes.tech), krivot `8082`, solarlink `8083`. Túnel `cloudflared-tunel.service` con métricas en `127.0.0.1:20250`. SSH en el puerto 97 (también `ssh.circutbytes.tech`). `postgres-demo` en `*:5432`, solo LAN.

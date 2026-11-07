@@ -1,0 +1,29 @@
+[Unit]
+Description=Monitoreo: Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=mon-prometheus
+Image=docker.io/prom/prometheus@sha256:fa3302279710be2f21a8301ec17a8b4f2301fd829bd113839b3b6b02b6f191a2
+Label=monitoreo.upstream=prom/prometheus:v3.15.1
+Network=host
+Volume=mon-prometheus:/prometheus:U
+Volume=%h/.config/monitoreo/prometheus:/etc/prometheus:ro
+Exec=--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=30d --web.listen-address=127.0.0.1:9091 --web.enable-lifecycle
+HealthCmd=["wget","-q","-O","/dev/null","http://127.0.0.1:9091/-/healthy"]
+HealthInterval=30s
+HealthTimeout=3s
+HealthRetries=3
+HealthStartPeriod=30s
+ReadOnly=true
+DropCapability=ALL
+NoNewPrivileges=true
+LogDriver=journald
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

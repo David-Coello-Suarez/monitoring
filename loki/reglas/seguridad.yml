@@ -1,0 +1,64 @@
+groups:
+  - name: seguridad
+    interval: 1m
+    rules:
+      - alert: SSHFallosRafaga
+        expr: |
+          sum(count_over_time({identificador=~"sshd.*"} |~ `Failed password|Invalid user|authentication failure|Connection closed by authenticating user` [10m])) > 20
+        labels:
+          severity: warning
+        annotations:
+          summary: "Más de 20 intentos de SSH fallidos en 10 min"
+      - alert: SSHLoginRoot
+        expr: |
+          sum(count_over_time({identificador=~"sshd.*"} |~ `Accepted \w+ for root` [5m])) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "Inicio de sesión SSH como root"
+      - alert: SSHLoginExitoso
+        expr: |
+          sum by (usuario) (count_over_time({identificador=~"sshd.*"} |~ `Accepted \w+ for` | regexp `Accepted \w+ for (?P<usuario>\S+)` [5m])) > 0
+        labels:
+          severity: info
+        annotations:
+          summary: "Inicio de sesión SSH de {{ $labels.usuario }}"
+      - alert: Fail2banBaneos
+        expr: |
+          sum(count_over_time({identificador=~"fail2ban.*"} |~ ` Ban ` [15m])) > 5
+        labels:
+          severity: warning
+        annotations:
+          summary: "fail2ban baneó más de 5 IPs en 15 min"
+      - alert: SudoClaveIncorrecta
+        expr: |
+          sum(count_over_time({identificador="sudo"} |~ `incorrect password attempt` [10m])) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "Intento de sudo con clave incorrecta"
+
+  - name: kernel
+    interval: 1m
+    rules:
+      - alert: OOMKill
+        expr: |
+          sum(count_over_time({identificador="kernel"} |~ `(?i)out of memory|oom-kill|killed process` [5m])) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "El kernel mató un proceso por falta de memoria"
+      - alert: ErroresDisco
+        expr: |
+          sum(count_over_time({identificador="kernel"} |~ `(?i)I/O error|EXT4-fs error|blk_update_request|Buffer I/O error` [10m])) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "El kernel reporta errores de disco"
+      - alert: AdaptadorWifiReiniciado
+        expr: |
+          sum(count_over_time({identificador="kernel"} |~ `(?i)wlx[0-9a-f]+: (deauthenticating|disconnect)|usb .* disconnect` [10m])) > 3
+        labels:
+          severity: warning
+        annotations:
+          summary: "El adaptador WiFi USB se desconecta repetidamente"

@@ -1,0 +1,7 @@
+{{ define "telegram.mensaje" -}}
+{{ if eq .Status "firing" }}{{ if eq .CommonLabels.severity "critical" }}🔴{{ else if eq .CommonLabels.severity "warning" }}🟠{{ else }}🔵{{ end }}{{ else }}✅{{ end }} <b>{{ .CommonLabels.alertname }}</b>{{ if gt (len .Alerts) 1 }} ({{ len .Alerts }}){{ end }}
+{{ range .Alerts -}}
+• {{ .Annotations.summary }}{{ if eq .Status "resolved" }} — resuelto{{ end }}
+{{ end -}}
+<i>{{ or .CommonLabels.servidor "servidor" }} · {{ .CommonLabels.severity }}</i>
+{{- end }}

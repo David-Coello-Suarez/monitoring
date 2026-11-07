@@ -1,0 +1,21 @@
+# Copia estos bloques a %USERPROFILE%\.ssh\config
+
+# Desde cualquier lugar, por el túnel de Cloudflare (ssh.circutbytes.tech → puerto 97)
+Host servidor-mon
+    HostName ssh.circutbytes.tech
+    User david_coello
+    ProxyCommand cloudflared access ssh --hostname %h
+    LocalForward 3000 127.0.0.1:3000
+    LocalForward 9090 127.0.0.1:9090
+    ServerAliveInterval 30
+    ExitOnForwardFailure yes
+
+# Solo dentro de la LAN de la casa
+Host servidor-mon-lan
+    HostName 192.168.100.59
+    Port 97
+    User david_coello
+    LocalForward 3000 127.0.0.1:3000
+    LocalForward 9090 127.0.0.1:9090
+    ServerAliveInterval 30
+    ExitOnForwardFailure yes
