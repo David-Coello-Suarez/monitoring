@@ -15,7 +15,7 @@ info "Objetivos de Prometheus"
 curl -fsS http://127.0.0.1:9091/api/v1/targets 2>/dev/null | python3 -c '
 import json, sys
 for t in json.load(sys.stdin)["data"]["activeTargets"]:
-    estado = "ok " if t["health"] == "up" else "MAL"
+    estado = {"up": "ok ", "unknown": " ? "}.get(t["health"], "MAL")
     print("    %s %-13s %s  %s" % (estado, t["labels"]["job"], t["scrapeUrl"], t.get("lastError", "")))
 ' || warn "Prometheus no responde"
 

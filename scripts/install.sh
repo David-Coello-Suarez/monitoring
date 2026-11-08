@@ -61,6 +61,7 @@ if $usar_postgres; then
   {
     printf "\\set clave '%s'\n" "$(cat "$SECRETOS_DIR/pg-password")"
     cat <<'SQL'
+SET client_min_messages = warning;
 SELECT 'CREATE ROLE monitoreo LOGIN' WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'monitoreo')\gexec
 ALTER ROLE monitoreo WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD :'clave';
 GRANT pg_monitor TO monitoreo;
@@ -69,7 +70,6 @@ SQL
   ok "rol monitoreo (pg_monitor) en $POSTGRES_CONTENEDOR"
 fi
 
-info "Configuración en $CONF_DIR"
 USAR_POSTGRES="$usar_postgres" "$REPO_DIR/scripts/generar-config.sh"
 
 info "Unidades"
