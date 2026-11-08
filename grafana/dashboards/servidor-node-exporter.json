@@ -54,7 +54,7 @@
    },
    "id": 261,
    "panels": [],
-   "title": "Quick CPU / Mem / Disk",
+   "title": "Resumen CPU / Mem. / Disco",
    "type": "row"
   },
   {
@@ -62,7 +62,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Resource pressure via PSI",
+   "description": "Presión de recursos mediante PSI",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -144,7 +144,7 @@
      "expr": "rate(node_pressure_memory_waiting_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
      "format": "time_series",
      "instant": true,
-     "legendFormat": "Mem",
+     "legendFormat": "Mem.",
      "range": false,
      "refId": "B",
      "step": 240
@@ -166,13 +166,13 @@
      "expr": "rate(node_pressure_irq_stalled_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
      "format": "time_series",
      "instant": true,
-     "legendFormat": "Irq",
+     "legendFormat": "IRQ",
      "range": false,
      "refId": "D",
      "step": 240
     }
    ],
-   "title": "Pressure",
+   "title": "Presión",
    "type": "bargauge"
   },
   {
@@ -180,7 +180,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Overall CPU busy percentage (averaged across all cores)",
+   "description": "Porcentaje de ocupación global de la CPU (promedio de todos los núcleos)",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -192,7 +192,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -255,7 +255,7 @@
      "step": 240
     }
    ],
-   "title": "CPU Busy",
+   "title": "Ocupación de CPU",
    "type": "gauge"
   },
   {
@@ -263,7 +263,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Tasks running or waiting (CPU, I/O) per core",
+   "description": "Tareas en ejecución o en espera (CPU, I/O) por núcleo",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -275,7 +275,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -338,7 +338,7 @@
      "step": 240
     }
    ],
-   "title": "Sys Load",
+   "title": "Carga del sistema",
    "type": "gauge"
   },
   {
@@ -346,7 +346,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Real RAM usage excluding cache and reclaimable memory",
+   "description": "Uso real de RAM, excluyendo caché y memoria recuperable",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -411,7 +411,7 @@
      "step": 240
     }
    ],
-   "title": "RAM Used",
+   "title": "RAM usada",
    "type": "gauge"
   },
   {
@@ -419,7 +419,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Percentage of swap space currently used by the system",
+   "description": "Porcentaje del espacio de swap usado actualmente por el sistema",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -431,7 +431,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -493,7 +493,7 @@
      "step": 240
     }
    ],
-   "title": "SWAP Used",
+   "title": "SWAP usada",
    "type": "gauge"
   },
   {
@@ -501,7 +501,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Percentage of root filesystem space currently used",
+   "description": "Porcentaje del espacio usado actualmente en el sistema de archivos raíz",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -513,7 +513,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -576,7 +576,7 @@
      "step": 240
     }
    ],
-   "title": "Root FS Used",
+   "title": "FS raíz usado",
    "type": "gauge"
   },
   {
@@ -595,7 +595,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -610,7 +610,7 @@
       ]
      },
      "unit": "short",
-     "displayName": "CPU Cores"
+     "displayName": "Núcleos de CPU"
     },
     "overrides": []
    },
@@ -675,7 +675,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -691,7 +691,7 @@
       ]
      },
      "unit": "bytes",
-     "displayName": "RAM Total"
+     "displayName": "RAM total"
     },
     "overrides": []
    },
@@ -756,7 +756,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -772,7 +772,7 @@
       ]
      },
      "unit": "bytes",
-     "displayName": "SWAP Total"
+     "displayName": "SWAP total"
     },
     "overrides": []
    },
@@ -837,7 +837,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -853,7 +853,7 @@
       ]
      },
      "unit": "bytes",
-     "displayName": "RootFS Total"
+     "displayName": "RootFS total"
     },
     "overrides": []
    },
@@ -919,7 +919,7 @@
        "options": {
         "match": "null",
         "result": {
-         "text": "N/A"
+         "text": "N/D"
         }
        },
        "type": "special"
@@ -935,7 +935,7 @@
       ]
      },
      "unit": "s",
-     "displayName": "Uptime"
+     "displayName": "Tiempo encendido"
     },
     "overrides": []
    },
@@ -993,7 +993,7 @@
    },
    "id": 263,
    "panels": [],
-   "title": "Basic CPU / Mem / Net / Disk",
+   "title": "Básico CPU / Mem. / Red / Disco",
    "type": "row"
   },
   {
@@ -1001,7 +1001,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "CPU time spent busy vs idle, split by activity type",
+   "description": "Tiempo de CPU ocupado frente a inactivo, por tipo de actividad",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -1159,7 +1159,7 @@
      "expr": "avg(rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\", mode=\"system\"}[$__rate_interval]))",
      "format": "time_series",
      "instant": false,
-     "legendFormat": "Busy System",
+     "legendFormat": "Ocupación System",
      "range": true,
      "refId": "A",
      "step": 240
@@ -1168,7 +1168,7 @@
      "editorMode": "code",
      "expr": "avg(rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\", mode=\"user\"}[$__rate_interval]))",
      "format": "time_series",
-     "legendFormat": "Busy User",
+     "legendFormat": "Ocupación User",
      "range": true,
      "refId": "B",
      "step": 240
@@ -1177,7 +1177,7 @@
      "editorMode": "code",
      "expr": "avg(rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\", mode=\"iowait\"}[$__rate_interval]))",
      "format": "time_series",
-     "legendFormat": "Busy Iowait",
+     "legendFormat": "Ocupación Iowait",
      "range": true,
      "refId": "C",
      "step": 240
@@ -1186,7 +1186,7 @@
      "editorMode": "code",
      "expr": "avg(sum without(mode) (rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\", mode=~\".*irq\"}[$__rate_interval])))",
      "format": "time_series",
-     "legendFormat": "Busy IRQs",
+     "legendFormat": "Ocupación IRQs",
      "range": true,
      "refId": "D",
      "step": 240
@@ -1195,7 +1195,7 @@
      "editorMode": "code",
      "expr": "avg(sum without (mode) (rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\",  mode!='idle',mode!='user',mode!='system',mode!='iowait',mode!='irq',mode!='softirq'}[$__rate_interval])))",
      "format": "time_series",
-     "legendFormat": "Busy Other",
+     "legendFormat": "Ocupación otros",
      "range": true,
      "refId": "E",
      "step": 240
@@ -1204,13 +1204,13 @@
      "editorMode": "code",
      "expr": "avg(rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\", mode=\"idle\"}[$__rate_interval]))",
      "format": "time_series",
-     "legendFormat": "Idle",
+     "legendFormat": "Inactivo",
      "range": true,
      "refId": "F",
      "step": 240
     }
    ],
-   "title": "CPU Basic",
+   "title": "CPU básico",
    "type": "timeseries"
   },
   {
@@ -1218,7 +1218,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "RAM and swap usage overview, including caches",
+   "description": "Resumen del uso de RAM y swap, incluidas las cachés",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -1379,7 +1379,7 @@
      "editorMode": "code",
      "expr": "node_memory_MemTotal_bytes{instance=\"$node\",job=\"$job\"} - node_memory_MemFree_bytes{instance=\"$node\",job=\"$job\"} - (node_memory_Cached_bytes{instance=\"$node\",job=\"$job\"} + node_memory_Buffers_bytes{instance=\"$node\",job=\"$job\"} + node_memory_SReclaimable_bytes{instance=\"$node\",job=\"$job\"})",
      "format": "time_series",
-     "legendFormat": "Used",
+     "legendFormat": "Usada",
      "range": true,
      "refId": "B",
      "step": 240
@@ -1388,7 +1388,7 @@
      "editorMode": "code",
      "expr": "node_memory_Cached_bytes{instance=\"$node\",job=\"$job\"} + node_memory_Buffers_bytes{instance=\"$node\",job=\"$job\"} + node_memory_SReclaimable_bytes{instance=\"$node\",job=\"$job\"}",
      "format": "time_series",
-     "legendFormat": "Cache + Buffer",
+     "legendFormat": "Caché + Búfer",
      "range": true,
      "refId": "C",
      "step": 240
@@ -1397,7 +1397,7 @@
      "editorMode": "code",
      "expr": "node_memory_MemFree_bytes{instance=\"$node\",job=\"$job\"}",
      "format": "time_series",
-     "legendFormat": "Free",
+     "legendFormat": "Libre",
      "range": true,
      "refId": "D",
      "step": 240
@@ -1406,13 +1406,13 @@
      "editorMode": "code",
      "expr": "(node_memory_SwapTotal_bytes{instance=\"$node\",job=\"$job\"} - node_memory_SwapFree_bytes{instance=\"$node\",job=\"$job\"})",
      "format": "time_series",
-     "legendFormat": "Swap used",
+     "legendFormat": "Swap usada",
      "range": true,
      "refId": "E",
      "step": 240
     }
    ],
-   "title": "Memory Basic",
+   "title": "Memoria básica",
    "type": "timeseries"
   },
   {
@@ -1420,7 +1420,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Per-interface network traffic (receive and transmit) in bits per second",
+   "description": "Tráfico de red por interfaz (recepción y transmisión) en bits por segundo",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -1526,7 +1526,7 @@
      "step": 240
     }
    ],
-   "title": "Network Traffic Basic",
+   "title": "Tráfico de red básico",
    "type": "timeseries"
   },
   {
@@ -1534,7 +1534,7 @@
     "type": "prometheus",
     "uid": "${ds_prometheus}"
    },
-   "description": "Percentage of filesystem space used for each mounted filesystem",
+   "description": "Porcentaje de espacio usado en cada sistema de archivos montado",
    "fieldConfig": {
     "defaults": {
      "color": {
@@ -1620,7 +1620,7 @@
      "step": 240
     }
    ],
-   "title": "Disk Space Used Basic",
+   "title": "Espacio de disco usado (básico)",
    "type": "timeseries"
   },
   {
@@ -1638,7 +1638,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "CPU time usage split by state, normalized across all CPU cores",
+     "description": "Uso de tiempo de CPU por estado, normalizado entre todos los núcleos",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -1873,7 +1873,7 @@
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"system\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "System - Processes executing in kernel mode",
+       "legendFormat": "System - Procesos ejecutándose en modo kernel",
        "range": true,
        "refId": "A",
        "step": 240
@@ -1882,7 +1882,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"user\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "User - Normal processes executing in user mode",
+       "legendFormat": "User - Procesos normales ejecutándose en modo usuario",
        "range": true,
        "refId": "B",
        "step": 240
@@ -1891,7 +1891,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"nice\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "Nice - Niced processes executing in user mode",
+       "legendFormat": "Nice - Procesos con nice ejecutándose en modo usuario",
        "range": true,
        "refId": "C",
        "step": 240
@@ -1900,7 +1900,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"iowait\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "Iowait - Waiting for I/O to complete",
+       "legendFormat": "Iowait - Esperando a que finalice la I/O",
        "range": true,
        "refId": "D",
        "step": 240
@@ -1909,7 +1909,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"irq\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "Irq - Servicing interrupts",
+       "legendFormat": "Irq - Atendiendo interrupciones",
        "range": true,
        "refId": "E",
        "step": 240
@@ -1918,7 +1918,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"softirq\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "Softirq - Servicing softirqs",
+       "legendFormat": "Softirq - Atendiendo softirqs",
        "range": true,
        "refId": "F",
        "step": 240
@@ -1927,7 +1927,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"steal\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "Steal - Time spent in other operating systems when running in a virtualized environment",
+       "legendFormat": "Steal - Tiempo dedicado a otros sistemas operativos en un entorno virtualizado",
        "range": true,
        "refId": "G",
        "step": 240
@@ -1936,7 +1936,7 @@
        "editorMode": "code",
        "expr": "sum(rate(node_cpu_seconds_total{mode=\"idle\",instance=\"$node\",job=\"$job\"}[$__rate_interval])) / scalar(count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu)))",
        "format": "time_series",
-       "legendFormat": "Idle - Waiting for something to happen",
+       "legendFormat": "Idle - Esperando a que ocurra algo",
        "range": true,
        "refId": "H",
        "step": 240
@@ -1945,7 +1945,7 @@
        "editorMode": "code",
        "expr": "sum by(instance) (rate(node_cpu_guest_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])) / on(instance) group_left sum by (instance)((rate(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]))) > 0",
        "format": "time_series",
-       "legendFormat": "Guest - Running virtual CPUs, included in User/Nice",
+       "legendFormat": "Guest - Ejecutando CPUs virtuales, incluido en User/Nice",
        "range": true,
        "refId": "I",
        "step": 240
@@ -1959,7 +1959,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Breakdown of physical memory and swap usage. Hardware-detected memory errors are also displayed",
+     "description": "Desglose del uso de memoria física y swap. También se muestran los errores de memoria detectados por hardware",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2194,7 +2194,7 @@
        "editorMode": "code",
        "expr": "node_memory_MemTotal_bytes{instance=\"$node\",job=\"$job\"} - node_memory_MemFree_bytes{instance=\"$node\",job=\"$job\"} - node_memory_Buffers_bytes{instance=\"$node\",job=\"$job\"} - node_memory_Cached_bytes{instance=\"$node\",job=\"$job\"} - node_memory_Slab_bytes{instance=\"$node\",job=\"$job\"} - node_memory_PageTables_bytes{instance=\"$node\",job=\"$job\"} - node_memory_SwapCached_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Apps - Memory used by user-space applications",
+       "legendFormat": "Apps - Memoria usada por aplicaciones de espacio de usuario",
        "range": true,
        "refId": "A",
        "step": 240
@@ -2203,7 +2203,7 @@
        "editorMode": "code",
        "expr": "node_memory_PageTables_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "PageTables - Memory used to map between virtual and physical memory addresses",
+       "legendFormat": "PageTables - Memoria usada para mapear direcciones de memoria virtual y física",
        "range": true,
        "refId": "B",
        "step": 240
@@ -2212,7 +2212,7 @@
        "editorMode": "code",
        "expr": "node_memory_SwapCached_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "SwapCache - Memory that keeps track of pages that have been fetched from swap but not yet been modified",
+       "legendFormat": "SwapCache - Memoria que registra páginas leídas de swap aún no modificadas",
        "range": true,
        "refId": "C",
        "step": 240
@@ -2221,7 +2221,7 @@
        "editorMode": "code",
        "expr": "node_memory_Slab_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Slab - Memory used by the kernel to cache data structures for its own use (caches like inode, dentry, etc)",
+       "legendFormat": "Slab - Memoria usada por el kernel para cachear sus estructuras de datos (cachés como inode, dentry, etc.)",
        "range": true,
        "refId": "D",
        "step": 240
@@ -2230,7 +2230,7 @@
        "editorMode": "code",
        "expr": "node_memory_Cached_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Cache - Parked file data (file content) cache",
+       "legendFormat": "Cache - Caché de datos de archivos (contenido de archivos)",
        "range": true,
        "refId": "E",
        "step": 240
@@ -2239,7 +2239,7 @@
        "editorMode": "code",
        "expr": "node_memory_Buffers_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Buffers - Block device (e.g. harddisk) cache",
+       "legendFormat": "Buffers - Caché de dispositivos de bloque (p. ej., disco duro)",
        "range": true,
        "refId": "F",
        "step": 240
@@ -2248,7 +2248,7 @@
        "editorMode": "code",
        "expr": "node_memory_MemFree_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Unused - Free memory unassigned",
+       "legendFormat": "Unused - Memoria libre sin asignar",
        "range": true,
        "refId": "G",
        "step": 240
@@ -2257,7 +2257,7 @@
        "editorMode": "code",
        "expr": "(node_memory_SwapTotal_bytes{instance=\"$node\",job=\"$job\"} - node_memory_SwapFree_bytes{instance=\"$node\",job=\"$job\"})",
        "format": "time_series",
-       "legendFormat": "Swap - Swap space used",
+       "legendFormat": "Swap - Espacio de swap usado",
        "range": true,
        "refId": "H",
        "step": 240
@@ -2266,13 +2266,13 @@
        "editorMode": "code",
        "expr": "node_memory_HardwareCorrupted_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Hardware Corrupted - Amount of RAM that the kernel identified as corrupted / not working",
+       "legendFormat": "Hardware Corrupted - Cantidad de RAM que el kernel identificó como dañada / no operativa",
        "range": true,
        "refId": "I",
        "step": 240
       }
      ],
-     "title": "Memory",
+     "title": "Memoria",
      "type": "timeseries"
     },
     {
@@ -2280,7 +2280,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Incoming and outgoing network traffic per interface",
+     "description": "Tráfico de red entrante y saliente por interfaz",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2290,7 +2290,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -2375,7 +2375,7 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_bytes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])*8",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -2384,13 +2384,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_bytes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])*8",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Traffic",
+     "title": "Tráfico de red",
      "type": "timeseries"
     },
     {
@@ -2398,7 +2398,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Network interface utilization as a percentage of its maximum capacity",
+     "description": "Utilización de la interfaz de red como porcentaje de su capacidad máxima",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2408,7 +2408,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -2493,7 +2493,7 @@
        "editorMode": "code",
        "expr": "(node_network_speed_bytes{instance=\"$node\",job=\"$job\"} > bool 0) * (rate(node_network_receive_bytes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]) / node_network_speed_bytes{instance=\"$node\",job=\"$job\"})",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -2502,13 +2502,13 @@
        "editorMode": "code",
        "expr": "(node_network_speed_bytes{instance=\"$node\",job=\"$job\"} > bool 0) * (rate(node_network_transmit_bytes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]) / node_network_speed_bytes{instance=\"$node\",job=\"$job\"})",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Saturation",
+     "title": "Saturación de red",
      "type": "timeseries"
     },
     {
@@ -2516,7 +2516,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Disk I/O operations per second for each device",
+     "description": "Operaciones de I/O de disco por segundo para cada dispositivo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2526,7 +2526,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "write (–) / read (+)",
+        "axisLabel": "escritura (–) / lectura (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -2610,7 +2610,7 @@
       {
        "editorMode": "code",
        "expr": "rate(node_disk_reads_completed_total{instance=\"$node\",job=\"$job\",device=~\"[a-z]+|nvme[0-9]+n[0-9]+|mmcblk[0-9]+\"}[$__rate_interval])",
-       "legendFormat": "{{device}} - Read",
+       "legendFormat": "{{device}} - Lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -2618,13 +2618,13 @@
       {
        "editorMode": "code",
        "expr": "rate(node_disk_writes_completed_total{instance=\"$node\",job=\"$job\",device=~\"[a-z]+|nvme[0-9]+n[0-9]+|mmcblk[0-9]+\"}[$__rate_interval])",
-       "legendFormat": "{{device}} - Write",
+       "legendFormat": "{{device}} - Escritura",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Disk IOps",
+     "title": "IOPS de disco",
      "type": "timeseries"
     },
     {
@@ -2632,7 +2632,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Disk I/O throughput per device",
+     "description": "Rendimiento de I/O de disco por dispositivo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2642,7 +2642,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "write (–) / read (+)",
+        "axisLabel": "escritura (–) / lectura (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -2727,7 +2727,7 @@
        "editorMode": "code",
        "expr": "rate(node_disk_read_bytes_total{instance=\"$node\",job=\"$job\",device=~\"[a-z]+|nvme[0-9]+n[0-9]+|mmcblk[0-9]+\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Read",
+       "legendFormat": "{{device}} - Lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -2736,13 +2736,13 @@
        "editorMode": "code",
        "expr": "rate(node_disk_written_bytes_total{instance=\"$node\",job=\"$job\",device=~\"[a-z]+|nvme[0-9]+n[0-9]+|mmcblk[0-9]+\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Write",
+       "legendFormat": "{{device}} - Escritura",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Disk Throughput",
+     "title": "Rendimiento de disco",
      "type": "timeseries"
     },
     {
@@ -2750,7 +2750,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Amount of available disk space per mounted filesystem, excluding rootfs. Based on block availability to non-root users",
+     "description": "Espacio de disco disponible por sistema de archivos montado, excluido rootfs. Basado en los bloques disponibles para usuarios no root",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2844,7 +2844,7 @@
        "expr": "node_filesystem_free_bytes{instance=\"$node\",job=\"$job\",fstype!~'rootfs'}",
        "format": "time_series",
        "hide": true,
-       "legendFormat": "{{mountpoint}} - Free",
+       "legendFormat": "{{mountpoint}} - Libre",
        "range": true,
        "refId": "B",
        "step": 240
@@ -2854,13 +2854,13 @@
        "expr": "node_filesystem_size_bytes{instance=\"$node\",job=\"$job\",fstype!~'rootfs'}",
        "format": "time_series",
        "hide": true,
-       "legendFormat": "{{mountpoint}} - Size",
+       "legendFormat": "{{mountpoint}} - Tamaño",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Filesystem Space Available",
+     "title": "Espacio disponible del sistema de archivos",
      "type": "timeseries"
     },
     {
@@ -2868,7 +2868,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Disk usage (used = total - available) per mountpoint",
+     "description": "Uso de disco (usado = total - disponible) por punto de montaje",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -2957,7 +2957,7 @@
        "step": 240
       }
      ],
-     "title": "Filesystem Used",
+     "title": "Sistema de archivos usado",
      "type": "timeseries"
     },
     {
@@ -2965,7 +2965,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Percentage of time the disk was actively processing I/O operations",
+     "description": "Porcentaje de tiempo en que el disco estuvo procesando operaciones de I/O",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3055,7 +3055,7 @@
        "step": 240
       }
      ],
-     "title": "Disk I/O Utilization",
+     "title": "Utilización de I/O de disco",
      "type": "timeseries"
     },
     {
@@ -3063,7 +3063,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "How often tasks experience CPU, memory, or I/O delays. 'Some' indicates partial slowdown; 'Full' indicates all tasks are stalled. Based on Linux PSI metrics:\nhttps://docs.kernel.org/accounting/psi.html",
+     "description": "Frecuencia con la que las tareas sufren retrasos de CPU, memoria o I/O. 'Some' indica una ralentización parcial; 'Full' indica que todas las tareas están bloqueadas. Basado en las métricas PSI de Linux:\nhttps://docs.kernel.org/accounting/psi.html",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3179,7 +3179,7 @@
        "editorMode": "code",
        "expr": "rate(node_pressure_memory_waiting_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Memory - Some",
+       "legendFormat": "Memoria - Some",
        "range": true,
        "refId": "Memory some",
        "step": 240
@@ -3188,7 +3188,7 @@
        "editorMode": "code",
        "expr": "rate(node_pressure_memory_stalled_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Memory - Full",
+       "legendFormat": "Memoria - Full",
        "range": true,
        "refId": "Memory full",
        "step": 240
@@ -3221,11 +3221,11 @@
        "step": 240
       }
      ],
-     "title": "Pressure Stall Information",
+     "title": "Información de bloqueo por presión (PSI)",
      "type": "timeseries"
     }
    ],
-   "title": "CPU / Memory / Net / Disk",
+   "title": "CPU / Memoria / Red / Disco",
    "type": "row"
   },
   {
@@ -3243,7 +3243,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Displays committed memory usage versus the system's commit limit. Exceeding the limit is allowed under Linux overcommit policies but may increase OOM risks under high load",
+     "description": "Muestra el uso de memoria comprometida frente al límite de compromiso del sistema. Superar el límite está permitido por las políticas de overcommit de Linux, pero puede aumentar el riesgo de OOM con carga alta",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3347,7 +3347,7 @@
        "editorMode": "code",
        "expr": "node_memory_Committed_AS_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Committed_AS – Memory promised to processes (not necessarily used)",
+       "legendFormat": "Committed_AS – Memoria prometida a los procesos (no necesariamente usada)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -3356,13 +3356,13 @@
        "editorMode": "code",
        "expr": "node_memory_CommitLimit_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "CommitLimit - Max allowable committed memory",
+       "legendFormat": "CommitLimit - Máxima memoria comprometida permitida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Committed",
+     "title": "Memoria comprometida",
      "type": "timeseries"
     },
     {
@@ -3370,7 +3370,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Memory currently dirty (modified but not yet written to disk), being actively written back, or held by writeback buffers. High dirty or writeback memory may indicate disk I/O pressure or delayed flushing",
+     "description": "Memoria actualmente sucia (modificada pero aún no escrita en disco), en proceso de escritura diferida o retenida en búferes de writeback. Valores altos de memoria sucia o en writeback pueden indicar presión de I/O de disco o vaciado retrasado",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3453,7 +3453,7 @@
        "editorMode": "code",
        "expr": "node_memory_Writeback_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Writeback – Memory currently being flushed to disk",
+       "legendFormat": "Writeback – Memoria que se está volcando a disco",
        "range": true,
        "refId": "A",
        "step": 240
@@ -3462,7 +3462,7 @@
        "editorMode": "code",
        "expr": "node_memory_WritebackTmp_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "WritebackTmp – FUSE temporary writeback buffers",
+       "legendFormat": "WritebackTmp – Búferes temporales de writeback de FUSE",
        "range": true,
        "refId": "B",
        "step": 240
@@ -3471,7 +3471,7 @@
        "editorMode": "code",
        "expr": "node_memory_Dirty_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Dirty – Memory marked dirty (pending write to disk)",
+       "legendFormat": "Dirty – Memoria marcada como sucia (pendiente de escribir a disco)",
        "range": true,
        "refId": "C",
        "step": 240
@@ -3480,13 +3480,13 @@
        "editorMode": "code",
        "expr": "node_memory_NFS_Unstable_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "NFS Unstable – Pages sent to NFS server, awaiting storage commit",
+       "legendFormat": "NFS Unstable – Páginas enviadas al servidor NFS, pendientes de confirmación en almacenamiento",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "Memory Writeback and Dirty",
+     "title": "Memoria en writeback y sucia",
      "type": "timeseries"
     },
     {
@@ -3494,7 +3494,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Memory used by anonymous pages (not backed by files), including standard and huge page allocations. Includes heap, stack, and memory-mapped anonymous regions",
+     "description": "Memoria usada por páginas anónimas (no respaldadas por archivos), incluidas asignaciones estándar y de páginas enormes. Incluye heap, pila y regiones anónimas mapeadas en memoria",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3577,7 +3577,7 @@
        "editorMode": "code",
        "expr": "node_memory_AnonHugePages_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "AnonHugePages – Anonymous memory using HugePages",
+       "legendFormat": "AnonHugePages – Memoria anónima que usa HugePages",
        "range": true,
        "refId": "A",
        "step": 240
@@ -3586,13 +3586,13 @@
        "editorMode": "code",
        "expr": "node_memory_AnonPages_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "AnonPages – Anonymous memory (non-file-backed)",
+       "legendFormat": "AnonPages – Memoria anónima (no respaldada por archivos)",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Anonymous",
+     "title": "Memoria anónima",
      "type": "timeseries"
     },
     {
@@ -3600,7 +3600,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Memory used for mapped files (such as libraries) and shared memory (shmem and tmpfs), including variants backed by huge pages",
+     "description": "Memoria usada por archivos mapeados (como bibliotecas) y memoria compartida (shmem y tmpfs), incluidas las variantes respaldadas por páginas enormes",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3684,7 +3684,7 @@
        "editorMode": "code",
        "expr": "node_memory_Mapped_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Mapped – Memory mapped from files (e.g., libraries, mmap)",
+       "legendFormat": "Mapped – Memoria mapeada desde archivos (p. ej., bibliotecas, mmap)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -3693,7 +3693,7 @@
        "editorMode": "code",
        "expr": "node_memory_Shmem_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Shmem – Shared memory used by processes and tmpfs",
+       "legendFormat": "Shmem – Memoria compartida usada por procesos y tmpfs",
        "range": true,
        "refId": "B",
        "step": 240
@@ -3703,7 +3703,7 @@
        "expr": "node_memory_ShmemHugePages_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "ShmemHugePages – Shared memory (shmem/tmpfs) allocated with HugePages",
+       "legendFormat": "ShmemHugePages – Memoria compartida (shmem/tmpfs) asignada con HugePages",
        "range": true,
        "refId": "C",
        "step": 240
@@ -3713,13 +3713,13 @@
        "expr": "node_memory_ShmemPmdMapped_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "PMD Mapped – Shmem/tmpfs backed by Transparent HugePages (PMD)",
+       "legendFormat": "PMD Mapped – Shmem/tmpfs respaldada por Transparent HugePages (PMD)",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "Memory Shared and Mapped",
+     "title": "Memoria compartida y mapeada",
      "type": "timeseries"
     },
     {
@@ -3727,7 +3727,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Proportion of memory pages in the kernel's active and inactive LRU lists relative to total RAM. Active pages have been recently used, while inactive pages are less recently accessed but still resident in memory",
+     "description": "Proporción de páginas de memoria en las listas LRU activa e inactiva del kernel respecto a la RAM total. Las páginas activas se han usado recientemente; las inactivas se han accedido hace más tiempo pero siguen residentes en memoria",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3842,7 +3842,7 @@
        "editorMode": "code",
        "expr": "(node_memory_Inactive_bytes{instance=\"$node\",job=\"$job\"}) \n/ \n(node_memory_MemTotal_bytes{instance=\"$node\",job=\"$job\"})",
        "format": "time_series",
-       "legendFormat": "Inactive – Less recently used memory, more likely to be reclaimed",
+       "legendFormat": "Inactive – Memoria usada hace más tiempo, más propensa a ser recuperada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -3851,13 +3851,13 @@
        "editorMode": "code",
        "expr": "(node_memory_Active_bytes{instance=\"$node\",job=\"$job\"}) \n/ \n(node_memory_MemTotal_bytes{instance=\"$node\",job=\"$job\"})\n",
        "format": "time_series",
-       "legendFormat": "Active – Recently used memory, retained unless under pressure",
+       "legendFormat": "Active – Memoria usada recientemente, se conserva salvo bajo presión",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory LRU Active / Inactive (%)",
+     "title": "Memoria LRU activa / inactiva (%)",
      "type": "timeseries"
     },
     {
@@ -3865,7 +3865,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Breakdown of memory pages in the kernel's active and inactive LRU lists, separated by anonymous (heap, tmpfs) and file-backed (caches, mmap) pages.",
+     "description": "Desglose de las páginas de memoria en las listas LRU activa e inactiva del kernel, separadas en anónimas (heap, tmpfs) y respaldadas por archivos (cachés, mmap).",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -3949,7 +3949,7 @@
        "editorMode": "code",
        "expr": "node_memory_Inactive_file_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Inactive_file - File-backed memory on inactive LRU list",
+       "legendFormat": "Inactive_file - Memoria respaldada por archivos en la lista LRU inactiva",
        "range": true,
        "refId": "A",
        "step": 240
@@ -3958,7 +3958,7 @@
        "editorMode": "code",
        "expr": "node_memory_Inactive_anon_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Inactive_anon – Anonymous memory on inactive LRU (incl. tmpfs & swap cache)",
+       "legendFormat": "Inactive_anon – Memoria anónima en la LRU inactiva (incl. tmpfs y swap cache)",
        "range": true,
        "refId": "B",
        "step": 240
@@ -3967,7 +3967,7 @@
        "editorMode": "code",
        "expr": "node_memory_Active_file_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Active_file - File-backed memory on active LRU list",
+       "legendFormat": "Active_file - Memoria respaldada por archivos en la lista LRU activa",
        "range": true,
        "refId": "C",
        "step": 240
@@ -3976,13 +3976,13 @@
        "editorMode": "code",
        "expr": "node_memory_Active_anon_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Active_anon – Anonymous memory on active LRU (incl. tmpfs & swap cache)",
+       "legendFormat": "Active_anon – Memoria anónima en la LRU activa (incl. tmpfs y swap cache)",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "Memory LRU Active / Inactive Detail",
+     "title": "Memoria LRU activa / inactiva (detalle)",
      "type": "timeseries"
     },
     {
@@ -3990,7 +3990,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Kernel slab memory usage, separated into reclaimable and non-reclaimable categories. Reclaimable memory can be freed under memory pressure (e.g., caches), while unreclaimable memory is locked by the kernel for core functions",
+     "description": "Uso de memoria slab del kernel, separada en recuperable y no recuperable. La memoria recuperable puede liberarse bajo presión de memoria (p. ej., cachés), mientras que la no recuperable está bloqueada por el kernel para funciones esenciales",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4073,7 +4073,7 @@
        "editorMode": "code",
        "expr": "node_memory_SUnreclaim_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "SUnreclaim – Non-reclaimable slab memory (kernel objects)",
+       "legendFormat": "SUnreclaim – Memoria slab no recuperable (objetos del kernel)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4082,13 +4082,13 @@
        "editorMode": "code",
        "expr": "node_memory_SReclaimable_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "SReclaimable – Potentially reclaimable slab memory (e.g., inode cache)",
+       "legendFormat": "SReclaimable – Memoria slab potencialmente recuperable (p. ej., caché de inode)",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Slab",
+     "title": "Memoria slab",
      "type": "timeseries"
     },
     {
@@ -4096,7 +4096,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Usage of the kernel's vmalloc area, which provides virtual memory allocations for kernel modules and drivers. Includes total, used, and largest free block sizes",
+     "description": "Uso del área vmalloc del kernel, que proporciona asignaciones de memoria virtual para módulos y controladores del kernel. Incluye el tamaño total, el usado y el del mayor bloque libre",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4209,7 +4209,7 @@
        "editorMode": "code",
        "expr": "node_memory_VmallocChunk_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Vmalloc Free Chunk – Largest available block in vmalloc area",
+       "legendFormat": "Vmalloc Free Chunk – Mayor bloque disponible en el área vmalloc",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4218,7 +4218,7 @@
        "editorMode": "code",
        "expr": "node_memory_VmallocTotal_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Vmalloc Total – Total size of the vmalloc memory area",
+       "legendFormat": "Vmalloc Total – Tamaño total del área de memoria vmalloc",
        "range": true,
        "refId": "B",
        "step": 240
@@ -4227,13 +4227,13 @@
        "editorMode": "code",
        "expr": "node_memory_VmallocUsed_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Vmalloc Used – Portion of vmalloc area currently in use",
+       "legendFormat": "Vmalloc Used – Parte del área vmalloc en uso actualmente",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Memory Vmalloc",
+     "title": "Memoria vmalloc",
      "type": "timeseries"
     },
     {
@@ -4241,7 +4241,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Tracks kernel memory used for CPU-local structures and per-thread stacks. These areas are typically small but critical for low-level operations",
+     "description": "Memoria del kernel usada para estructuras locales de CPU y pilas por hilo. Estas áreas suelen ser pequeñas pero críticas para operaciones de bajo nivel",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4325,7 +4325,7 @@
        "editorMode": "code",
        "expr": "node_memory_KernelStack_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "KernelStack – Kernel stack memory (per-thread, non-reclaimable)",
+       "legendFormat": "KernelStack – Memoria de pila del kernel (por hilo, no recuperable)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4335,13 +4335,13 @@
        "expr": "node_memory_Percpu_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "PerCPU – Dynamically allocated per-CPU memory (used by kernel modules)",
+       "legendFormat": "PerCPU – Memoria por CPU asignada dinámicamente (usada por módulos del kernel)",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Kernel / CPU",
+     "title": "Memoria kernel / CPU",
      "type": "timeseries"
     },
     {
@@ -4349,7 +4349,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "How much memory is directly mapped in the kernel using different page sizes (4K, 2M, 1G). Helps monitor large page utilization in the direct map region",
+     "description": "Cuánta memoria está mapeada directamente en el kernel con distintos tamaños de página (4K, 2M, 1G). Ayuda a supervisar el uso de páginas grandes en la región de mapeo directo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4436,7 +4436,7 @@
        "editorMode": "code",
        "expr": "node_memory_DirectMap1G_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "DirectMap 1G – Memory mapped with 1GB pages",
+       "legendFormat": "DirectMap 1G – Memoria mapeada con páginas de 1GB",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4446,7 +4446,7 @@
        "expr": "node_memory_DirectMap2M_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "DirectMap 2M – Memory mapped with 2MB pages",
+       "legendFormat": "DirectMap 2M – Memoria mapeada con páginas de 2MB",
        "range": true,
        "refId": "B",
        "step": 240
@@ -4456,13 +4456,13 @@
        "expr": "node_memory_DirectMap4k_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "DirectMap 4K – Memory mapped with 4KB pages",
+       "legendFormat": "DirectMap 4K – Memoria mapeada con páginas de 4KB",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Memory DirectMap",
+     "title": "Memoria DirectMap",
      "type": "timeseries"
     },
     {
@@ -4470,7 +4470,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Memory that is locked in RAM and cannot be swapped out. Includes both kernel-unevictable memory and user-level memory locked with mlock()",
+     "description": "Memoria bloqueada en RAM que no puede pasarse a swap. Incluye la memoria no desalojable del kernel y la memoria de usuario bloqueada con mlock()",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4554,7 +4554,7 @@
        "editorMode": "code",
        "expr": "node_memory_Unevictable_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Unevictable – Kernel-pinned memory (not swappable)",
+       "legendFormat": "Unevictable – Memoria fijada por el kernel (no paginable a swap)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4563,13 +4563,13 @@
        "editorMode": "code",
        "expr": "node_memory_Mlocked_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Mlocked – Application-locked memory via mlock()",
+       "legendFormat": "Mlocked – Memoria bloqueada por aplicaciones mediante mlock()",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Unevictable and MLocked",
+     "title": "Memoria no desalojable y MLocked",
      "type": "timeseries"
     },
     {
@@ -4577,7 +4577,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Displays HugePages memory usage in bytes, including allocated, free, reserved, and surplus memory. All values are calculated based on the number of huge pages multiplied by their configured size",
+     "description": "Muestra el uso de memoria HugePages en bytes, incluida la memoria asignada, libre, reservada y excedente. Todos los valores se calculan como el número de páginas enormes multiplicado por su tamaño configurado",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4660,7 +4660,7 @@
        "editorMode": "code",
        "expr": "(node_memory_HugePages_Total{instance=\"$node\",job=\"$job\"} - node_memory_HugePages_Free{instance=\"$node\",job=\"$job\"}) * node_memory_Hugepagesize_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "HugePages Used – Currently allocated",
+       "legendFormat": "HugePages Used – Asignadas actualmente",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4669,7 +4669,7 @@
        "editorMode": "code",
        "expr": "node_memory_HugePages_Rsvd{instance=\"$node\",job=\"$job\"} * node_memory_Hugepagesize_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "HugePages Reserved – Promised but unused",
+       "legendFormat": "HugePages Reserved – Prometidas pero sin usar",
        "range": true,
        "refId": "B",
        "step": 240
@@ -4678,7 +4678,7 @@
        "editorMode": "code",
        "expr": "node_memory_HugePages_Surp{instance=\"$node\",job=\"$job\"} * node_memory_Hugepagesize_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "HugePages Surplus – Dynamic pool extension",
+       "legendFormat": "HugePages Surplus – Ampliación dinámica del pool",
        "range": true,
        "refId": "C",
        "step": 240
@@ -4687,13 +4687,13 @@
        "editorMode": "code",
        "expr": "node_memory_HugePages_Total{instance=\"$node\",job=\"$job\"} * node_memory_Hugepagesize_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "HugePages Total – Preallocated pool size",
+       "legendFormat": "HugePages Total – Tamaño del pool preasignado",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "Memory HugePages",
+     "title": "Memoria HugePages",
      "type": "timeseries"
     },
     {
@@ -4701,7 +4701,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Zswap is a compressed RAM cache for swap pages. Zswap stores compressed pages that would otherwise be written to swap, reducing disk I/O. Zswapped shows the amount of data stored in the Zswap pool before compression",
+     "description": "Zswap es una caché comprimida en RAM para páginas de swap. Zswap almacena páginas comprimidas que de otro modo se escribirían en swap, reduciendo la I/O de disco. Zswapped muestra la cantidad de datos almacenados en el pool de Zswap antes de la compresión",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4784,7 +4784,7 @@
        "editorMode": "code",
        "expr": "node_memory_Zswap_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Zswap – Compressed pool size in RAM",
+       "legendFormat": "Zswap – Tamaño del pool comprimido en RAM",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4793,13 +4793,13 @@
        "editorMode": "code",
        "expr": "node_memory_Zswapped_bytes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Zswapped – Original data size before compression",
+       "legendFormat": "Zswapped – Tamaño original de los datos antes de comprimir",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Zswap",
+     "title": "Memoria Zswap",
      "type": "timeseries"
     },
     {
@@ -4807,7 +4807,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of data read from and written to block devices. Despite the historical name, it covers all block I/O, not only memory paging",
+     "description": "Tasa de datos leídos y escritos en dispositivos de bloque. Pese a su nombre histórico, abarca toda la I/O de bloque, no solo la paginación de memoria",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4817,7 +4817,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -4902,7 +4902,7 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pgpgin{instance=\"$node\",job=\"$job\"}[$__rate_interval]) * 1024",
        "format": "time_series",
-       "legendFormat": "Pagesin - Data paged in",
+       "legendFormat": "Pagesin - Datos paginados de entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -4911,13 +4911,13 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pgpgout{instance=\"$node\",job=\"$job\"}[$__rate_interval]) * 1024",
        "format": "time_series",
-       "legendFormat": "Pagesout - Data paged out",
+       "legendFormat": "Pagesout - Datos paginados de salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Pages In / Out",
+     "title": "Páginas de memoria entrada / salida",
      "type": "timeseries"
     },
     {
@@ -4925,7 +4925,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate at which memory pages are being swapped in from or out to disk. High swap-out activity may indicate memory pressure",
+     "description": "Tasa a la que las páginas de memoria entran desde swap o salen a disco. Una actividad alta de swap-out puede indicar presión de memoria",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -4935,7 +4935,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -5020,7 +5020,7 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pswpin{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Pswpin - Pages swapped in",
+       "legendFormat": "Pswpin - Páginas traídas desde swap",
        "range": true,
        "refId": "A",
        "step": 240
@@ -5029,13 +5029,13 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pswpout{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Pswpout - Pages swapped out",
+       "legendFormat": "Pswpout - Páginas enviadas a swap",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Memory Pages Swap In / Out",
+     "title": "Páginas de memoria swap entrada / salida",
      "type": "timeseries"
     },
     {
@@ -5043,7 +5043,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of memory page faults, split into total, major (disk-backed), and derived minor (non-disk) faults. High major fault rates may indicate memory pressure or insufficient RAM",
+     "description": "Tasa de fallos de página, separada en total, mayores (desde disco) y menores derivados (sin disco). Tasas altas de fallos mayores pueden indicar presión de memoria o RAM insuficiente",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5164,7 +5164,7 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pgfault{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Pgfault - Page major and minor fault ops",
+       "legendFormat": "Pgfault - Fallos de página mayores y menores",
        "range": true,
        "refId": "A",
        "step": 240
@@ -5173,7 +5173,7 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pgmajfault{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Pgmajfault - Major page fault ops",
+       "legendFormat": "Pgmajfault - Fallos de página mayores",
        "range": true,
        "refId": "B",
        "step": 240
@@ -5182,13 +5182,13 @@
        "editorMode": "code",
        "expr": "rate(node_vmstat_pgfault{instance=\"$node\",job=\"$job\"}[$__rate_interval])  - rate(node_vmstat_pgmajfault{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Pgminfault - Minor page fault ops",
+       "legendFormat": "Pgminfault - Fallos de página menores",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Memory Page Faults",
+     "title": "Fallos de página de memoria",
      "type": "timeseries"
     },
     {
@@ -5196,7 +5196,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of Out-of-Memory (OOM) kill events. A non-zero value indicates the kernel has terminated one or more processes due to memory exhaustion",
+     "description": "Tasa de eventos de terminación por falta de memoria (OOM). Un valor distinto de cero indica que el kernel ha terminado uno o más procesos por agotamiento de memoria",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5306,7 +5306,7 @@
      "type": "timeseries"
     }
    ],
-   "title": "Memory Details",
+   "title": "Detalles de memoria",
    "type": "row"
   },
   {
@@ -5324,7 +5324,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "System load average over 1, 5, and 15 minutes. Reflects the number of active or waiting processes. Values above CPU core count may indicate overload",
+     "description": "Carga media del sistema en 1, 5 y 15 minutos. Refleja el número de procesos activos o en espera. Valores superiores al número de núcleos de CPU pueden indicar sobrecarga",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5437,7 +5437,7 @@
        "editorMode": "code",
        "expr": "node_load1{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Load 1m",
+       "legendFormat": "Carga 1m",
        "range": true,
        "refId": "A",
        "step": 240
@@ -5446,7 +5446,7 @@
        "editorMode": "code",
        "expr": "node_load5{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Load 5m",
+       "legendFormat": "Carga 5m",
        "range": true,
        "refId": "B",
        "step": 240
@@ -5455,7 +5455,7 @@
        "editorMode": "code",
        "expr": "node_load15{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Load 15m",
+       "legendFormat": "Carga 15m",
        "range": true,
        "refId": "C",
        "step": 240
@@ -5464,13 +5464,13 @@
        "editorMode": "code",
        "expr": "count(count(node_cpu_seconds_total{instance=\"$node\",job=\"$job\"}) by (cpu))",
        "format": "time_series",
-       "legendFormat": "CPU Core Count",
+       "legendFormat": "Núcleos de CPU",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "System Load",
+     "title": "Carga del sistema",
      "type": "timeseries"
     },
     {
@@ -5478,7 +5478,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Running and blocked processes, plus kernel hung tasks detected (processes stuck in uninterruptible D state beyond the kernel timeout threshold)",
+     "description": "Procesos en ejecución y bloqueados, más las tareas colgadas detectadas por el kernel (procesos atascados en estado D ininterrumpible más allá del umbral de timeout del kernel)",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5565,7 +5565,7 @@
        "editorMode": "code",
        "expr": "node_procs_blocked{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Blocked (I/O Wait)",
+       "legendFormat": "Bloqueados (espera de I/O)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -5574,7 +5574,7 @@
        "editorMode": "code",
        "expr": "node_procs_running{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Runnable (Ready for CPU)",
+       "legendFormat": "Ejecutables (listos para CPU)",
        "range": true,
        "refId": "B",
        "step": 240
@@ -5583,13 +5583,13 @@
        "editorMode": "code",
        "expr": "increase(node_kernel_hung_tasks_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Hung Tasks Detected (D state > timeout)",
+       "legendFormat": "Tareas colgadas detectadas (estado D > timeout)",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Processes Status",
+     "title": "Estado de procesos",
      "type": "timeseries"
     },
     {
@@ -5597,7 +5597,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Current number of processes in each state (e.g., running, sleeping, zombie). Requires --collector.processes to be enabled in node_exporter",
+     "description": "Número actual de procesos en cada estado (p. ej., running, sleeping, zombie). Requiere habilitar --collector.processes en node_exporter",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5772,7 +5772,7 @@
        "step": 240
       }
      ],
-     "title": "Processes Detailed States",
+     "title": "Estados detallados de procesos",
      "type": "timeseries"
     },
     {
@@ -5780,7 +5780,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of new processes being created on the system (forks/sec).",
+     "description": "Tasa de creación de nuevos procesos en el sistema (forks/s).",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5863,13 +5863,13 @@
        "editorMode": "code",
        "expr": "rate(node_forks_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Process Forks per second",
+       "legendFormat": "Forks de procesos por segundo",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Processes Forks",
+     "title": "Forks de procesos",
      "type": "timeseries"
     },
     {
@@ -5877,7 +5877,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of active PIDs on the system and the configured maximum allowed. Useful for detecting PID exhaustion risk. Requires --collector.processes in node_exporter",
+     "description": "Número de PIDs activos en el sistema y el máximo configurado. Útil para detectar riesgo de agotamiento de PIDs. Requiere --collector.processes en node_exporter",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -5991,7 +5991,7 @@
        "expr": "node_processes_pids{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Number of PIDs",
+       "legendFormat": "Número de PIDs",
        "range": true,
        "refId": "A",
        "step": 240
@@ -6001,13 +6001,13 @@
        "expr": "node_processes_max_processes{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "PIDs limit",
+       "legendFormat": "Límite de PIDs",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "PIDs Number and Limit",
+     "title": "Número y límite de PIDs",
      "type": "timeseries"
     },
     {
@@ -6015,7 +6015,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of active threads on the system and the configured thread limit. Useful for monitoring thread pressure. Requires --collector.processes in node_exporter",
+     "description": "Número de hilos activos en el sistema y el límite de hilos configurado. Útil para supervisar la presión de hilos. Requiere --collector.processes en node_exporter",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6129,7 +6129,7 @@
        "expr": "node_processes_threads{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Allocated threads",
+       "legendFormat": "Hilos asignados",
        "range": true,
        "refId": "A",
        "step": 240
@@ -6139,13 +6139,13 @@
        "expr": "node_processes_max_threads{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Threads limit",
+       "legendFormat": "Límite de hilos",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Threads Number and Limit",
+     "title": "Número y límite de hilos",
      "type": "timeseries"
     },
     {
@@ -6153,7 +6153,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of file descriptors currently allocated system-wide versus the system limit. Important for detecting descriptor exhaustion risks",
+     "description": "Número de descriptores de archivo asignados actualmente en todo el sistema frente al límite del sistema. Importante para detectar riesgos de agotamiento de descriptores",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6266,7 +6266,7 @@
        "editorMode": "code",
        "expr": "node_filefd_maximum{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Max open files",
+       "legendFormat": "Máx. archivos abiertos",
        "range": true,
        "refId": "A",
        "step": 240
@@ -6275,17 +6275,17 @@
        "editorMode": "code",
        "expr": "node_filefd_allocated{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Open files",
+       "legendFormat": "Archivos abiertos",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "File Descriptor",
+     "title": "Descriptores de archivo",
      "type": "timeseries"
     }
    ],
-   "title": "Processes",
+   "title": "Procesos",
    "type": "row"
   },
   {
@@ -6303,7 +6303,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Per-second rate of context switches and hardware interrupts. High values may indicate intense CPU or I/O activity",
+     "description": "Tasa por segundo de cambios de contexto e interrupciones de hardware. Valores altos pueden indicar una actividad intensa de CPU o I/O",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6386,7 +6386,7 @@
        "editorMode": "code",
        "expr": "rate(node_context_switches_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Context switches",
+       "legendFormat": "Cambios de contexto",
        "range": true,
        "refId": "A",
        "step": 240
@@ -6395,13 +6395,13 @@
        "editorMode": "code",
        "expr": "rate(node_intr_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "Interrupts",
+       "legendFormat": "Interrupciones",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Context Switches / Interrupts",
+     "title": "Cambios de contexto / Interrupciones",
      "type": "timeseries"
     },
     {
@@ -6409,7 +6409,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Shows CPU saturation per core, calculated as the proportion of time spent waiting to run relative to total time demanded (running + waiting).",
+     "description": "Muestra la saturación de CPU por núcleo, calculada como la proporción de tiempo en espera para ejecutarse respecto al tiempo total demandado (ejecución + espera).",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6419,7 +6419,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "CPU saturation (%)",
+        "axisLabel": "Saturación de CPU (%)",
         "axisPlacement": "left",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -6497,7 +6497,7 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "CPU {{ cpu }} - Running",
+       "legendFormat": "CPU {{ cpu }} - En ejecución",
        "range": true,
        "refId": "A",
        "step": 240
@@ -6508,7 +6508,7 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "CPU {{cpu}} - Waiting Queue",
+       "legendFormat": "CPU {{cpu}} - Cola de espera",
        "range": true,
        "refId": "B",
        "step": 240
@@ -6524,7 +6524,7 @@
        "step": 240
       }
      ],
-     "title": "CPU Saturation per Core",
+     "title": "Saturación de CPU por núcleo",
      "type": "timeseries"
     },
     {
@@ -6532,7 +6532,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Real-time CPU frequency scaling per core, including average minimum and maximum allowed scaling frequencies",
+     "description": "Escalado de frecuencia de CPU en tiempo real por núcleo, incluidas las frecuencias de escalado mínima y máxima permitidas promedio",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6692,7 +6692,7 @@
        "expr": "avg(node_cpu_scaling_frequency_max_hertz{instance=\"$node\",job=\"$job\"})",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Max",
+       "legendFormat": "Máx.",
        "range": true,
        "refId": "A",
        "step": 240
@@ -6702,13 +6702,13 @@
        "expr": "avg(node_cpu_scaling_frequency_min_hertz{instance=\"$node\",job=\"$job\"})",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Min",
+       "legendFormat": "Mín.",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "CPU Frequency Scaling",
+     "title": "Escalado de frecuencia de CPU",
      "type": "timeseries"
     },
     {
@@ -6716,7 +6716,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of scheduling timeslices executed per CPU. Reflects how frequently the scheduler switches tasks on each core",
+     "description": "Tasa de intervalos de planificación (timeslices) ejecutados por CPU. Refleja la frecuencia con la que el planificador cambia de tarea en cada núcleo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6805,7 +6805,7 @@
        "step": 240
       }
      ],
-     "title": "CPU Schedule Timeslices",
+     "title": "Timeslices del planificador de CPU",
      "type": "timeseries"
     },
     {
@@ -6813,7 +6813,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Breaks down hardware interrupts by type and device. Useful for diagnosing IRQ load on network, disk, or CPU interfaces. Requires --collector.interrupts to be enabled in node_exporter",
+     "description": "Desglosa las interrupciones de hardware por tipo y dispositivo. Útil para diagnosticar la carga de IRQ en interfaces de red, disco o CPU. Requiere habilitar --collector.interrupts en node_exporter",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -6903,7 +6903,7 @@
        "step": 240
       }
      ],
-     "title": "IRQ Detail",
+     "title": "Detalle de IRQ",
      "type": "timeseries"
     },
     {
@@ -6911,7 +6911,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of bits of entropy currently available to the system's random number generators (e.g., /dev/random). Low values may indicate that random number generation could block or degrade performance of cryptographic operations",
+     "description": "Número de bits de entropía disponibles actualmente para los generadores de números aleatorios del sistema (p. ej., /dev/random). Valores bajos pueden indicar que la generación de números aleatorios podría bloquearse o degradar el rendimiento de las operaciones criptográficas",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7024,7 +7024,7 @@
        "editorMode": "code",
        "expr": "node_entropy_available_bits{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Entropy available",
+       "legendFormat": "Entropía disponible",
        "range": true,
        "refId": "A",
        "step": 240
@@ -7033,17 +7033,17 @@
        "editorMode": "code",
        "expr": "node_entropy_pool_size_bits{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "Entropy pool max",
+       "legendFormat": "Máx. del pool de entropía",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Entropy",
+     "title": "Entropía",
      "type": "timeseries"
     }
    ],
-   "title": "CPU & Scheduler",
+   "title": "CPU y planificador",
    "type": "row"
   },
   {
@@ -7061,7 +7061,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Monitors hardware sensor temperatures and critical thresholds as exposed by Linux hwmon. Includes CPU, GPU, and motherboard sensors where available",
+     "description": "Supervisa las temperaturas de los sensores de hardware y los umbrales críticos expuestos por hwmon de Linux. Incluye sensores de CPU, GPU y placa base cuando están disponibles",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7175,7 +7175,7 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "{{ chip_name }} {{ sensor }} Critical Alarm",
+       "legendFormat": "{{ chip_name }} {{ sensor }} Alarma crítica",
        "refId": "B",
        "step": 240
       },
@@ -7184,7 +7184,7 @@
        "expr": "node_hwmon_temp_crit_celsius{instance=\"$node\",job=\"$job\"} * on(chip) group_left(chip_name) node_hwmon_chip_names{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{ chip_name }} {{ sensor }} Critical",
+       "legendFormat": "{{ chip_name }} {{ sensor }} Crítico",
        "range": true,
        "refId": "C",
        "step": 240
@@ -7194,7 +7194,7 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "{{ chip_name }} {{ sensor }} Critical Hysteresis",
+       "legendFormat": "{{ chip_name }} {{ sensor }} Histéresis crítica",
        "refId": "D",
        "step": 240
       },
@@ -7203,12 +7203,12 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "{{ chip_name }} {{ sensor }} Max",
+       "legendFormat": "{{ chip_name }} {{ sensor }} Máx.",
        "refId": "E",
        "step": 240
       }
      ],
-     "title": "Hardware Temperature Monitor",
+     "title": "Monitor de temperatura de hardware",
      "type": "timeseries"
     },
     {
@@ -7216,7 +7216,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Shows how hard each cooling device (fan/throttle) is working relative to its maximum capacity",
+     "description": "Muestra cuánto trabaja cada dispositivo de refrigeración (ventilador/limitación) respecto a su capacidad máxima",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7325,7 +7325,7 @@
        "step": 240
       }
      ],
-     "title": "Cooling Device Utilization",
+     "title": "Utilización de dispositivos de refrigeración",
      "type": "timeseries"
     },
     {
@@ -7333,7 +7333,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Displays the current fan speeds (RPM) from hardware sensors via the hwmon interface",
+     "description": "Muestra las velocidades actuales de los ventiladores (RPM) de los sensores de hardware a través de la interfaz hwmon",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7428,13 +7428,13 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "{{ chip_name }} {{ sensor }} rpm min",
+       "legendFormat": "{{ chip_name }} {{ sensor }} rpm mín.",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Hardware Fan Speed",
+     "title": "Velocidad de ventiladores",
      "type": "timeseries"
     },
     {
@@ -7442,7 +7442,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Core-level CPU thermal throttling events per package. Values above zero indicate cores were throttled during the interval. Requires hardware that exposes thermal_throttle counters (mostly Intel); absent on AMD and most virtual machines.",
+     "description": "Eventos de limitación térmica de CPU a nivel de núcleo por paquete. Valores superiores a cero indican que los núcleos se limitaron durante el intervalo. Requiere hardware que exponga contadores thermal_throttle (sobre todo Intel); no disponible en AMD ni en la mayoría de máquinas virtuales.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7452,7 +7452,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "throttle events",
+        "axisLabel": "eventos de limitación",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -7527,13 +7527,13 @@
        "editorMode": "code",
        "expr": "sum by (package) (increase(node_cpu_core_throttles_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]))",
        "format": "time_series",
-       "legendFormat": "Package {{package}}",
+       "legendFormat": "Paquete {{package}}",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "CPU Throttling",
+     "title": "Limitación térmica de CPU",
      "type": "timeseries"
     },
     {
@@ -7541,7 +7541,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Tracks the system clock's estimated and maximum error, as well as its offset from the reference clock (e.g., via NTP). Useful for detecting synchronization drift",
+     "description": "Registra el error estimado y máximo del reloj del sistema, así como su desfase respecto al reloj de referencia (p. ej., mediante NTP). Útil para detectar deriva de sincronización",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7624,7 +7624,7 @@
        "expr": "node_timex_estimated_error_seconds{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Estimated error",
+       "legendFormat": "Error estimado",
        "range": true,
        "refId": "A",
        "step": 240
@@ -7634,7 +7634,7 @@
        "expr": "node_timex_offset_seconds{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Offset local vs reference",
+       "legendFormat": "Desfase local vs referencia",
        "range": true,
        "refId": "B",
        "step": 240
@@ -7644,13 +7644,13 @@
        "expr": "node_timex_maxerror_seconds{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Maximum error",
+       "legendFormat": "Error máximo",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Time Synchronized Drift",
+     "title": "Deriva de sincronización horaria",
      "type": "timeseries"
     },
     {
@@ -7658,7 +7658,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "NTP phase-locked loop (PLL) time constant used by the kernel to control time adjustments. Lower values mean faster correction but less stability",
+     "description": "Constante de tiempo del bucle de enganche de fase (PLL) de NTP usada por el kernel para controlar los ajustes de hora. Valores más bajos implican una corrección más rápida pero menos estabilidad",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7741,13 +7741,13 @@
        "expr": "node_timex_loop_time_constant{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "PLL Time Constant",
+       "legendFormat": "Constante de tiempo PLL",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Time PLL Adjust",
+     "title": "Ajuste PLL de hora",
      "type": "timeseries"
     },
     {
@@ -7755,7 +7755,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Shows whether the system clock is synchronized to a reliable time source, and the current frequency correction ratio applied by the kernel to maintain synchronization",
+     "description": "Muestra si el reloj del sistema está sincronizado con una fuente horaria fiable y la relación de corrección de frecuencia aplicada por el kernel para mantener la sincronización",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -7838,7 +7838,7 @@
        "expr": "node_timex_sync_status{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Sync status (1 = ok)",
+       "legendFormat": "Estado de sincronización (1 = ok)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -7848,7 +7848,7 @@
        "expr": "node_timex_frequency_adjustment_ratio{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Frequency Adjustment",
+       "legendFormat": "Ajuste de frecuencia",
        "range": true,
        "refId": "B",
        "step": 240
@@ -7859,7 +7859,7 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "Tick Interval",
+       "legendFormat": "Intervalo de tick",
        "range": true,
        "refId": "C",
        "step": 240
@@ -7870,13 +7870,13 @@
        "format": "time_series",
        "hide": true,
        "interval": "",
-       "legendFormat": "TAI Offset",
+       "legendFormat": "Desfase TAI",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "Time Synchronized Status",
+     "title": "Estado de sincronización horaria",
      "type": "timeseries"
     },
     {
@@ -7884,7 +7884,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Correctable and uncorrectable ECC memory errors reported by EDAC. Correctable errors indicate a degrading DIMM; uncorrectable errors can cause data corruption. Only available on bare metal hosts that expose EDAC.",
+     "description": "Errores de memoria ECC corregibles e incorregibles notificados por EDAC. Los errores corregibles indican un DIMM en degradación; los incorregibles pueden causar corrupción de datos. Solo disponible en hosts bare metal que expongan EDAC.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8003,7 +8003,7 @@
        "expr": "increase(node_edac_correctable_errors_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{controller}} - Correctable",
+       "legendFormat": "{{controller}} - Corregibles",
        "range": true,
        "refId": "A",
        "step": 240
@@ -8013,13 +8013,13 @@
        "expr": "increase(node_edac_uncorrectable_errors_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{controller}} - Uncorrectable",
+       "legendFormat": "{{controller}} - Incorregibles",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "ECC Memory Errors",
+     "title": "Errores de memoria ECC",
      "type": "timeseries"
     },
     {
@@ -8027,7 +8027,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Online and present state of each power supply exposed by /sys/class/power_supply. 1 = OK, 0 = failed or missing. Only available on hardware that exposes node_power_supply_online or node_power_supply_present; absent on most virtual machines.",
+     "description": "Estado en línea y presente de cada fuente de alimentación expuesta por /sys/class/power_supply. 1 = OK, 0 = fallo o ausente. Solo disponible en hardware que exponga node_power_supply_online o node_power_supply_present; no disponible en la mayoría de máquinas virtuales.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8037,7 +8037,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "state (1 = OK)",
+        "axisLabel": "estado (1 = OK)",
         "axisPlacement": "left",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -8073,7 +8073,7 @@
           "0": {
            "color": "red",
            "index": 1,
-           "text": "DOWN"
+           "text": "CAÍDO"
           },
           "1": {
            "color": "green",
@@ -8133,7 +8133,7 @@
        "expr": "node_power_supply_online{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{power_supply}} online",
+       "legendFormat": "{{power_supply}} en línea",
        "range": true,
        "refId": "A",
        "step": 240
@@ -8143,17 +8143,17 @@
        "expr": "node_power_supply_present{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{power_supply}} present",
+       "legendFormat": "{{power_supply}} presente",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Power Supply Status",
+     "title": "Estado de fuentes de alimentación",
      "type": "timeseries"
     }
    ],
-   "title": "Hardware & Time",
+   "title": "Hardware y hora",
    "type": "row"
   },
   {
@@ -8171,7 +8171,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Current number of systemd units in each operational state, such as active, failed, inactive, or transitioning",
+     "description": "Número actual de unidades de systemd en cada estado operativo, como active, failed, inactive o en transición",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8330,7 +8330,7 @@
        "expr": "node_systemd_units{instance=\"$node\",job=\"$job\",state=\"activating\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Activating",
+       "legendFormat": "Activando",
        "range": true,
        "refId": "A",
        "step": 240
@@ -8340,7 +8340,7 @@
        "expr": "node_systemd_units{instance=\"$node\",job=\"$job\",state=\"active\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Active",
+       "legendFormat": "Activas",
        "range": true,
        "refId": "B",
        "step": 240
@@ -8350,7 +8350,7 @@
        "expr": "node_systemd_units{instance=\"$node\",job=\"$job\",state=\"deactivating\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Deactivating",
+       "legendFormat": "Desactivando",
        "range": true,
        "refId": "C",
        "step": 240
@@ -8360,7 +8360,7 @@
        "expr": "node_systemd_units{instance=\"$node\",job=\"$job\",state=\"failed\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Failed",
+       "legendFormat": "Fallidas",
        "range": true,
        "refId": "D",
        "step": 240
@@ -8370,13 +8370,13 @@
        "expr": "node_systemd_units{instance=\"$node\",job=\"$job\",state=\"inactive\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Inactive",
+       "legendFormat": "Inactivas",
        "range": true,
        "refId": "E",
        "step": 240
       }
      ],
-     "title": "Systemd Units State",
+     "title": "Estado de unidades de systemd",
      "type": "timeseries"
     },
     {
@@ -8384,7 +8384,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Current number of active connections per systemd socket, as reported by the Node Exporter systemd collector",
+     "description": "Número actual de conexiones activas por socket de systemd, según el collector systemd de Node Exporter",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8474,7 +8474,7 @@
        "step": 240
       }
      ],
-     "title": "Systemd Sockets Current",
+     "title": "Sockets de systemd actuales",
      "type": "timeseries"
     },
     {
@@ -8482,7 +8482,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of accepted connections per second for each systemd socket",
+     "description": "Tasa de conexiones aceptadas por segundo para cada socket de systemd",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8572,7 +8572,7 @@
        "step": 240
       }
      ],
-     "title": "Systemd Sockets Accepted",
+     "title": "Sockets de systemd aceptados",
      "type": "timeseries"
     },
     {
@@ -8580,7 +8580,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of systemd socket connection refusals per second, typically due to service unavailability or backlog overflow",
+     "description": "Tasa de conexiones rechazadas por segundo en sockets de systemd, normalmente por indisponibilidad del servicio o desbordamiento del backlog",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8670,7 +8670,7 @@
        "step": 240
       }
      ],
-     "title": "Systemd Sockets Refused",
+     "title": "Sockets de systemd rechazados",
      "type": "timeseries"
     }
    ],
@@ -8692,7 +8692,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of I/O operations completed per second for the device (after merges), including both reads and writes",
+     "description": "Número de operaciones de I/O completadas por segundo en el dispositivo (tras fusiones), incluidas lecturas y escrituras",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8702,7 +8702,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "write (–) / read (+)",
+        "axisLabel": "escritura (–) / lectura (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -8801,7 +8801,7 @@
       {
        "editorMode": "code",
        "expr": "rate(node_disk_reads_completed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
-       "legendFormat": "{{device}} - Read",
+       "legendFormat": "{{device}} - Lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -8809,13 +8809,13 @@
       {
        "editorMode": "code",
        "expr": "rate(node_disk_writes_completed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
-       "legendFormat": "{{device}} - Write",
+       "legendFormat": "{{device}} - Escritura",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Disk Read/Write IOps",
+     "title": "IOPS de lectura/escritura de disco",
      "type": "timeseries"
     },
     {
@@ -8823,7 +8823,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of bytes read from or written to the device per second",
+     "description": "Número de bytes leídos o escritos en el dispositivo por segundo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8833,7 +8833,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "write (–) / read (+)",
+        "axisLabel": "escritura (–) / lectura (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -8933,7 +8933,7 @@
        "editorMode": "code",
        "expr": "rate(node_disk_read_bytes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Read",
+       "legendFormat": "{{device}} - Lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -8944,13 +8944,13 @@
        "expr": "rate(node_disk_written_bytes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "instant": false,
-       "legendFormat": "{{device}} - Write",
+       "legendFormat": "{{device}} - Escritura",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Disk Read/Write Data",
+     "title": "Datos de lectura/escritura de disco",
      "type": "timeseries"
     },
     {
@@ -8958,7 +8958,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Average time for requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.",
+     "description": "Tiempo medio en atender las solicitudes enviadas al dispositivo. Incluye el tiempo que pasan en cola y el tiempo de servicio.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -8968,7 +8968,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "write (–) / read (+)",
+        "axisLabel": "escritura (–) / lectura (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -9068,7 +9068,7 @@
        "editorMode": "code",
        "expr": "rate(node_disk_read_time_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]) / (rate(node_disk_reads_completed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]) > 0)",
        "interval": "",
-       "legendFormat": "{{device}} - Read",
+       "legendFormat": "{{device}} - Lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -9077,13 +9077,13 @@
        "editorMode": "code",
        "expr": "rate(node_disk_write_time_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]) / (rate(node_disk_writes_completed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval]) > 0)",
        "interval": "",
-       "legendFormat": "{{device}} - Write",
+       "legendFormat": "{{device}} - Escritura",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Disk Average Wait Time",
+     "title": "Tiempo medio de espera de disco",
      "type": "timeseries"
     },
     {
@@ -9091,7 +9091,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Percentage of time the disk spent actively processing I/O operations, including general I/O, discards (TRIM), and write cache flushes",
+     "description": "Porcentaje de tiempo que el disco dedicó a procesar operaciones de I/O, incluidas I/O general, descartes (TRIM) y vaciados de la caché de escritura",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9190,7 +9190,7 @@
        "editorMode": "code",
        "expr": "rate(node_disk_io_time_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "{{device}} - General IO",
+       "legendFormat": "{{device}} - I/O general",
        "range": true,
        "refId": "A",
        "step": 240
@@ -9208,13 +9208,13 @@
        "editorMode": "code",
        "expr": "rate(node_disk_flush_requests_time_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "{{device}} - Flush (write cache)",
+       "legendFormat": "{{device}} - Flush (caché de escritura)",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Time Spent Doing I/Os",
+     "title": "Tiempo dedicado a I/O",
      "type": "timeseries"
     },
     {
@@ -9222,7 +9222,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Average queue length of the requests that were issued to the device",
+     "description": "Longitud media de la cola de solicitudes enviadas al dispositivo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9327,7 +9327,7 @@
        "step": 240
       }
      ],
-     "title": "Average Queue Size",
+     "title": "Tamaño medio de cola",
      "type": "timeseries"
     },
     {
@@ -9335,7 +9335,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of in-progress I/O requests at the time of sampling (active requests in the disk queue)",
+     "description": "Número de solicitudes de I/O en curso en el momento del muestreo (solicitudes activas en la cola del disco)",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9440,7 +9440,7 @@
        "step": 240
       }
      ],
-     "title": "Instantaneous Queue Size",
+     "title": "Tamaño instantáneo de cola",
      "type": "timeseries"
     },
     {
@@ -9448,7 +9448,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of read and write requests merged per second that were queued to the device",
+     "description": "Número de solicitudes de lectura y escritura fusionadas por segundo que se encolaron al dispositivo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9458,7 +9458,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "write (–) / read (+)",
+        "axisLabel": "escritura (–) / lectura (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -9557,7 +9557,7 @@
       {
        "editorMode": "code",
        "expr": "rate(node_disk_reads_merged_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
-       "legendFormat": "{{device}} - Read",
+       "legendFormat": "{{device}} - Lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -9565,13 +9565,13 @@
       {
        "editorMode": "code",
        "expr": "rate(node_disk_writes_merged_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
-       "legendFormat": "{{device}} - Write",
+       "legendFormat": "{{device}} - Escritura",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Disk R/W Merged",
+     "title": "Lectura/Escritura fusionadas de disco",
      "type": "timeseries"
     },
     {
@@ -9579,7 +9579,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Per-second rate of discard (TRIM) and flush (write cache) operations. Useful for monitoring low-level disk activity on SSDs and advanced storage",
+     "description": "Tasa por segundo de operaciones de descarte (TRIM) y vaciado (caché de escritura). Útil para supervisar la actividad de disco de bajo nivel en SSD y almacenamiento avanzado",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9677,7 +9677,7 @@
        "editorMode": "code",
        "expr": "rate(node_disk_discards_completed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "{{device}} - Discards completed",
+       "legendFormat": "{{device}} - Descartes completados",
        "range": true,
        "refId": "A",
        "step": 240
@@ -9686,7 +9686,7 @@
        "editorMode": "code",
        "expr": "rate(node_disk_discards_merged_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "{{device}} - Discards merged",
+       "legendFormat": "{{device}} - Descartes fusionados",
        "range": true,
        "refId": "B",
        "step": 240
@@ -9701,7 +9701,7 @@
        "step": 240
       }
      ],
-     "title": "Disk Ops Discards / Flush",
+     "title": "Operaciones de disco Discards / Flush",
      "type": "timeseries"
     },
     {
@@ -9709,7 +9709,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Shows how many disk sectors are discarded (TRIMed) per second. Useful for monitoring SSD behavior and storage efficiency",
+     "description": "Muestra cuántos sectores de disco se descartan (TRIM) por segundo. Útil para supervisar el comportamiento de SSD y la eficiencia del almacenamiento",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9813,7 +9813,7 @@
        "step": 240
       }
      ],
-     "title": "Disk Sectors Discarded Successfully",
+     "title": "Sectores de disco descartados correctamente",
      "type": "timeseries"
     },
     {
@@ -9821,7 +9821,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of free file nodes (inodes) available per mounted filesystem. A low count may prevent file creation even if disk space is available",
+     "description": "Número de nodos de archivo libres (inodes) disponibles por sistema de archivos montado. Un recuento bajo puede impedir crear archivos aunque haya espacio en disco",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -9910,7 +9910,7 @@
        "step": 240
       }
      ],
-     "title": "File Nodes Free",
+     "title": "Nodos de archivo libres",
      "type": "timeseries"
     },
     {
@@ -9918,7 +9918,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Indicates filesystems mounted in read-only mode or reporting device-level I/O errors.",
+     "description": "Indica los sistemas de archivos montados en modo solo lectura o que notifican errores de I/O del dispositivo.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10002,7 +10002,7 @@
        "editorMode": "code",
        "expr": "node_filesystem_readonly{instance=\"$node\",job=\"$job\",fstype!~'rootfs'}",
        "format": "time_series",
-       "legendFormat": "{{mountpoint}} - ReadOnly",
+       "legendFormat": "{{mountpoint}} - Solo lectura",
        "range": true,
        "refId": "A",
        "step": 240
@@ -10012,13 +10012,13 @@
        "expr": "node_filesystem_device_error{instance=\"$node\",job=\"$job\",fstype!~'rootfs|tmpfs'}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{mountpoint}} - Device error",
+       "legendFormat": "{{mountpoint}} - Error de dispositivo",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Filesystem in ReadOnly / Error",
+     "title": "Sistema de archivos en solo lectura / error",
      "type": "timeseries"
     },
     {
@@ -10026,7 +10026,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of file nodes (inodes) available per mounted filesystem. Reflects maximum file capacity regardless of disk size",
+     "description": "Número de nodos de archivo (inodes) disponibles por sistema de archivos montado. Refleja la capacidad máxima de archivos independientemente del tamaño del disco",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10115,11 +10115,11 @@
        "step": 240
       }
      ],
-     "title": "File Nodes Size",
+     "title": "Tamaño de nodos de archivo",
      "type": "timeseries"
     }
    ],
-   "title": "Storage",
+   "title": "Almacenamiento",
    "type": "row"
   },
   {
@@ -10137,7 +10137,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of network packets received and transmitted per second, by interface.",
+     "description": "Número de paquetes de red recibidos y transmitidos por segundo, por interfaz.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10147,7 +10147,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -10234,7 +10234,7 @@
        "expr": "rate(node_network_receive_packets_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -10244,13 +10244,13 @@
        "expr": "rate(node_network_transmit_packets_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Traffic by Packets",
+     "title": "Tráfico de red por paquetes",
      "type": "timeseries"
     },
     {
@@ -10258,7 +10258,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of packet-level errors for each network interface. Receive errors may indicate physical or driver issues; transmit errors may reflect collisions or hardware faults",
+     "description": "Tasa de errores a nivel de paquete en cada interfaz de red. Los errores de recepción pueden indicar problemas físicos o del controlador; los de transmisión pueden reflejar colisiones o fallos de hardware",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10268,7 +10268,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -10354,7 +10354,7 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_errs_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -10363,13 +10363,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_errs_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Traffic Errors",
+     "title": "Errores de tráfico de red",
      "type": "timeseries"
     },
     {
@@ -10377,7 +10377,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of dropped packets per network interface. Receive drops can indicate buffer overflow or driver issues; transmit drops may result from outbound congestion or queuing limits",
+     "description": "Tasa de paquetes descartados por interfaz de red. Los descartes en recepción pueden indicar desbordamiento de búfer o problemas del controlador; los de transmisión pueden deberse a congestión de salida o límites de cola",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10387,7 +10387,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -10473,7 +10473,7 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_drop_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -10482,13 +10482,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_drop_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Traffic Drop",
+     "title": "Tráfico de red descartado",
      "type": "timeseries"
     },
     {
@@ -10496,7 +10496,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of received packets that could not be processed due to missing protocol or handler in the kernel. May indicate unsupported traffic or misconfiguration",
+     "description": "Tasa de paquetes recibidos que no pudieron procesarse por falta de protocolo o manejador en el kernel. Puede indicar tráfico no soportado o una mala configuración",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10579,13 +10579,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_nohandler_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Network Traffic NoHandler",
+     "title": "Tráfico de red sin manejador",
      "type": "timeseries"
     },
     {
@@ -10593,7 +10593,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of frame errors on received packets, typically caused by physical layer issues such as bad cables, duplex mismatches, or hardware problems",
+     "description": "Tasa de errores de trama en paquetes recibidos, causados normalmente por problemas de capa física como cables defectuosos, discrepancias de dúplex o problemas de hardware",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10676,13 +10676,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_frame_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Network Traffic Frame",
+     "title": "Errores de trama de red",
      "type": "timeseries"
     },
     {
@@ -10690,7 +10690,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Tracks FIFO buffer overrun errors on network interfaces. These occur when incoming or outgoing packets are dropped due to queue or buffer overflows, often indicating congestion or hardware limits",
+     "description": "Registra errores de desbordamiento de búfer FIFO en las interfaces de red. Se producen cuando se descartan paquetes entrantes o salientes por desbordamiento de colas o búferes, lo que suele indicar congestión o límites de hardware",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10700,7 +10700,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -10786,7 +10786,7 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_fifo_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -10795,13 +10795,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_fifo_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Traffic Fifo",
+     "title": "Tráfico de red FIFO",
      "type": "timeseries"
     },
     {
@@ -10809,7 +10809,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of packet collisions detected during transmission. Mostly relevant on half-duplex or legacy Ethernet networks",
+     "description": "Tasa de colisiones de paquetes detectadas durante la transmisión. Relevante sobre todo en redes Ethernet half-duplex o heredadas",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -10905,13 +10905,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_colls_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Network Traffic Collision",
+     "title": "Colisiones de red",
      "type": "timeseries"
     },
     {
@@ -10919,7 +10919,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of carrier errors during transmission. These typically indicate physical layer issues like faulty cabling or duplex mismatches",
+     "description": "Tasa de errores de portadora durante la transmisión. Suelen indicar problemas de capa física como cableado defectuoso o discrepancias de dúplex",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11015,13 +11015,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_carrier_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Network Traffic Carrier Errors",
+     "title": "Errores de portadora de red",
      "type": "timeseries"
     },
     {
@@ -11029,7 +11029,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of compressed network packets received and transmitted per interface. These are common in low-bandwidth or special interfaces like PPP or SLIP",
+     "description": "Tasa de paquetes de red comprimidos recibidos y transmitidos por interfaz. Son habituales en interfaces de bajo ancho de banda o especiales como PPP o SLIP",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11039,7 +11039,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -11125,7 +11125,7 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_compressed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -11134,13 +11134,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_transmit_compressed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Tx out",
+       "legendFormat": "{{device}} - Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Traffic Compressed",
+     "title": "Tráfico de red comprimido",
      "type": "timeseries"
     },
     {
@@ -11148,7 +11148,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of incoming multicast packets received per network interface. Multicast is used by protocols such as mDNS, SSDP, and some streaming or cluster services",
+     "description": "Tasa de paquetes multicast entrantes por interfaz de red. Multicast lo usan protocolos como mDNS, SSDP y algunos servicios de streaming o clúster",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11231,13 +11231,13 @@
        "editorMode": "code",
        "expr": "rate(node_network_receive_multicast_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Rx in",
+       "legendFormat": "{{device}} - Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Network Traffic Multicast",
+     "title": "Tráfico de red multicast",
      "type": "timeseries"
     },
     {
@@ -11245,7 +11245,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of ARP entries per interface. Useful for detecting excessive ARP traffic or table growth due to scanning or misconfiguration",
+     "description": "Número de entradas ARP por interfaz. Útil para detectar tráfico ARP excesivo o crecimiento de la tabla por escaneos o mala configuración",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11328,13 +11328,13 @@
        "editorMode": "code",
        "expr": "node_arp_entries{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "{{ device }} ARP Table",
+       "legendFormat": "{{ device }} Tabla ARP",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "ARP Entries",
+     "title": "Entradas ARP",
      "type": "timeseries"
     },
     {
@@ -11342,7 +11342,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Current and maximum connection tracking entries used by Netfilter (nf_conntrack). High usage approaching the limit may cause packet drops or connection issues",
+     "description": "Entradas de seguimiento de conexiones actuales y máximas usadas por Netfilter (nf_conntrack). Un uso cercano al límite puede provocar descartes de paquetes o problemas de conexión",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11455,7 +11455,7 @@
        "editorMode": "code",
        "expr": "node_nf_conntrack_entries{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "NF conntrack entries",
+       "legendFormat": "Entradas NF conntrack",
        "range": true,
        "refId": "A",
        "step": 240
@@ -11464,7 +11464,7 @@
        "editorMode": "code",
        "expr": "node_nf_conntrack_entries_limit{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "NF conntrack limit",
+       "legendFormat": "Límite NF conntrack",
        "range": true,
        "refId": "B",
        "step": 240
@@ -11478,7 +11478,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of link-down transitions (flaps) per interface. Repeated flaps usually indicate a faulty cable, SFP, or switch port. The negative series shows link-down state: 0 when the carrier is present and -1 when it is absent.",
+     "description": "Número de transiciones a enlace caído (flaps) por interfaz. Los flaps repetidos suelen indicar un cable, SFP o puerto de switch defectuoso. La serie negativa muestra el estado de enlace caído: 0 cuando hay portadora y -1 cuando no.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11488,7 +11488,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "down (-) / flaps (+)",
+        "axisLabel": "caído (-) / flaps (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -11583,7 +11583,7 @@
        "editorMode": "code",
        "expr": "increase(node_network_carrier_down_changes_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "{{device}} - Link flaps",
+       "legendFormat": "{{device}} - Flaps de enlace",
        "range": true,
        "refId": "A",
        "step": 240
@@ -11592,13 +11592,13 @@
        "editorMode": "code",
        "expr": "node_network_carrier{instance=\"$node\",job=\"$job\"} - 1",
        "format": "time_series",
-       "legendFormat": "{{device}} - Down state",
+       "legendFormat": "{{device}} - Estado caído",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Network Link Flaps",
+     "title": "Flaps de enlace de red",
      "type": "timeseries"
     },
     {
@@ -11606,7 +11606,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Maximum speed of each network interface as reported by the operating system. This is a static hardware capability, not current throughput. A value of -1 means unknown speed",
+     "description": "Velocidad máxima de cada interfaz de red según el sistema operativo. Es una capacidad estática del hardware, no el rendimiento actual. Un valor de -1 indica velocidad desconocida",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11672,7 +11672,7 @@
        "step": 240
       }
      ],
-     "title": "Speed",
+     "title": "Velocidad",
      "type": "bargauge"
     },
     {
@@ -11680,7 +11680,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "MTU (Maximum Transmission Unit) in bytes for each network interface. Affects packet size and transmission efficiency",
+     "description": "MTU (Maximum Transmission Unit) en bytes de cada interfaz de red. Afecta al tamaño de paquete y a la eficiencia de la transmisión",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11749,7 +11749,7 @@
      "type": "bargauge"
     }
    ],
-   "title": "Network Traffic",
+   "title": "Tráfico de red",
    "type": "row"
   },
   {
@@ -11767,7 +11767,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Tracks TCP socket usage per node",
+     "description": "Uso de sockets TCP por nodo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11852,7 +11852,7 @@
        "expr": "node_sockstat_TCP_alloc{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 Allocated Sockets",
+       "legendFormat": "Sockets IPv4 asignados",
        "range": true,
        "refId": "A",
        "step": 240
@@ -11862,7 +11862,7 @@
        "expr": "node_sockstat_TCP_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 In-Use Sockets",
+       "legendFormat": "Sockets IPv4 en uso",
        "range": true,
        "refId": "B",
        "step": 240
@@ -11872,7 +11872,7 @@
        "expr": "node_sockstat_TCP_orphan{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 Orphaned Sockets",
+       "legendFormat": "Sockets IPv4 huérfanos",
        "range": true,
        "refId": "C",
        "step": 240
@@ -11882,7 +11882,7 @@
        "expr": "node_sockstat_TCP_tw{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 TIME_WAIT Sockets",
+       "legendFormat": "Sockets IPv4 TIME_WAIT",
        "range": true,
        "refId": "D",
        "step": 240
@@ -11891,7 +11891,7 @@
        "editorMode": "code",
        "expr": "node_sockstat_TCP6_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 In-Use Sockets",
+       "legendFormat": "Sockets IPv6 en uso",
        "range": true,
        "refId": "E",
        "step": 240
@@ -11905,7 +11905,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of UDP and UDPLite sockets currently in use",
+     "description": "Número de sockets UDP y UDPLite en uso actualmente",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -11990,7 +11990,7 @@
        "expr": "node_sockstat_UDPLITE_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDPLite - In-Use Sockets",
+       "legendFormat": "IPv4 UDPLite - Sockets en uso",
        "range": true,
        "refId": "A",
        "step": 240
@@ -12000,7 +12000,7 @@
        "expr": "node_sockstat_UDP_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP - In-Use Sockets",
+       "legendFormat": "IPv4 UDP - Sockets en uso",
        "range": true,
        "refId": "B",
        "step": 240
@@ -12009,7 +12009,7 @@
        "editorMode": "code",
        "expr": "node_sockstat_UDPLITE6_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 UDPLite - In-Use Sockets",
+       "legendFormat": "IPv6 UDPLite - Sockets en uso",
        "range": true,
        "refId": "C",
        "step": 240
@@ -12018,7 +12018,7 @@
        "editorMode": "code",
        "expr": "node_sockstat_UDP6_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP - In-Use Sockets",
+       "legendFormat": "IPv6 UDP - Sockets en uso",
        "range": true,
        "refId": "D",
        "step": 240
@@ -12032,7 +12032,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Total number of sockets currently in use across all protocols (TCP, UDP, UNIX, etc.), as reported by /proc/net/sockstat",
+     "description": "Número total de sockets en uso en todos los protocolos (TCP, UDP, UNIX, etc.), según /proc/net/sockstat",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12117,13 +12117,13 @@
        "expr": "node_sockstat_sockets_used{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Total sockets",
+       "legendFormat": "Sockets totales",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Sockstat Used",
+     "title": "Sockstat usados",
      "type": "timeseries"
     },
     {
@@ -12131,7 +12131,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of FRAG and RAW sockets currently in use. RAW sockets are used for custom protocols or tools like ping; FRAG sockets are used internally for IP packet defragmentation",
+     "description": "Número de sockets FRAG y RAW en uso actualmente. Los sockets RAW se usan para protocolos personalizados o herramientas como ping; los FRAG se usan internamente para desfragmentar paquetes IP",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12216,7 +12216,7 @@
        "expr": "node_sockstat_FRAG_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 FRAG - In-Use Sockets",
+       "legendFormat": "IPv4 FRAG - Sockets en uso",
        "range": true,
        "refId": "A",
        "step": 240
@@ -12226,7 +12226,7 @@
        "expr": "node_sockstat_RAW_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 RAW - In-Use Sockets",
+       "legendFormat": "IPv4 RAW - Sockets en uso",
        "range": true,
        "refId": "C",
        "step": 240
@@ -12235,7 +12235,7 @@
        "editorMode": "code",
        "expr": "node_sockstat_FRAG6_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 FRAG - In-Use Sockets",
+       "legendFormat": "IPv6 FRAG - Sockets en uso",
        "range": true,
        "refId": "D",
        "step": 240
@@ -12244,7 +12244,7 @@
        "editorMode": "code",
        "expr": "node_sockstat_RAW6_inuse{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 RAW - In-Use Sockets",
+       "legendFormat": "IPv6 RAW - Sockets en uso",
        "range": true,
        "refId": "E",
        "step": 240
@@ -12258,7 +12258,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Kernel memory used by TCP, UDP, and IP fragmentation buffers",
+     "description": "Memoria del kernel usada por los búferes de TCP, UDP y fragmentación IP",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12362,12 +12362,12 @@
        "editorMode": "code",
        "expr": "node_sockstat_FRAG_memory{instance=\"$node\",job=\"$job\"}",
        "interval": "",
-       "legendFormat": "Fragmentation",
+       "legendFormat": "Fragmentación",
        "range": true,
        "refId": "C"
       }
      ],
-     "title": "Sockstat Memory Size",
+     "title": "Tamaño de memoria Sockstat",
      "type": "timeseries"
     },
     {
@@ -12375,7 +12375,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Average memory used per socket (TCP/UDP). Helps tune net.ipv4.tcp_rmem / tcp_wmem",
+     "description": "Memoria media usada por socket (TCP/UDP). Ayuda a ajustar net.ipv4.tcp_rmem / tcp_wmem",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12476,7 +12476,7 @@
        "step": 240
       }
      ],
-     "title": "Sockstat Average Socket Memory",
+     "title": "Memoria media por socket (Sockstat)",
      "type": "timeseries"
     },
     {
@@ -12484,7 +12484,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "TCP/UDP socket memory usage in kernel (in pages)",
+     "description": "Uso de memoria de sockets TCP/UDP en el kernel (en páginas)",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12585,7 +12585,7 @@
        "step": 240
       }
      ],
-     "title": "TCP/UDP Kernel Buffer Memory Pages",
+     "title": "Páginas de memoria de búfer del kernel TCP/UDP",
      "type": "timeseries"
     },
     {
@@ -12593,7 +12593,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Packets processed and dropped by the softnet network stack per CPU. Drops may indicate CPU saturation or network driver limitations",
+     "description": "Paquetes procesados y descartados por la pila de red softnet por CPU. Los descartes pueden indicar saturación de CPU o limitaciones del controlador de red",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12603,7 +12603,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "drop (-) / process (+)",
+        "axisLabel": "descartado (-) / procesado (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -12690,7 +12690,7 @@
        "expr": "rate(node_softnet_processed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "CPU {{cpu}} - Processed",
+       "legendFormat": "CPU {{cpu}} - Procesados",
        "range": true,
        "refId": "A",
        "step": 240
@@ -12700,13 +12700,13 @@
        "expr": "rate(node_softnet_dropped_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "CPU {{cpu}} - Dropped",
+       "legendFormat": "CPU {{cpu}} - Descartados",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Softnet Packets",
+     "title": "Paquetes softnet",
      "type": "timeseries"
     },
     {
@@ -12714,7 +12714,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "How often the kernel was unable to process all packets in the softnet queue before time ran out. Frequent squeezes may indicate CPU contention or driver inefficiency",
+     "description": "Frecuencia con la que el kernel no pudo procesar todos los paquetes de la cola softnet antes de agotar el tiempo. Los squeezes frecuentes pueden indicar contención de CPU o ineficiencia del controlador",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12802,13 +12802,13 @@
        "expr": "rate(node_softnet_times_squeezed_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "CPU {{cpu}} - Times Squeezed",
+       "legendFormat": "CPU {{cpu}} - Veces agotado (squeezed)",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Softnet Out of Quota",
+     "title": "Softnet sin cuota",
      "type": "timeseries"
     },
     {
@@ -12816,7 +12816,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Times each CPU was woken up by Receive Packet Steering (RPS) to process packets steered from other CPUs, and packets dropped for exceeding the flow limit",
+     "description": "Veces que cada CPU fue despertada por Receive Packet Steering (RPS) para procesar paquetes dirigidos desde otras CPUs, y paquetes descartados por superar el límite de flujo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12920,7 +12920,7 @@
        "expr": "rate(node_softnet_received_rps_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "CPU {{cpu}} - RPS Wakeups",
+       "legendFormat": "CPU {{cpu}} - Despertares RPS",
        "range": true,
        "refId": "A",
        "step": 240
@@ -12930,7 +12930,7 @@
        "expr": "rate(node_softnet_flow_limit_count_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "CPU {{cpu}} - Dropped",
+       "legendFormat": "CPU {{cpu}} - Descartados",
        "range": true,
        "refId": "B",
        "step": 240
@@ -12940,7 +12940,7 @@
      "type": "timeseries"
     }
    ],
-   "title": "Network Sockstat",
+   "title": "Sockstat de red",
    "type": "row"
   },
   {
@@ -12958,7 +12958,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of octets sent and received at the IP layer, as reported by /proc/net/netstat",
+     "description": "Tasa de octetos enviados y recibidos en la capa IP, según /proc/net/netstat",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -12968,7 +12968,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -13055,7 +13055,7 @@
        "expr": "rate(node_netstat_IpExt_InOctets{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 Rx in",
+       "legendFormat": "IPv4 Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -13064,7 +13064,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_IpExt_OutOctets{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv4 Tx out",
+       "legendFormat": "IPv4 Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
@@ -13073,7 +13073,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Ip6_InOctets{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 Rx in",
+       "legendFormat": "IPv6 Rx entrada",
        "range": true,
        "refId": "C",
        "step": 240
@@ -13082,13 +13082,13 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Ip6_OutOctets{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 Tx out",
+       "legendFormat": "IPv6 Tx salida",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "Netstat IP In / Out Octets",
+     "title": "Octetos IP entrada / salida (Netstat)",
      "type": "timeseries"
     },
     {
@@ -13096,7 +13096,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of TCP segments sent and received per second, including data and control segments",
+     "description": "Tasa de segmentos TCP enviados y recibidos por segundo, incluidos segmentos de datos y de control",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -13106,7 +13106,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -13197,7 +13197,7 @@
        "format": "time_series",
        "instant": false,
        "interval": "",
-       "legendFormat": "TCP Rx in",
+       "legendFormat": "TCP Rx entrada",
        "refId": "A",
        "step": 240
       },
@@ -13206,13 +13206,13 @@
        "expr": "rate(node_netstat_Tcp_OutSegs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "TCP Tx out",
+       "legendFormat": "TCP Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "TCP In / Out",
+     "title": "TCP entrada / salida",
      "type": "timeseries"
     },
     {
@@ -13220,7 +13220,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of UDP datagrams sent and received per second, based on /proc/net/snmp",
+     "description": "Tasa de datagramas UDP enviados y recibidos por segundo, según /proc/net/snmp",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -13230,7 +13230,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -13316,7 +13316,7 @@
        "expr": "rate(node_netstat_Udp_InDatagrams{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Rx in",
+       "legendFormat": "IPv4 UDP Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -13326,7 +13326,7 @@
        "expr": "rate(node_netstat_Udp_OutDatagrams{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Tx out",
+       "legendFormat": "IPv4 UDP Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
@@ -13335,7 +13335,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Udp6_InDatagrams{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Rx in",
+       "legendFormat": "IPv6 UDP Rx entrada",
        "range": true,
        "refId": "C",
        "step": 240
@@ -13344,13 +13344,13 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Udp6_OutDatagrams{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Tx out",
+       "legendFormat": "IPv6 UDP Tx salida",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "UDP In / Out",
+     "title": "UDP entrada / salida",
      "type": "timeseries"
     },
     {
@@ -13358,7 +13358,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of ICMP messages sent and received per second, including error and control messages",
+     "description": "Número de mensajes ICMP enviados y recibidos por segundo, incluidos mensajes de error y de control",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -13368,7 +13368,7 @@
         "axisBorderShow": false,
         "axisCenteredZero": false,
         "axisColorMode": "text",
-        "axisLabel": "out (-) / in (+)",
+        "axisLabel": "salida (-) / entrada (+)",
         "axisPlacement": "auto",
         "barAlignment": 0,
         "barWidthFactor": 0.6,
@@ -13458,7 +13458,7 @@
        "expr": "rate(node_netstat_Icmp_InMsgs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 ICMP Rx in",
+       "legendFormat": "IPv4 ICMP Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -13468,7 +13468,7 @@
        "expr": "rate(node_netstat_Icmp_OutMsgs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 ICMP Tx out",
+       "legendFormat": "IPv4 ICMP Tx salida",
        "range": true,
        "refId": "B",
        "step": 240
@@ -13477,7 +13477,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Icmp6_InMsgs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 ICMP Rx in",
+       "legendFormat": "IPv6 ICMP Rx entrada",
        "range": true,
        "refId": "C",
        "step": 240
@@ -13486,13 +13486,13 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Icmp6_OutMsgs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 ICMP Tx out",
+       "legendFormat": "IPv6 ICMP Tx salida",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "ICMP In / Out",
+     "title": "ICMP entrada / salida",
      "type": "timeseries"
     },
     {
@@ -13500,7 +13500,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Tracks various TCP error and congestion-related events, including retransmissions, timeouts, dropped connections, and buffer issues",
+     "description": "Registra diversos eventos de error y congestión de TCP, como retransmisiones, timeouts, conexiones descartadas y problemas de búfer",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -13584,7 +13584,7 @@
        "expr": "rate(node_netstat_TcpExt_ListenOverflows{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Listen Overflows",
+       "legendFormat": "Desbordamientos de listen",
        "range": true,
        "refId": "A",
        "step": 240
@@ -13594,7 +13594,7 @@
        "expr": "rate(node_netstat_TcpExt_ListenDrops{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Listen Drops",
+       "legendFormat": "Descartes de listen",
        "range": true,
        "refId": "B",
        "step": 240
@@ -13604,7 +13604,7 @@
        "expr": "rate(node_netstat_TcpExt_TCPSynRetrans{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "SYN Retransmits",
+       "legendFormat": "Retransmisiones SYN",
        "range": true,
        "refId": "C",
        "step": 240
@@ -13613,7 +13613,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Tcp_RetransSegs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "Segment Retransmits",
+       "legendFormat": "Retransmisiones de segmentos",
        "range": true,
        "refId": "D"
       },
@@ -13621,7 +13621,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Tcp_InErrs{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "Receive Errors",
+       "legendFormat": "Errores de recepción",
        "range": true,
        "refId": "E"
       },
@@ -13629,7 +13629,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Tcp_OutRsts{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "RST Sent",
+       "legendFormat": "RST enviados",
        "range": true,
        "refId": "F"
       },
@@ -13637,7 +13637,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_TcpExt_TCPRcvQDrop{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "Receive Queue Drops",
+       "legendFormat": "Descartes de cola de recepción",
        "range": true,
        "refId": "G"
       },
@@ -13645,7 +13645,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_TcpExt_TCPOFOQueue{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "Out-of-order Queued",
+       "legendFormat": "Encolados fuera de orden",
        "range": true,
        "refId": "H"
       },
@@ -13653,12 +13653,12 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_TcpExt_TCPTimeouts{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "TCP Timeouts",
+       "legendFormat": "Timeouts TCP",
        "range": true,
        "refId": "I"
       }
      ],
-     "title": "TCP Errors",
+     "title": "Errores TCP",
      "type": "timeseries"
     },
     {
@@ -13666,7 +13666,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of UDP and UDPLite datagram delivery errors, including missing listeners, buffer overflows, and protocol-specific issues",
+     "description": "Tasa de errores de entrega de datagramas UDP y UDPLite, incluidos receptores ausentes, desbordamientos de búfer y problemas específicos del protocolo",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -13753,7 +13753,7 @@
        "expr": "rate(node_netstat_Udp_InErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Rx in Errors",
+       "legendFormat": "IPv4 UDP Rx errores de entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -13763,7 +13763,7 @@
        "expr": "rate(node_netstat_Udp_NoPorts{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP No Listener",
+       "legendFormat": "IPv4 UDP sin receptor",
        "range": true,
        "refId": "B",
        "step": 240
@@ -13772,7 +13772,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_UdpLite_InErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "interval": "",
-       "legendFormat": "IPv4 UDPLite Rx in Errors",
+       "legendFormat": "IPv4 UDPLite Rx errores de entrada",
        "range": true,
        "refId": "C"
       },
@@ -13781,7 +13781,7 @@
        "expr": "rate(node_netstat_Udp_RcvbufErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Rx in Buffer Errors",
+       "legendFormat": "IPv4 UDP Rx errores de búfer de entrada",
        "range": true,
        "refId": "D",
        "step": 240
@@ -13791,7 +13791,7 @@
        "expr": "rate(node_netstat_Udp_SndbufErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Tx out Buffer Errors",
+       "legendFormat": "IPv4 UDP Tx errores de búfer de salida",
        "range": true,
        "refId": "E",
        "step": 240
@@ -13800,7 +13800,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Udp6_InErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Rx in Errors",
+       "legendFormat": "IPv6 UDP Rx errores de entrada",
        "range": true,
        "refId": "F",
        "step": 240
@@ -13809,7 +13809,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Udp6_NoPorts{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP No Listener",
+       "legendFormat": "IPv6 UDP sin receptor",
        "range": true,
        "refId": "G",
        "step": 240
@@ -13818,7 +13818,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_UdpLite6_InErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDPLite Rx in Errors",
+       "legendFormat": "IPv6 UDPLite Rx errores de entrada",
        "range": true,
        "refId": "H",
        "step": 240
@@ -13827,7 +13827,7 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Udp6_RcvbufErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Rx in Buffer Errors",
+       "legendFormat": "IPv6 UDP Rx errores de búfer de entrada",
        "range": true,
        "refId": "I",
        "step": 240
@@ -13836,13 +13836,13 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Udp6_SndbufErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Tx out Buffer Errors",
+       "legendFormat": "IPv6 UDP Tx errores de búfer de salida",
        "range": true,
        "refId": "J",
        "step": 240
       }
      ],
-     "title": "UDP Errors",
+     "title": "Errores UDP",
      "type": "timeseries"
     },
     {
@@ -13850,7 +13850,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of incoming ICMP messages that contained protocol-specific errors, such as bad checksums or invalid lengths",
+     "description": "Tasa de mensajes ICMP entrantes que contenían errores específicos del protocolo, como checksums incorrectos o longitudes no válidas",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -13933,7 +13933,7 @@
        "expr": "rate(node_netstat_Icmp_InErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 ICMP Rx In",
+       "legendFormat": "IPv4 ICMP Rx entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -13942,13 +13942,13 @@
        "editorMode": "code",
        "expr": "rate(node_netstat_Icmp6_InErrors{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
-       "legendFormat": "IPv6 ICMP Rx In",
+       "legendFormat": "IPv6 ICMP Rx entrada",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "ICMP Errors",
+     "title": "Errores ICMP",
      "type": "timeseries"
     },
     {
@@ -13956,7 +13956,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of TCP SYN cookies sent, validated, and failed. These are used to protect against SYN flood attacks and manage TCP handshake resources under load",
+     "description": "Tasa de SYN cookies TCP enviadas, validadas y fallidas. Se usan para proteger frente a ataques SYN flood y gestionar los recursos del handshake TCP bajo carga",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14055,7 +14055,7 @@
        "expr": "rate(node_netstat_TcpExt_SyncookiesFailed{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "SYN Cookies Failed",
+       "legendFormat": "SYN cookies fallidas",
        "range": true,
        "refId": "A",
        "step": 240
@@ -14065,7 +14065,7 @@
        "expr": "rate(node_netstat_TcpExt_SyncookiesRecv{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "SYN Cookies Validated",
+       "legendFormat": "SYN cookies validadas",
        "range": true,
        "refId": "B",
        "step": 240
@@ -14075,7 +14075,7 @@
        "expr": "rate(node_netstat_TcpExt_SyncookiesSent{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "SYN Cookies Sent",
+       "legendFormat": "SYN cookies enviadas",
        "range": true,
        "refId": "C",
        "step": 240
@@ -14089,7 +14089,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of currently established TCP connections",
+     "description": "Número de conexiones TCP establecidas actualmente",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14173,13 +14173,13 @@
        "expr": "node_netstat_Tcp_CurrEstab{instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Current Connections",
+       "legendFormat": "Conexiones actuales",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "TCP Connections",
+     "title": "Conexiones TCP",
      "type": "timeseries"
     },
     {
@@ -14187,7 +14187,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Memory currently queued in the UDP receive (RX) and transmit (TX) buffers. A growing queue may indicate a bottleneck",
+     "description": "Memoria encolada actualmente en los búferes de recepción (RX) y transmisión (TX) de UDP. Una cola creciente puede indicar un cuello de botella",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14270,7 +14270,7 @@
        "expr": "node_udp_queues{instance=\"$node\",job=\"$job\",ip=\"v4\",queue=\"rx\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Rx in Queue",
+       "legendFormat": "IPv4 UDP Rx cola de entrada",
        "range": true,
        "refId": "A",
        "step": 240
@@ -14280,7 +14280,7 @@
        "expr": "node_udp_queues{instance=\"$node\",job=\"$job\",ip=\"v4\",queue=\"tx\"}",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "IPv4 UDP Tx out Queue",
+       "legendFormat": "IPv4 UDP Tx cola de salida",
        "range": true,
        "refId": "B",
        "step": 240
@@ -14289,7 +14289,7 @@
        "editorMode": "code",
        "expr": "node_udp_queues{instance=\"$node\",job=\"$job\",ip=\"v6\",queue=\"rx\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Rx in Queue",
+       "legendFormat": "IPv6 UDP Rx cola de entrada",
        "range": true,
        "refId": "C",
        "step": 240
@@ -14298,13 +14298,13 @@
        "editorMode": "code",
        "expr": "node_udp_queues{instance=\"$node\",job=\"$job\",ip=\"v6\",queue=\"tx\"}",
        "format": "time_series",
-       "legendFormat": "IPv6 UDP Tx out Queue",
+       "legendFormat": "IPv6 UDP Tx cola de salida",
        "range": true,
        "refId": "D",
        "step": 240
       }
      ],
-     "title": "UDP Queue",
+     "title": "Cola UDP",
      "type": "timeseries"
     },
     {
@@ -14312,7 +14312,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of TCP connection initiations per second. 'Active' opens are initiated by this host. 'Passive' opens are accepted from incoming connections",
+     "description": "Tasa de inicios de conexión TCP por segundo. Las aperturas 'Active' las inicia este host. Las aperturas 'Passive' se aceptan de conexiones entrantes",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14396,7 +14396,7 @@
        "expr": "rate(node_netstat_Tcp_ActiveOpens{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Active Opens",
+       "legendFormat": "Aperturas activas",
        "range": true,
        "refId": "A",
        "step": 240
@@ -14406,13 +14406,13 @@
        "expr": "rate(node_netstat_Tcp_PassiveOpens{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Passive Opens",
+       "legendFormat": "Aperturas pasivas",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "TCP Direct Transition",
+     "title": "Transiciones directas TCP",
      "type": "timeseries"
     },
     {
@@ -14420,7 +14420,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of TCP sockets in key connection states. Requires the --collector.tcpstat flag on node_exporter",
+     "description": "Número de sockets TCP en estados de conexión clave. Requiere el flag --collector.tcpstat en node_exporter",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14551,7 +14551,7 @@
        "step": 240
       }
      ],
-     "title": "TCP Stat Persistent",
+     "title": "Estados TCP persistentes",
      "type": "timeseries"
     },
     {
@@ -14559,7 +14559,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Transient TCP connection states. These are typically short-lived during connection establishment and teardown",
+     "description": "Estados de conexión TCP transitorios. Suelen durar poco durante el establecimiento y cierre de la conexión",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14694,7 +14694,7 @@
        "step": 240
       }
      ],
-     "title": "TCP Stat Transient",
+     "title": "Estados TCP transitorios",
      "type": "timeseries"
     },
     {
@@ -14702,7 +14702,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "TCP socket queue sizes. High rx_queued_bytes indicates application not reading fast enough. High tx_queued_bytes indicates network congestion or slow receiver",
+     "description": "Tamaños de cola de sockets TCP. Un rx_queued_bytes alto indica que la aplicación no lee lo bastante rápido. Un tx_queued_bytes alto indica congestión de red o un receptor lento",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14785,7 +14785,7 @@
        "editorMode": "code",
        "expr": "node_tcp_connection_states{state=\"rx_queued_bytes\",instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "RX Queued (waiting to be read)",
+       "legendFormat": "RX encolado (pendiente de leer)",
        "range": true,
        "refId": "A",
        "step": 240
@@ -14794,17 +14794,17 @@
        "editorMode": "code",
        "expr": "node_tcp_connection_states{state=\"tx_queued_bytes\",instance=\"$node\",job=\"$job\"}",
        "format": "time_series",
-       "legendFormat": "TX Queued (waiting to be sent)",
+       "legendFormat": "TX encolado (pendiente de enviar)",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "TCP Socket Queue",
+     "title": "Cola de sockets TCP",
      "type": "timeseries"
     }
    ],
-   "title": "Network Netstat",
+   "title": "Netstat de red",
    "type": "row"
   },
   {
@@ -14822,7 +14822,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Duration of each individual collector executed during a Node Exporter scrape. Useful for identifying slow or failing collectors",
+     "description": "Duración de cada collector ejecutado durante un scrape de Node Exporter. Útil para identificar collectors lentos o con fallos",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -14915,7 +14915,7 @@
        "step": 240
       }
      ],
-     "title": "Node Exporter Scrape Time",
+     "title": "Tiempo de scrape de Node Exporter",
      "type": "timeseries"
     },
     {
@@ -14923,7 +14923,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Rate of CPU time used by the process exposing this metric (user + system mode)",
+     "description": "Tasa de tiempo de CPU usado por el proceso que expone esta métrica (modo user + system)",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -15006,13 +15006,13 @@
        "expr": "rate(process_cpu_seconds_total{instance=\"$node\",job=\"$job\"}[$__rate_interval])",
        "format": "time_series",
        "interval": "",
-       "legendFormat": "Process CPU Usage",
+       "legendFormat": "Uso de CPU del proceso",
        "range": true,
        "refId": "A",
        "step": 240
       }
      ],
-     "title": "Exporter Process CPU Usage",
+     "title": "Uso de CPU del proceso exporter",
      "type": "timeseries"
     },
     {
@@ -15020,7 +15020,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Tracks the memory usage of the process exposing this metric (e.g., node_exporter), including resident memory (RSS), current virtual memory and maximum virtual memory limit. The limit is shown in the legend and tooltip but hidden from the graph to preserve scale.",
+     "description": "Registra el uso de memoria del proceso que expone esta métrica (p. ej., node_exporter), incluida la memoria residente (RSS), la memoria virtual actual y el límite máximo de memoria virtual. El límite se muestra en la leyenda y el tooltip, pero se oculta en el gráfico para conservar la escala.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -15149,7 +15149,7 @@
        "editorMode": "code",
        "expr": "process_virtual_memory_bytes{instance=\"$node\",job=\"$job\"}",
        "interval": "",
-       "legendFormat": "Virtual Memory",
+       "legendFormat": "Memoria virtual",
        "range": true,
        "refId": "A",
        "step": 240
@@ -15158,7 +15158,7 @@
        "editorMode": "code",
        "expr": "process_virtual_memory_max_bytes{instance=\"$node\",job=\"$job\"}",
        "interval": "",
-       "legendFormat": "Virtual Memory Limit",
+       "legendFormat": "Límite de memoria virtual",
        "range": true,
        "refId": "B",
        "step": 240
@@ -15167,13 +15167,13 @@
        "editorMode": "code",
        "expr": "process_resident_memory_bytes{instance=\"$node\",job=\"$job\"}",
        "interval": "",
-       "legendFormat": "Resident Memory (RSS)",
+       "legendFormat": "Memoria residente (RSS)",
        "range": true,
        "refId": "C",
        "step": 240
       }
      ],
-     "title": "Exporter Processes Memory",
+     "title": "Memoria de procesos exporter",
      "type": "timeseries"
     },
     {
@@ -15181,7 +15181,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Number of file descriptors used by the exporter process versus its configured limit. The limit is shown in the legend and tooltip but hidden from the graph to preserve scale.",
+     "description": "Número de descriptores de archivo usados por el proceso exporter frente a su límite configurado. El límite se muestra en la leyenda y el tooltip, pero se oculta en el gráfico para conservar la escala.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -15310,7 +15310,7 @@
        "editorMode": "code",
        "expr": "process_max_fds{instance=\"$node\",job=\"$job\"}",
        "interval": "",
-       "legendFormat": "Maximum open file descriptors",
+       "legendFormat": "Máx. descriptores de archivo abiertos",
        "range": true,
        "refId": "A",
        "step": 240
@@ -15319,13 +15319,13 @@
        "editorMode": "code",
        "expr": "process_open_fds{instance=\"$node\",job=\"$job\"}",
        "interval": "",
-       "legendFormat": "Open file descriptors",
+       "legendFormat": "Descriptores de archivo abiertos",
        "range": true,
        "refId": "B",
        "step": 240
       }
      ],
-     "title": "Exporter File Descriptor Usage",
+     "title": "Uso de descriptores de archivo del exporter",
      "type": "timeseries"
     },
     {
@@ -15333,7 +15333,7 @@
       "type": "prometheus",
       "uid": "${ds_prometheus}"
      },
-     "description": "Shows whether each Node Exporter collector scraped successfully (1 = success, 0 = failure), and whether the textfile collector returned an error.",
+     "description": "Muestra si cada collector de Node Exporter hizo scrape correctamente (1 = éxito, 0 = fallo) y si el collector textfile devolvió un error.",
      "fieldConfig": {
       "defaults": {
        "color": {
@@ -15415,7 +15415,7 @@
        "step": 240
       }
      ],
-     "title": "Node Exporter Scrape",
+     "title": "Scrape de Node Exporter",
      "type": "bargauge"
     }
    ],
@@ -15433,7 +15433,7 @@
    {
     "current": {},
     "includeAll": false,
-    "label": "Datasource",
+    "label": "Origen de datos",
     "name": "ds_prometheus",
     "options": [],
     "query": "prometheus",
@@ -15469,7 +15469,7 @@
     },
     "definition": "label_values(node_uname_info{job=\"$job\"}, nodename)",
     "includeAll": false,
-    "label": "Nodename",
+    "label": "Nombre de nodo",
     "name": "nodename",
     "options": [],
     "query": {
@@ -15489,7 +15489,7 @@
     },
     "definition": "label_values(node_uname_info{job=\"$job\", nodename=\"$nodename\"}, instance)",
     "includeAll": false,
-    "label": "Instance",
+    "label": "Instancia",
     "name": "node",
     "options": [],
     "query": {
