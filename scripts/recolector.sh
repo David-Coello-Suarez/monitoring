@@ -24,6 +24,16 @@ escape() {
         "$(escape "$unit")" "$load" "$active" "$sub"
     done
 
+  echo '# HELP monitoreo_servidor_info Datos del equipo que node-exporter no publica.'
+  echo '# TYPE monitoreo_servidor_info gauge'
+  cpu_modelo="$(sed -n 's/^model name[[:space:]]*:[[:space:]]*//p;T;q' /proc/cpuinfo)"
+  ruta="$(ip -4 -o route get 1.1.1.1 2>/dev/null || true)"
+  ip_lan="$(sed -n 's/.* src \([0-9.]*\).*/\1/p' <<<"$ruta")"
+  puerta="$(sed -n 's/.* via \([0-9.]*\).*/\1/p' <<<"$ruta")"
+  interfaz="$(sed -n 's/.* dev \([^ ]*\).*/\1/p' <<<"$ruta")"
+  printf 'monitoreo_servidor_info{cpu_modelo="%s",ip_lan="%s",puerta_enlace="%s",interfaz="%s"} 1\n' \
+    "$(escape "$cpu_modelo")" "$ip_lan" "$puerta" "$interfaz"
+
   echo '# HELP monitoreo_puerto_escucha Socket TCP en escucha en el host.'
   echo '# TYPE monitoreo_puerto_escucha gauge'
   ss -Htln | awk '{print $4}' | sort -u | while read -r local; do

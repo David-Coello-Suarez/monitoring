@@ -30,7 +30,7 @@ Ningún componente escucha fuera de `127.0.0.1`. No se abre ningún puerto nuevo
 | Quadlet rootless | blackbox | Apps por dentro (127.0.0.1:808x) y por fuera (dominios de Cloudflare), router y salida a internet |
 | Quadlet rootless | podman-exporter | Estado, salud, reinicios, CPU, RAM y red por contenedor |
 | Quadlet rootless | postgres-exporter | `postgres-demo` con un rol `monitoreo` (`pg_monitor`) |
-| Quadlet rootless | Grafana | Dashboards: Resumen, Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
+| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
 
 Todos los contenedores usan `Network=host` y escuchan solo en loopback, para alcanzar node-exporter, cloudflared y las apps sin exponer nada. Corren con `ReadOnly`, `DropCapability=ALL`, `NoNewPrivileges` e imágenes fijadas por digest.
 
