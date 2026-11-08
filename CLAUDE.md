@@ -15,6 +15,7 @@ Monitoreo del servidor Linux Mint 22 (Ubuntu 24.04 noble, Podman 4.9.3, usuario 
 ## Archivos
 
 - `scripts/generar-config.sh`: copia la configuración a `~/.config/monitoreo` y genera `objetivos/*.yml`, `reglas/especificas.yml` y `alertmanager.yml` desde `.env`. Se prueba en Windows con `MONITOREO_ENV` y `MONITOREO_CONF_DIR`.
+- Grupo `ataques-web` de `loki/reglas/seguridad.yml`: una tanda de 5 reglas por app, desde los logs de Traefik (krivot) y nginx (minga, solarlink). Las SPA responden 200 a rutas inexistentes, así que los escaneos se detectan por la ruta y no por contar 404. Se excluyen IP privadas y el User-Agent `Blackbox` (las sondas externas salen con la IP pública del servidor).
 - `prometheus/reglas/servidor.yml`: reglas fijas. `loki/reglas/seguridad.yml`: reglas LogQL; las `expr` van como bloque `|` (un `: ` en línea rompe el YAML).
 - `grafana/dashboards/`: `resumen`, `contenedores`, `logs`, `seguridad` (propios) y `servidor-node-exporter` (1860), `postgresql` (9628), `blackbox` (13659) de grafana.com, con el datasource fijado a uid `prometheus`.
 

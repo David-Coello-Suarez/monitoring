@@ -103,6 +103,7 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 | Apps | caída interna, caída solo por Cloudflare, lentitud, certificado por vencer |
 | Contenedores | detenido, unhealthy, reinicios en bucle, memoria cerca del límite |
 | Seguridad | ráfaga de SSH fallidos, login root, login SSH (info), baneos de fail2ban, sudo con clave incorrecta, puerto abierto en todas las interfaces fuera de la lista permitida |
+| Ataques web (por app: krivot, minga, solarlink) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
 | Kernel | OOM kill, errores de disco |
 | Monitoreo | objetivo caído, recolector detenido, notificaciones fallidas, Watchdog |
 

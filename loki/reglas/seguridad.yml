@@ -62,3 +62,130 @@ groups:
           severity: warning
         annotations:
           summary: "El adaptador WiFi USB se desconecta repetidamente"
+  # Ataques web a todas las aplicaciones, desde sus logs de acceso. Se excluyen las sondas
+  # locales y las del monitoreo (User-Agent Blackbox). Las SPA responden 200 a rutas
+  # inexistentes: los escaneos se detectan por el patrón de la ruta, no por contar 404.
+  # La API de minga (/api/*) no aparece: Caddy la envía al backend sin registrarla.
+  - name: ataques-web
+    interval: 1m
+    rules:
+      - alert: WebFuerzaBrutaLogin
+        expr: |
+          sum by (ip) (count_over_time({contenedor="traefik"} |= `RequestPath` | json | __error__="" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | metodo="POST" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\?.*)?` | estado=~`401|429` [5m])) > 10
+        labels:
+          severity: warning
+          app: krivot
+        annotations:
+          summary: "krivot: posible fuerza bruta en el login desde {{ $labels.ip }}: más de 10 intentos fallidos en 5 min"
+      - alert: WebFuerzaBrutaDistribuida
+        expr: |
+          sum(count_over_time({contenedor="traefik"} |= `RequestPath` | json | __error__="" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | metodo="POST" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\?.*)?` | estado=~`401|429` [10m])) > 100
+        labels:
+          severity: warning
+          app: krivot
+        annotations:
+          summary: "krivot: más de 100 logins fallidos en 10 min, posiblemente desde varias IP"
+      - alert: WebEscaneoRutas
+        expr: |
+          sum by (ip) (count_over_time({contenedor="traefik"} |= `RequestPath` | json | __error__="" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\.env|\.git|/wp-|phpmyadmin|\.php|/cgi-bin|\.\./|/admin(istrator)?(/|$|\?)).*` [5m])) > 10
+        labels:
+          severity: warning
+          app: krivot
+        annotations:
+          summary: "krivot: posible escaneo de rutas desde {{ $labels.ip }}: más de 10 rutas sospechosas en 5 min"
+      - alert: WebRafagaErrores
+        expr: |
+          sum by (ip) (count_over_time({contenedor="traefik"} |= `RequestPath` | json | __error__="" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | estado=~`4..` [5m])) > 100
+        labels:
+          severity: warning
+          app: krivot
+        annotations:
+          summary: "krivot: más de 100 errores 4xx en 5 min desde {{ $labels.ip }}"
+      - alert: WebRafagaPeticiones
+        expr: |
+          sum by (ip) (count_over_time({contenedor="traefik"} |= `RequestPath` | json | __error__="" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` [5m])) > 3000
+        labels:
+          severity: warning
+          app: krivot
+        annotations:
+          summary: "krivot: más de 3000 peticiones en 5 min desde {{ $labels.ip }}"
+      - alert: WebFuerzaBrutaLogin
+        expr: |
+          sum by (ip) (count_over_time({contenedor="minga-frontend"} | pattern `<ip> - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" <_>` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | metodo="POST" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\?.*)?` | estado=~`401|429` [5m])) > 10
+        labels:
+          severity: warning
+          app: minga
+        annotations:
+          summary: "minga: posible fuerza bruta en el login desde {{ $labels.ip }}: más de 10 intentos fallidos en 5 min"
+      - alert: WebFuerzaBrutaDistribuida
+        expr: |
+          sum(count_over_time({contenedor="minga-frontend"} | pattern `<ip> - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" <_>` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | metodo="POST" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\?.*)?` | estado=~`401|429` [10m])) > 100
+        labels:
+          severity: warning
+          app: minga
+        annotations:
+          summary: "minga: más de 100 logins fallidos en 10 min, posiblemente desde varias IP"
+      - alert: WebEscaneoRutas
+        expr: |
+          sum by (ip) (count_over_time({contenedor="minga-frontend"} | pattern `<ip> - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" <_>` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\.env|\.git|/wp-|phpmyadmin|\.php|/cgi-bin|\.\./|/admin(istrator)?(/|$|\?)).*` [5m])) > 10
+        labels:
+          severity: warning
+          app: minga
+        annotations:
+          summary: "minga: posible escaneo de rutas desde {{ $labels.ip }}: más de 10 rutas sospechosas en 5 min"
+      - alert: WebRafagaErrores
+        expr: |
+          sum by (ip) (count_over_time({contenedor="minga-frontend"} | pattern `<ip> - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" <_>` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | estado=~`4..` [5m])) > 100
+        labels:
+          severity: warning
+          app: minga
+        annotations:
+          summary: "minga: más de 100 errores 4xx en 5 min desde {{ $labels.ip }}"
+      - alert: WebRafagaPeticiones
+        expr: |
+          sum by (ip) (count_over_time({contenedor="minga-frontend"} | pattern `<ip> - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" <_>` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` [5m])) > 3000
+        labels:
+          severity: warning
+          app: minga
+        annotations:
+          summary: "minga: más de 3000 peticiones en 5 min desde {{ $labels.ip }}"
+      - alert: WebFuerzaBrutaLogin
+        expr: |
+          sum by (ip) (count_over_time({contenedor="solarlink-frontend"} | pattern `<_> - - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" "<ip>"` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | metodo="POST" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\?.*)?` | estado=~`401|429` [5m])) > 10
+        labels:
+          severity: warning
+          app: solarlink
+        annotations:
+          summary: "solarlink: posible fuerza bruta en el login desde {{ $labels.ip }}: más de 10 intentos fallidos en 5 min"
+      - alert: WebFuerzaBrutaDistribuida
+        expr: |
+          sum(count_over_time({contenedor="solarlink-frontend"} | pattern `<_> - - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" "<ip>"` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | metodo="POST" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\?.*)?` | estado=~`401|429` [10m])) > 100
+        labels:
+          severity: warning
+          app: solarlink
+        annotations:
+          summary: "solarlink: más de 100 logins fallidos en 10 min, posiblemente desde varias IP"
+      - alert: WebEscaneoRutas
+        expr: |
+          sum by (ip) (count_over_time({contenedor="solarlink-frontend"} | pattern `<_> - - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" "<ip>"` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\.env|\.git|/wp-|phpmyadmin|\.php|/cgi-bin|\.\./|/admin(istrator)?(/|$|\?)).*` [5m])) > 10
+        labels:
+          severity: warning
+          app: solarlink
+        annotations:
+          summary: "solarlink: posible escaneo de rutas desde {{ $labels.ip }}: más de 10 rutas sospechosas en 5 min"
+      - alert: WebRafagaErrores
+        expr: |
+          sum by (ip) (count_over_time({contenedor="solarlink-frontend"} | pattern `<_> - - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" "<ip>"` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` | estado=~`4..` [5m])) > 100
+        labels:
+          severity: warning
+          app: solarlink
+        annotations:
+          summary: "solarlink: más de 100 errores 4xx en 5 min desde {{ $labels.ip }}"
+      - alert: WebRafagaPeticiones
+        expr: |
+          sum by (ip) (count_over_time({contenedor="solarlink-frontend"} | pattern `<_> - - [<_>] "<metodo> <ruta> <_>" <estado> <_> "<_>" "<ua>" "<ip>"` | ip != "" | ip != "-" | ip !~ `10\..*` | ip !~ `127\..*` | ip != "::1" | ua !~ `Blackbox.*` [5m])) > 3000
+        labels:
+          severity: warning
+          app: solarlink
+        annotations:
+          summary: "solarlink: más de 3000 peticiones en 5 min desde {{ $labels.ip }}"

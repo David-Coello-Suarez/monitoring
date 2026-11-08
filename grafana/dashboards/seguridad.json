@@ -375,6 +375,406 @@
     "w": 12,
     "h": 12
    }
+  },
+  {
+   "type": "row",
+   "title": "Ataques web (todas las aplicaciones)",
+   "collapsed": false,
+   "id": 100,
+   "gridPos": {
+    "x": 0,
+    "y": 28,
+    "w": 24,
+    "h": 1
+   },
+   "panels": []
+  },
+  {
+   "type": "timeseries",
+   "title": "Peticiones por aplicación y tipo de respuesta",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum by (clase) (count_over_time({contenedor=\"traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | label_format clase=`{{substr 0 1 .estado}}xx` [$__auto]))",
+     "legendFormat": "krivot {{clase}}",
+     "refId": "A"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum by (clase) (count_over_time({contenedor=\"minga-frontend\"} | pattern `<ip> - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" <_>` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | label_format clase=`{{substr 0 1 .estado}}xx` [$__auto]))",
+     "legendFormat": "minga {{clase}}",
+     "refId": "B"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum by (clase) (count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | label_format clase=`{{substr 0 1 .estado}}xx` [$__auto]))",
+     "legendFormat": "solarlink {{clase}}",
+     "refId": "C"
+    }
+   ],
+   "id": 101,
+   "gridPos": {
+    "x": 0,
+    "y": 29,
+    "w": 24,
+    "h": 8
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none",
+     "custom": {
+      "fillOpacity": 10,
+      "lineWidth": 1,
+      "showPoints": "never",
+      "stacking": {
+       "mode": "none"
+      }
+     }
+    },
+    "overrides": []
+   },
+   "description": "Peticiones de visitantes reales (sin sondas del monitoreo). La API de minga no aparece: Caddy no la registra."
+  },
+  {
+   "type": "timeseries",
+   "title": "Intentos de login fallidos",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum(count_over_time({contenedor=\"traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | metodo=\"POST\" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` | estado=~`401|429` [$__auto]))",
+     "legendFormat": "krivot",
+     "refId": "A"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum(count_over_time({contenedor=\"minga-frontend\"} | pattern `<ip> - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" <_>` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | metodo=\"POST\" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` | estado=~`401|429` [$__auto]))",
+     "legendFormat": "minga",
+     "refId": "B"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum(count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | metodo=\"POST\" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` | estado=~`401|429` [$__auto]))",
+     "legendFormat": "solarlink",
+     "refId": "C"
+    }
+   ],
+   "id": 102,
+   "gridPos": {
+    "x": 0,
+    "y": 37,
+    "w": 12,
+    "h": 8
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none",
+     "custom": {
+      "fillOpacity": 10,
+      "lineWidth": 1,
+      "showPoints": "never",
+      "stacking": {
+       "mode": "none"
+      }
+     }
+    },
+    "overrides": []
+   },
+   "description": "POST a rutas de login con respuesta 401 o 429."
+  },
+  {
+   "type": "timeseries",
+   "title": "Rutas sospechosas sondeadas",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum(count_over_time({contenedor=\"traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__auto]))",
+     "legendFormat": "krivot",
+     "refId": "A"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum(count_over_time({contenedor=\"minga-frontend\"} | pattern `<ip> - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" <_>` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__auto]))",
+     "legendFormat": "minga",
+     "refId": "B"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum(count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__auto]))",
+     "legendFormat": "solarlink",
+     "refId": "C"
+    }
+   ],
+   "id": 103,
+   "gridPos": {
+    "x": 12,
+    "y": 37,
+    "w": 12,
+    "h": 8
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none",
+     "custom": {
+      "fillOpacity": 10,
+      "lineWidth": 1,
+      "showPoints": "never",
+      "stacking": {
+       "mode": "none"
+      }
+     }
+    },
+    "overrides": []
+   },
+   "description": "Rutas típicas de escaneo: .env, .git, /wp-, phpmyadmin, .php, /cgi-bin, /admin. Las SPA responden 200 a muchas de ellas, por eso se detectan por la ruta y no por el código."
+  },
+  {
+   "type": "bargauge",
+   "title": "Top 10 IP por peticiones",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "topk(10, sum by (ip) (count_over_time({contenedor=\"traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` [$__range])))",
+     "legendFormat": "krivot: {{ip}}",
+     "refId": "A",
+     "instant": true,
+     "queryType": "instant"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "topk(10, sum by (ip) (count_over_time({contenedor=\"minga-frontend\"} | pattern `<ip> - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" <_>` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` [$__range])))",
+     "legendFormat": "minga: {{ip}}",
+     "refId": "B",
+     "instant": true,
+     "queryType": "instant"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "topk(10, sum by (ip) (count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` [$__range])))",
+     "legendFormat": "solarlink: {{ip}}",
+     "refId": "C",
+     "instant": true,
+     "queryType": "instant"
+    }
+   ],
+   "id": 104,
+   "gridPos": {
+    "x": 0,
+    "y": 45,
+    "w": 12,
+    "h": 10
+   },
+   "options": {
+    "displayMode": "gradient",
+    "orientation": "horizontal",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "showUnfilled": true
+   }
+  },
+  {
+   "type": "bargauge",
+   "title": "Top 10 rutas sospechosas",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "topk(10, sum by (ruta) (count_over_time({contenedor=\"traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__range])))",
+     "legendFormat": "krivot: {{ruta}}",
+     "refId": "A",
+     "instant": true,
+     "queryType": "instant"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "topk(10, sum by (ruta) (count_over_time({contenedor=\"minga-frontend\"} | pattern `<ip> - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" <_>` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__range])))",
+     "legendFormat": "minga: {{ruta}}",
+     "refId": "B",
+     "instant": true,
+     "queryType": "instant"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "topk(10, sum by (ruta) (count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__range])))",
+     "legendFormat": "solarlink: {{ruta}}",
+     "refId": "C",
+     "instant": true,
+     "queryType": "instant"
+    }
+   ],
+   "id": 105,
+   "gridPos": {
+    "x": 12,
+    "y": 45,
+    "w": 12,
+    "h": 10
+   },
+   "options": {
+    "displayMode": "gradient",
+    "orientation": "horizontal",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "showUnfilled": true
+   }
+  },
+  {
+   "type": "logs",
+   "title": "Peticiones sospechosas y logins fallidos",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{contenedor=\"traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=ClientHost,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` or (metodo=\"POST\" and ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` and estado=~`401|429`)",
+     "legendFormat": "",
+     "refId": "A"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{contenedor=\"minga-frontend\"} | pattern `<ip> - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" <_>` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` or (metodo=\"POST\" and ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` and estado=~`401|429`)",
+     "legendFormat": "",
+     "refId": "B"
+    },
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` or (metodo=\"POST\" and ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` and estado=~`401|429`)",
+     "legendFormat": "",
+     "refId": "C"
+    }
+   ],
+   "id": 106,
+   "gridPos": {
+    "x": 0,
+    "y": 55,
+    "w": 24,
+    "h": 12
+   },
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": true,
+    "sortOrder": "Descending",
+    "enableLogDetails": true,
+    "dedupStrategy": "none",
+    "prettifyLogMessage": false,
+    "showLabels": false
+   }
   }
  ],
  "templating": {
