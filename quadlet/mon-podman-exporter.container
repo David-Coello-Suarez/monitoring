@@ -12,8 +12,7 @@ Label=monitoreo.upstream=navidys/prometheus-podman-exporter:v1.21.2
 Network=host
 UserNS=keep-id:uid=65534
 Environment=CONTAINER_HOST=unix:///run/podman/podman.sock
-# Las bindings de Podman leen $HOME/.config; con keep-id HOME no existe y sale
-# "stat /home/.config". Se le da un HOME efímero.
+# Las bindings de Podman leen $HOME/.config y con keep-id HOME no existe.
 Environment=HOME=/tmp
 Tmpfs=/tmp:rw,size=16m,mode=1777
 Volume=%t/podman/podman.sock:/run/podman/podman.sock

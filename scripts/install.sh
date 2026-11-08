@@ -32,8 +32,7 @@ podman_secret() {
 }
 
 generar_clave() {
-  # Lee una cantidad finita de /dev/urandom: con `tr </dev/urandom | head`, tr
-  # muere por SIGPIPE (141) y pipefail aborta el script sin mensaje.
+  # Con tr </dev/urandom | head, tr muere por SIGPIPE y pipefail aborta sin mensaje.
   local n="${1:-32}" s
   s="$(head -c 4096 /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9')"
   ((${#s} >= n)) || die "no se pudo generar una clave aleatoria"
