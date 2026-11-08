@@ -17,6 +17,10 @@ install -d "$CONF_DIR/bin" "$CONF_DIR/prometheus/objetivos"
 install -m 0755 "$REPO_DIR/scripts/recolector.sh" "$CONF_DIR/bin/recolector.sh"
 sed -i "s/__SERVIDOR__/$SERVIDOR_NOMBRE/; s/__CLOUDFLARED_PUERTO__/$CLOUDFLARED_METRICAS_PUERTO/" "$CONF_DIR/prometheus/prometheus.yml"
 sed -i "s/__SERVIDOR__/$SERVIDOR_NOMBRE/" "$CONF_DIR/loki/loki.yml"
+if [[ -n "${GRAFANA_URL_PUBLICA:-}" ]]; then
+  [[ "$GRAFANA_URL_PUBLICA" =~ ^https://[A-Za-z0-9.-]+/?$ ]] || die "GRAFANA_URL_PUBLICA debe ser https://dominio"
+  printf 'GF_SERVER_ROOT_URL=%s/\n' "${GRAFANA_URL_PUBLICA%/}" >>"$CONF_DIR/grafana/grafana.env"
+fi
 
 {
   for app in "${APPS[@]}"; do
