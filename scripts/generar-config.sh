@@ -36,7 +36,7 @@ EOF
 if $usar_postgres; then
   printf -- '- targets: ["127.0.0.1:9187"]\n  labels: {contenedor: "%s"}\n' "$POSTGRES_CONTENEDOR" >"$CONF_DIR/prometheus/objetivos/postgres.yml"
   cat >"$CONF_DIR/postgres-exporter.env" <<EOF
-DATA_SOURCE_URI=127.0.0.1:$POSTGRES_PUERTO/postgres?sslmode=disable
+DATA_SOURCE_URI=127.0.0.1:$POSTGRES_PUERTO/${POSTGRES_BASE:-postgres}?sslmode=disable
 DATA_SOURCE_USER=monitoreo
 DATA_SOURCE_PASS_FILE=/run/secrets/pg-password
 EOF

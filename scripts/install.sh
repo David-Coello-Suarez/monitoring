@@ -32,7 +32,12 @@ podman_secret() {
 }
 
 generar_clave() {
-  tr -dc 'A-Za-z0-9' </dev/urandom | head -c "${1:-32}"
+  # Lee una cantidad finita de /dev/urandom: con `tr </dev/urandom | head`, tr
+  # muere por SIGPIPE (141) y pipefail aborta el script sin mensaje.
+  local n="${1:-32}" s
+  s="$(head -c 4096 /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9')"
+  ((${#s} >= n)) || die "no se pudo generar una clave aleatoria"
+  printf '%s' "${s:0:n}"
 }
 
 info "Secretos"
@@ -61,7 +66,7 @@ SELECT 'CREATE ROLE monitoreo LOGIN' WHERE NOT EXISTS (SELECT FROM pg_roles WHER
 ALTER ROLE monitoreo WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD :'clave';
 GRANT pg_monitor TO monitoreo;
 SQL
-  } | podman exec -i "$POSTGRES_CONTENEDOR" sh -c 'psql -q -v ON_ERROR_STOP=1 -U "${POSTGRES_USER:-postgres}" -d postgres' >/dev/null
+  } | podman exec -i "$POSTGRES_CONTENEDOR" sh -c 'psql -q -v ON_ERROR_STOP=1 -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-${POSTGRES_USER:-postgres}}"' >/dev/null
   ok "rol monitoreo (pg_monitor) en $POSTGRES_CONTENEDOR"
 fi
 
