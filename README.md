@@ -7,7 +7,7 @@ Todo corre **en el servidor**: recolecta, guarda historial y avisa por Telegram 
 ```
 Servidor (24/7)                                               PC (cuando esté encendida)
   node-exporter ─┐                                              acceso/conectar.ps1
-  podman-exporter┤                                                │  ssh -L 3000 -L 9090
+  podman-exporter┤                                                │  ssh -L 13000 -L 19090
   postgres-exp. ─┼─> Prometheus ─> Alertmanager ─> Telegram       │  (cloudflared access ssh
   blackbox ──────┤        │                                       │   o LAN puerto 97)
   cloudflared ───┘        └──> Grafana 127.0.0.1:3000 <───────────┤
@@ -88,7 +88,7 @@ Para cubrir el caso en que el servidor pierde internet entero, define `HEALTHCHE
 2. Copia los bloques de `acceso/ssh_config.ejemplo` a `%USERPROFILE%\.ssh\config`.
 3. `.\acceso\conectar.ps1` (desde fuera de casa, por Cloudflare) o `.\acceso\conectar.ps1 -Lan` (en la LAN).
 
-Abre Grafana en `http://localhost:3000` y Cockpit en `http://localhost:9090`. Ctrl+C cierra el túnel.
+Abre Grafana en `http://localhost:13000` y Cockpit en `http://localhost:19090`. Ctrl+C cierra el túnel.
 
 ## Alertas
 

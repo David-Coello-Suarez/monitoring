@@ -1,11 +1,11 @@
-param(
+﻿param(
     [switch]$Lan,
     [switch]$SinNavegador
 )
 
 $ErrorActionPreference = 'Stop'
 $destino = if ($Lan) { 'servidor-mon-lan' } else { 'servidor-mon' }
-$puertos = @{ Grafana = 3000; Cockpit = 9090 }
+$puertos = @{ Grafana = 13000; Cockpit = 19090 }
 
 if (-not (Get-Command ssh -ErrorAction SilentlyContinue)) {
     throw 'No encuentro ssh. Instala el cliente OpenSSH de Windows.'

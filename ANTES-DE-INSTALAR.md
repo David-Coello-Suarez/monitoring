@@ -218,10 +218,10 @@ Copy-Item acceso\ssh_config.ejemplo -Destination $env:USERPROFILE\.ssh\config-mo
 
 - [ ] Llegó el mensaje de `probar-alerta.sh` a Telegram.
 - [ ] `status.sh` muestra todos los objetivos en `ok`.
-- [ ] Grafana abre en `http://localhost:3000` (usuario `admin`, clave en `~/.config/monitoreo/secretos/grafana-admin`).
+- [ ] Grafana abre en `http://localhost:13000` (usuario `admin`, clave en `~/.config/monitoreo/secretos/grafana-admin`).
 - [ ] El dashboard **Resumen** muestra las tres apps en OK, por dentro y por fuera.
 - [ ] El dashboard **Logs** muestra entradas de `sshd`, `kernel` y de tus contenedores. Si está vacío, falta la ACL del journal: vuelve a ejecutar `install-host.sh`.
-- [ ] Cockpit abre en `http://localhost:9090` y la pestaña **Podman containers** lista tus contenedores.
+- [ ] Cockpit abre en `http://localhost:19090` y la pestaña **Podman containers** lista tus contenedores.
 - [ ] Prueba real: `systemctl --user stop solarlink-frontend` → en 2–3 min llega `ServicioUsuarioCaido` y `AppInternaCaida` → `systemctl --user start solarlink-frontend` → llega el aviso de resuelto.
 - [ ] Reinicia el servidor en un horario tranquilo y confirma que todo vuelve solo y que llega `ServidorReiniciado`.
 - [ ] Al día siguiente llegó el `Watchdog` diario (en silencio).

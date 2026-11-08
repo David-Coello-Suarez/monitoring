@@ -4,9 +4,10 @@
 Host servidor-mon
     HostName ssh.circutbytes.tech
     User david_coello
+    IdentityFile ~/.ssh/id_ed25519
     ProxyCommand cloudflared access ssh --hostname %h
-    LocalForward 3000 127.0.0.1:3000
-    LocalForward 9090 127.0.0.1:9090
+    LocalForward 13000 127.0.0.1:3000
+    LocalForward 19090 127.0.0.1:9090
     ServerAliveInterval 30
     ExitOnForwardFailure yes
 
@@ -15,7 +16,8 @@ Host servidor-mon-lan
     HostName 192.168.100.59
     Port 97
     User david_coello
-    LocalForward 3000 127.0.0.1:3000
-    LocalForward 9090 127.0.0.1:9090
+    IdentityFile ~/.ssh/id_ed25519
+    LocalForward 13000 127.0.0.1:3000
+    LocalForward 19090 127.0.0.1:9090
     ServerAliveInterval 30
     ExitOnForwardFailure yes
