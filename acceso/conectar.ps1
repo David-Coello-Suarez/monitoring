@@ -20,18 +20,19 @@ foreach ($p in $puertos.Values) {
     }
 }
 
-Write-Host "Abriendo túnel con $destino ..."
-$tunel = Start-Process ssh -ArgumentList '-N', $destino -PassThru -NoNewWindow
+function Abrir-Tunel {
+    $proceso = Start-Process ssh -ArgumentList '-N', $destino -PassThru -NoNewWindow
+    for ($i = 0; $i -lt 30 -and -not $proceso.HasExited; $i++) {
+        if (Get-NetTCPConnection -LocalPort $puertos.Grafana -State Listen -ErrorAction SilentlyContinue) { return $proceso }
+        Start-Sleep -Seconds 1
+    }
+    if (-not $proceso.HasExited) { Stop-Process -Id $proceso.Id }
+    return $null
+}
 
-$listo = $false
-for ($i = 0; $i -lt 30 -and -not $tunel.HasExited; $i++) {
-    if (Get-NetTCPConnection -LocalPort $puertos.Grafana -State Listen -ErrorAction SilentlyContinue) { $listo = $true; break }
-    Start-Sleep -Seconds 1
-}
-if (-not $listo) {
-    if (-not $tunel.HasExited) { Stop-Process -Id $tunel.Id }
-    throw 'El túnel no se abrió. Prueba a mano: ssh -v ' + $destino
-}
+Write-Host "Abriendo túnel con $destino ..."
+$tunel = Abrir-Tunel
+if (-not $tunel) { throw 'El túnel no se abrió. Prueba a mano: ssh -v ' + $destino }
 
 Write-Host "Grafana: http://localhost:$($puertos.Grafana)  (usuario admin)"
 Write-Host "Cockpit: http://localhost:$($puertos.Cockpit)  (tu usuario del servidor)"
@@ -40,7 +41,17 @@ if (-not $SinNavegador) {
     Start-Process "http://localhost:$($puertos.Cockpit)"
 }
 
-Write-Host 'Túnel activo. Presiona Ctrl+C para cerrarlo.'
-try { Wait-Process -Id $tunel.Id } finally {
-    if (-not $tunel.HasExited) { Stop-Process -Id $tunel.Id }
+Write-Host 'Túnel activo. Se reconecta solo si el servidor se reinicia. Ctrl+C para cerrarlo.'
+try {
+    while ($true) {
+        Wait-Process -Id $tunel.Id
+        Write-Host "$(Get-Date -Format HH:mm:ss) Túnel caído. Reintentando cada 10 s ..."
+        do {
+            Start-Sleep -Seconds 10
+            $tunel = Abrir-Tunel
+        } until ($tunel)
+        Write-Host "$(Get-Date -Format HH:mm:ss) Túnel restablecido."
+    }
+} finally {
+    if ($tunel -and -not $tunel.HasExited) { Stop-Process -Id $tunel.Id }
 }
