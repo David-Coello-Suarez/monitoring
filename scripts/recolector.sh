@@ -18,6 +18,8 @@ escape() {
     while read -r unit load active sub _; do
       [[ -n "$unit" ]] || continue
       [[ "$unit" =~ ^[0-9a-f]{64}\.(service|timer)$ ]] && continue
+      # Mientras corre, el propio recolector siempre sale "activating": se omite.
+      [[ "$unit" == monitoreo-recolector.service ]] && continue
       printf 'monitoreo_unidad_usuario{unit="%s",load="%s",active="%s",sub="%s"} 1\n' \
         "$(escape "$unit")" "$load" "$active" "$sub"
     done
