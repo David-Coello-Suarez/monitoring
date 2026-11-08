@@ -17,6 +17,7 @@ escape() {
     sed 's/^[^[:alnum:]@_.-]*//' |
     while read -r unit load active sub _; do
       [[ -n "$unit" ]] || continue
+      [[ "$unit" =~ ^[0-9a-f]{64}\.(service|timer)$ ]] && continue
       printf 'monitoreo_unidad_usuario{unit="%s",load="%s",active="%s",sub="%s"} 1\n' \
         "$(escape "$unit")" "$load" "$active" "$sub"
     done
