@@ -13,7 +13,6 @@ load_env
 [[ -n "${TELEGRAM_CHAT_ID:-}" ]] || die "TELEGRAM_CHAT_ID está vacío en .env"
 [[ -d /var/lib/prometheus/node-exporter && -w /var/lib/prometheus/node-exporter ]] ||
   die "falta el lado host. Ejecuta primero: sudo ./scripts/install-host.sh"
-# El timer corre en user@.service, que solo ve el grupo docker si arrancó después de añadirlo.
 systemd-run --user --wait --quiet --collect docker version >/dev/null 2>&1 ||
   die "systemd --user no ve el grupo docker. Ejecuta: sudo systemctl restart user@$(id -u).service y vuelve a entrar."
 
@@ -65,7 +64,6 @@ fi
 USAR_POSTGRES="$usar_postgres" "$REPO_DIR/scripts/generar-config.sh"
 
 info "Datos"
-# Sin crearlos antes, Docker los crea como root y los contenedores no pueden escribir.
 install -d -m 0700 "$DATOS_DIR"/{prometheus,alertmanager,loki,alloy,grafana}
 ok "$DATOS_DIR"
 
@@ -82,7 +80,6 @@ dc pull -q
 ok "imágenes descargadas"
 
 info "Arranque"
-# generar-config.sh recrea los archivos y los contenedores en marcha seguirían viendo los anteriores.
 dc up -d --force-recreate --remove-orphans
 
 fallos=0

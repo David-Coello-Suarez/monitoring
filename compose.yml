@@ -87,7 +87,6 @@ services:
       monitoreo.upstream: grafana/alloy:v1.21.3
     depends_on:
       - mon-loki
-    # /var/lib/alloy es 0770 del uid 473: el uid del host no puede entrar, por eso los datos van en /datos.
     working_dir: /
     tmpfs:
       - /tmp:size=64m,mode=1777
