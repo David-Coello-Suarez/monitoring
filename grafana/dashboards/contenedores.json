@@ -3,7 +3,7 @@
  "title": "Contenedores",
  "tags": [
   "servidor",
-  "podman"
+  "docker"
  ],
  "timezone": "browser",
  "schemaVersion": 39,
@@ -39,7 +39,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_container_state{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
+     "expr": "monitoreo_contenedor_estado{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
      "legendFormat": "",
      "refId": "A",
      "instant": true,
@@ -51,7 +51,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_container_health{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
+     "expr": "monitoreo_contenedor_salud{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
      "legendFormat": "",
      "refId": "B",
      "instant": true,
@@ -63,7 +63,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "time() - podman_container_started_seconds{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
+     "expr": "time() - monitoreo_contenedor_arranque_segundos{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
      "legendFormat": "",
      "refId": "C",
      "instant": true,
@@ -251,7 +251,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "rate(podman_container_cpu_seconds_total{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}[5m])",
+     "expr": "rate(container_cpu_usage_seconds_total{name!=\"\", name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}[5m])",
      "legendFormat": "{{name}}",
      "refId": "A"
     }
@@ -302,7 +302,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_container_mem_usage_bytes{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
+     "expr": "container_memory_working_set_bytes{name!=\"\", name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}",
      "legendFormat": "{{name}}",
      "refId": "A"
     }
@@ -353,7 +353,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "rate(podman_container_net_input_total{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}[5m])",
+     "expr": "rate(container_network_receive_bytes_total{name!=\"\", name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}[5m])",
      "legendFormat": "{{name}}",
      "refId": "A"
     }
@@ -404,7 +404,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "changes(podman_container_started_seconds{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}[1h])",
+     "expr": "changes(monitoreo_contenedor_arranque_segundos{name=~\"$contenedor\", name!~\"mon-.*|.+-(infra|service)\"}[1h])",
      "legendFormat": "{{name}}",
      "refId": "A"
     }
@@ -467,7 +467,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "podman_container_state{name=~\"$contenedor\", name=~\"mon-.*\"}",
+       "expr": "monitoreo_contenedor_estado{name=~\"$contenedor\", name=~\"mon-.*\"}",
        "legendFormat": "",
        "refId": "A",
        "instant": true,
@@ -479,7 +479,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "podman_container_health{name=~\"$contenedor\", name=~\"mon-.*\"}",
+       "expr": "monitoreo_contenedor_salud{name=~\"$contenedor\", name=~\"mon-.*\"}",
        "legendFormat": "",
        "refId": "B",
        "instant": true,
@@ -491,7 +491,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "time() - podman_container_started_seconds{name=~\"$contenedor\", name=~\"mon-.*\"}",
+       "expr": "time() - monitoreo_contenedor_arranque_segundos{name=~\"$contenedor\", name=~\"mon-.*\"}",
        "legendFormat": "",
        "refId": "C",
        "instant": true,
@@ -679,7 +679,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "rate(podman_container_cpu_seconds_total{name=~\"$contenedor\", name=~\"mon-.*\"}[5m])",
+       "expr": "rate(container_cpu_usage_seconds_total{name!=\"\", name=~\"$contenedor\", name=~\"mon-.*\"}[5m])",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -730,7 +730,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "podman_container_mem_usage_bytes{name=~\"$contenedor\", name=~\"mon-.*\"}",
+       "expr": "container_memory_working_set_bytes{name!=\"\", name=~\"$contenedor\", name=~\"mon-.*\"}",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -781,7 +781,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "rate(podman_container_net_input_total{name=~\"$contenedor\", name=~\"mon-.*\"}[5m])",
+       "expr": "rate(container_network_receive_bytes_total{name!=\"\", name=~\"$contenedor\", name=~\"mon-.*\"}[5m])",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -832,7 +832,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "changes(podman_container_started_seconds{name=~\"$contenedor\", name=~\"mon-.*\"}[1h])",
+       "expr": "changes(monitoreo_contenedor_arranque_segundos{name=~\"$contenedor\", name=~\"mon-.*\"}[1h])",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -874,7 +874,7 @@
   },
   {
    "type": "row",
-   "title": "Sistema de Podman (contenedores internos de los pods)",
+   "title": "Sistema de Docker (contenedores auxiliares *-infra y *-service)",
    "collapsed": true,
    "id": 113,
    "gridPos": {
@@ -897,7 +897,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "podman_container_state{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
+       "expr": "monitoreo_contenedor_estado{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
        "legendFormat": "",
        "refId": "A",
        "instant": true,
@@ -909,7 +909,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "podman_container_health{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
+       "expr": "monitoreo_contenedor_salud{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
        "legendFormat": "",
        "refId": "B",
        "instant": true,
@@ -921,7 +921,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "time() - podman_container_started_seconds{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
+       "expr": "time() - monitoreo_contenedor_arranque_segundos{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
        "legendFormat": "",
        "refId": "C",
        "instant": true,
@@ -1109,7 +1109,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "rate(podman_container_cpu_seconds_total{name=~\"$contenedor\", name=~\".+-(infra|service)\"}[5m])",
+       "expr": "rate(container_cpu_usage_seconds_total{name!=\"\", name=~\"$contenedor\", name=~\".+-(infra|service)\"}[5m])",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -1160,7 +1160,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "podman_container_mem_usage_bytes{name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
+       "expr": "container_memory_working_set_bytes{name!=\"\", name=~\"$contenedor\", name=~\".+-(infra|service)\"}",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -1211,7 +1211,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "rate(podman_container_net_input_total{name=~\"$contenedor\", name=~\".+-(infra|service)\"}[5m])",
+       "expr": "rate(container_network_receive_bytes_total{name!=\"\", name=~\"$contenedor\", name=~\".+-(infra|service)\"}[5m])",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -1262,7 +1262,7 @@
         "type": "prometheus",
         "uid": "prometheus"
        },
-       "expr": "changes(podman_container_started_seconds{name=~\"$contenedor\", name=~\".+-(infra|service)\"}[1h])",
+       "expr": "changes(monitoreo_contenedor_arranque_segundos{name=~\"$contenedor\", name=~\".+-(infra|service)\"}[1h])",
        "legendFormat": "{{name}}",
        "refId": "A"
       }
@@ -1362,7 +1362,7 @@
      "uid": "prometheus"
     },
     "query": {
-     "query": "label_values(podman_container_info, name)",
+     "query": "label_values(monitoreo_contenedor_estado, name)",
      "refId": "v"
     },
     "includeAll": true,

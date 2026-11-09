@@ -1281,7 +1281,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "node_network_info{device!~\"lo|veth.*|podman.*|tap.*\"}",
+     "expr": "node_network_info{device!~\"lo|veth.*|docker.*|br-.*|tap.*\"}",
      "legendFormat": "",
      "refId": "A",
      "instant": true,
@@ -1356,7 +1356,7 @@
   },
   {
    "type": "stat",
-   "title": "Podman",
+   "title": "Docker",
    "datasource": {
     "type": "prometheus",
     "uid": "prometheus"
@@ -1367,8 +1367,8 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_system_api_version",
-     "legendFormat": "{{version}}",
+     "expr": "monitoreo_docker_info",
+     "legendFormat": "{{docker}}",
      "refId": "A",
      "instant": true,
      "range": false
@@ -1421,8 +1421,8 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_system_runtime_version",
-     "legendFormat": "{{version}}",
+     "expr": "monitoreo_docker_info",
+     "legendFormat": "{{runtime}}",
      "refId": "A",
      "instant": true,
      "range": false
@@ -1464,7 +1464,7 @@
   },
   {
    "type": "stat",
-   "title": "Buildah",
+   "title": "Compose",
    "datasource": {
     "type": "prometheus",
     "uid": "prometheus"
@@ -1475,8 +1475,8 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_system_buildah_version",
-     "legendFormat": "{{version}}",
+     "expr": "monitoreo_docker_info",
+     "legendFormat": "{{compose}}",
      "refId": "A",
      "instant": true,
      "range": false
@@ -1529,7 +1529,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "count(count by (name) (podman_container_state == 2))",
+     "expr": "count(count by (name) (monitoreo_contenedor_estado == 2))",
      "legendFormat": "",
      "refId": "A",
      "instant": true,

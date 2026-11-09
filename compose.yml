@@ -1,0 +1,182 @@
+name: monitoreo
+
+x-base: &base
+  network_mode: host
+  restart: always
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  user: "${HOST_UID}:${HOST_GID}"
+  logging:
+    driver: journald
+
+secrets:
+  telegram-token:
+    file: ${CONF_DIR}/secretos/telegram-token
+  grafana-admin:
+    file: ${CONF_DIR}/secretos/grafana-admin
+  pg-password:
+    file: ${CONF_DIR}/secretos/pg-password
+
+services:
+  mon-prometheus:
+    <<: *base
+    container_name: mon-prometheus
+    image: docker.io/prom/prometheus@sha256:fa3302279710be2f21a8301ec17a8b4f2301fd829bd113839b3b6b02b6f191a2
+    labels:
+      monitoreo.upstream: prom/prometheus:v3.15.1
+    volumes:
+      - ${DATOS_DIR}/prometheus:/prometheus
+      - ${CONF_DIR}/prometheus:/etc/prometheus:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+      - --web.listen-address=127.0.0.1:9091
+      - --web.enable-lifecycle
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9091/-/healthy"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+  mon-alertmanager:
+    <<: *base
+    container_name: mon-alertmanager
+    image: docker.io/prom/alertmanager@sha256:39d8bb3966c694a124428a3a88fbcffd40bd069129ecd47c059f8a3f17c55f3b
+    labels:
+      monitoreo.upstream: prom/alertmanager:v0.34.2
+    secrets:
+      - telegram-token
+    volumes:
+      - ${DATOS_DIR}/alertmanager:/alertmanager
+      - ${CONF_DIR}/alertmanager:/etc/alertmanager:ro
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --web.listen-address=127.0.0.1:9093
+      - --cluster.listen-address=
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9093/-/healthy"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+  mon-loki:
+    <<: *base
+    container_name: mon-loki
+    image: docker.io/grafana/loki@sha256:0db216b630ae1f348a1584c67f3cead8b4c1fc839169a39501db664744158e28
+    labels:
+      monitoreo.upstream: grafana/loki:3.7.9
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    volumes:
+      - ${DATOS_DIR}/loki:/loki
+      - ${CONF_DIR}/loki/loki.yml:/etc/loki/loki.yml:ro
+      - ${CONF_DIR}/loki/reglas:/etc/loki/reglas/fake:ro
+    command:
+      - -config.file=/etc/loki/loki.yml
+
+  mon-alloy:
+    <<: *base
+    container_name: mon-alloy
+    image: docker.io/grafana/alloy@sha256:8ab871206bd2d8f89277f53abffee5f452a293980788d52f85fa183a87a505a4
+    labels:
+      monitoreo.upstream: grafana/alloy:v1.21.3
+    depends_on:
+      - mon-loki
+    # /var/lib/alloy es 0770 del uid 473: el uid del host no puede entrar, por eso los datos van en /datos.
+    working_dir: /
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    volumes:
+      - ${DATOS_DIR}/alloy:/datos
+      - ${CONF_DIR}/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/log/journal:/var/log/journal:ro
+      - /etc/machine-id:/etc/machine-id:ro
+    command:
+      - run
+      - --storage.path=/datos
+      - --server.http.listen-addr=127.0.0.1:12345
+      - /etc/alloy/config.alloy
+
+  mon-grafana:
+    <<: *base
+    container_name: mon-grafana
+    image: docker.io/grafana/grafana@sha256:9f7aa1e1e3246aade5792d35a738049f7f32f89cd51d1956cf426a4e86268a84
+    labels:
+      monitoreo.upstream: grafana/grafana:13.2.5
+    env_file:
+      - ${CONF_DIR}/grafana/grafana.env
+    secrets:
+      - grafana-admin
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    volumes:
+      - ${DATOS_DIR}/grafana:/var/lib/grafana
+      - ${CONF_DIR}/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ${CONF_DIR}/grafana/dashboards:/etc/grafana/dashboards:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 60s
+
+  mon-blackbox:
+    <<: *base
+    container_name: mon-blackbox
+    image: docker.io/prom/blackbox-exporter@sha256:ea1c7aa3ef3f307cd03e85f34abb604478ccb90b567fc690da0cd9776da76b13
+    labels:
+      monitoreo.upstream: prom/blackbox-exporter:v0.29.1
+    volumes:
+      - ${CONF_DIR}/blackbox/blackbox.yml:/etc/blackbox/blackbox.yml:ro
+    command:
+      - --config.file=/etc/blackbox/blackbox.yml
+      - --web.listen-address=127.0.0.1:9115
+
+  # cAdvisor necesita root y acceso al host para leer los cgroups de todos los contenedores.
+  mon-cadvisor:
+    container_name: mon-cadvisor
+    image: ghcr.io/google/cadvisor@sha256:b8e7d1093144fd088f425ff003d75a4aa405de075db78dae3bc563730b1bd07a
+    labels:
+      monitoreo.upstream: google/cadvisor:v0.60.6
+    network_mode: host
+    restart: always
+    read_only: true
+    privileged: true
+    security_opt: ["no-new-privileges:true"]
+    logging:
+      driver: journald
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    command:
+      - --listen_ip=127.0.0.1
+      - --port=9882
+      - --docker_only=true
+      - --store_container_labels=false
+      - --housekeeping_interval=15s
+
+  mon-postgres-exporter:
+    <<: *base
+    container_name: mon-postgres-exporter
+    image: docker.io/prometheuscommunity/postgres-exporter@sha256:ac5ec343104fae0e2d84a27bb8d69b38430a11910c5382cad85d478d2bab713e
+    labels:
+      monitoreo.upstream: prometheuscommunity/postgres-exporter:v0.20.1
+    profiles: [postgres]
+    environment:
+      DATA_SOURCE_URI: 127.0.0.1:${POSTGRES_PUERTO:-5432}/${POSTGRES_BASE:-postgres}?sslmode=disable
+      DATA_SOURCE_USER: monitoreo
+      DATA_SOURCE_PASS_FILE: /run/secrets/pg-password
+    secrets:
+      - pg-password
+    command:
+      - --web.listen-address=127.0.0.1:9187

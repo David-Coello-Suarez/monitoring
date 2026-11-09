@@ -203,20 +203,20 @@ groups:
   - name: contenedores
     rules:
       - alert: ContenedorUnhealthy
-        expr: podman_container_health == 1
+        expr: monitoreo_contenedor_salud == 1
         for: 3m
         labels:
           severity: warning
         annotations:
           summary: "El contenedor {{ $labels.name }} falla su healthcheck"
       - alert: ContenedorReiniciando
-        expr: changes(podman_container_started_seconds[15m]) > 3
+        expr: changes(monitoreo_contenedor_arranque_segundos[15m]) > 3
         labels:
           severity: warning
         annotations:
           summary: "El contenedor {{ $labels.name }} se reinició más de 3 veces en 15 min"
       - alert: MemoriaContenedorAlta
-        expr: podman_container_mem_usage_bytes / (podman_container_mem_limit_bytes > 0 < 1e12) > 0.9
+        expr: container_memory_working_set_bytes{name!=""} / (container_spec_memory_limit_bytes{name!=""} > 0 < 1e12) > 0.9
         for: 10m
         labels:
           severity: warning

@@ -9,6 +9,18 @@ id "$USUARIO" >/dev/null 2>&1 || die "no existe el usuario $USUARIO"
 TEXTFILE_DIR=/var/lib/prometheus/node-exporter
 export DEBIAN_FRONTEND=noninteractive
 
+info "Docker"
+command -v docker >/dev/null 2>&1 || die "Docker no está instalado. Instala Docker Engine y el plugin Compose v2 antes de continuar."
+docker compose version >/dev/null 2>&1 || die "falta el plugin Docker Compose v2."
+id -nG "$USUARIO" | tr ' ' '\n' | grep -qx docker ||
+  die "$USUARIO no está en el grupo docker. Ejecuta: sudo usermod -aG docker $USUARIO y vuelve a entrar."
+log_driver="$(docker info --format '{{.LoggingDriver}}')"
+if [[ "$log_driver" == journald ]]; then
+  ok "docker registra en el journal"
+else
+  warn "Docker usa el driver de logs $log_driver. Los logs de tus apps no llegarán a Loki ni a las reglas de ataques web. Define \"log-driver\": \"journald\" en /etc/docker/daemon.json, reinicia Docker y recrea tus contenedores."
+fi
+
 info "Paquetes base"
 apt-get update -qq
 apt-get install -y -qq prometheus-node-exporter prometheus-node-exporter-collectors smartmontools acl >/dev/null
@@ -32,12 +44,12 @@ for timer in prometheus-node-exporter-apt.timer prometheus-node-exporter-smartmo
   fi
 done
 
-info "Cockpit + cockpit-podman solo en 127.0.0.1:9090"
+info "Cockpit solo en 127.0.0.1:9090"
 codename="$(. /etc/upstream-release/lsb-release 2>/dev/null && echo "${DISTRIB_CODENAME:-}")"
-if [[ -n "$codename" ]] && apt-get install -y -qq -t "$codename-backports" cockpit cockpit-podman >/dev/null 2>&1; then
+if [[ -n "$codename" ]] && apt-get install -y -qq -t "$codename-backports" cockpit >/dev/null 2>&1; then
   ok "cockpit desde $codename-backports"
 else
-  apt-get install -y -qq cockpit cockpit-podman >/dev/null
+  apt-get install -y -qq cockpit >/dev/null
   ok "cockpit desde el repositorio principal"
 fi
 install -d /etc/systemd/system/cockpit.socket.d

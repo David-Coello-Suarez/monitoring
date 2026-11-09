@@ -30,6 +30,16 @@ fi
   done
 } >"$CONF_DIR/prometheus/objetivos/apps.yml"
 
+cat >"$CONF_DIR/compose.env" <<EOF
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
+CONF_DIR="$CONF_DIR"
+DATOS_DIR="$DATOS_DIR"
+POSTGRES_PUERTO=${POSTGRES_PUERTO:-5432}
+POSTGRES_BASE=${POSTGRES_BASE:-postgres}
+COMPOSE_PROFILES=$($usar_postgres && echo postgres)
+EOF
+
 cat >"$CONF_DIR/prometheus/objetivos/red.yml" <<EOF
 - targets: ["$GATEWAY_LAN"]
   labels: {destino: gateway}
@@ -39,11 +49,6 @@ EOF
 
 if $usar_postgres; then
   printf -- '- targets: ["127.0.0.1:9187"]\n  labels: {contenedor: "%s"}\n' "$POSTGRES_CONTENEDOR" >"$CONF_DIR/prometheus/objetivos/postgres.yml"
-  cat >"$CONF_DIR/postgres-exporter.env" <<EOF
-DATA_SOURCE_URI=127.0.0.1:$POSTGRES_PUERTO/${POSTGRES_BASE:-postgres}?sslmode=disable
-DATA_SOURCE_USER=monitoreo
-DATA_SOURCE_PASS_FILE=/run/secrets/pg-password
-EOF
 else
   echo "[]" >"$CONF_DIR/prometheus/objetivos/postgres.yml"
 fi
@@ -79,7 +84,7 @@ groups:
         annotations:
           summary: "Puerto {{ \$labels.puerto }} abierto en todas las interfaces ({{ \$labels.direccion }})"
       - alert: ContenedorDetenido
-        expr: podman_container_state{name!~\`$re_excluidos\`} != 2
+        expr: monitoreo_contenedor_estado{name!~\`$re_excluidos\`} != 2
         for: 3m
         labels:
           severity: critical

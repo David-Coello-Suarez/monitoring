@@ -824,7 +824,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "rate(node_network_receive_bytes_total{device!~\"lo|veth.*|podman.*|tap.*\"}[5m])",
+     "expr": "rate(node_network_receive_bytes_total{device!~\"lo|veth.*|docker.*|br-.*|tap.*\"}[5m])",
      "legendFormat": "{{device}} rx",
      "refId": "A"
     },
@@ -833,7 +833,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "-rate(node_network_transmit_bytes_total{device!~\"lo|veth.*|podman.*|tap.*\"}[5m])",
+     "expr": "-rate(node_network_transmit_bytes_total{device!~\"lo|veth.*|docker.*|br-.*|tap.*\"}[5m])",
      "legendFormat": "{{device}} tx",
      "refId": "B"
     }
@@ -1063,7 +1063,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_container_state",
+     "expr": "monitoreo_contenedor_estado",
      "legendFormat": "",
      "refId": "A",
      "instant": true,
@@ -1075,7 +1075,7 @@
       "type": "prometheus",
       "uid": "prometheus"
      },
-     "expr": "podman_container_health",
+     "expr": "monitoreo_contenedor_salud",
      "legendFormat": "",
      "refId": "B",
      "instant": true,

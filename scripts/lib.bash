@@ -3,7 +3,7 @@
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
 CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/monitoreo"
-QUADLET_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/containers/systemd"
+DATOS_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/monitoreo"
 USER_UNIT_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
 ENV_FILE="${MONITOREO_ENV:-$REPO_DIR/.env}"
 
@@ -29,7 +29,7 @@ require_cmd() {
 }
 
 require_non_root() {
-  [[ "$(id -u)" -ne 0 ]] || die "ejecuta este script con tu usuario, no como root (podman rootless)."
+  [[ "$(id -u)" -ne 0 ]] || die "ejecuta este script con tu usuario, no como root."
 }
 
 require_root() {
@@ -42,14 +42,16 @@ require_user_systemd() {
   fi
 }
 
-require_podman() {
-  local version major minor
-  version="$(podman version --format '{{.Client.Version}}' 2>/dev/null || podman --version | awk '{print $NF}')"
-  IFS=. read -r major minor _ <<<"$version"
-  if ((major < 4 || (major == 4 && minor < 4))); then
-    die "se necesita Podman >= 4.4 para Quadlet (instalado: $version)."
-  fi
-  ok "podman $version"
+require_docker() {
+  local version
+  version="$(docker version --format '{{.Server.Version}}' 2>/dev/null)" ||
+    die "no hay acceso a Docker. Revisa que el servicio esté activo y que $USER esté en el grupo docker."
+  docker compose version >/dev/null 2>&1 || die "falta el plugin Docker Compose v2."
+  ok "docker $version"
+}
+
+dc() {
+  docker compose --project-name monitoreo --env-file "$CONF_DIR/compose.env" -f "$REPO_DIR/compose.yml" "$@"
 }
 
 load_env() {
