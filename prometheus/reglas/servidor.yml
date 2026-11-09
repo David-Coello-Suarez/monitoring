@@ -253,6 +253,36 @@ groups:
         annotations:
           summary: "{{ $labels.unit }} sigue activa pero su definición ya no existe"
 
+  - name: gitops
+    rules:
+      - alert: GitOpsDesincronizado
+        expr: monitoreo_orches_sincronizado == 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "orches no ha aplicado el último commit de GitHub en 10 min"
+      - alert: GitOpsSinRevisar
+        expr: time() - monitoreo_orches_ultima_revision_segundos > 600
+        labels:
+          severity: warning
+        annotations:
+          summary: "orches no revisa el repositorio hace más de 10 min"
+      - alert: GitOpsErrores
+        expr: monitoreo_orches_errores_10m > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "orches registró {{ $value }} errores en los últimos 10 min"
+      - alert: GitOpsGitHubInaccesible
+        expr: monitoreo_orches_remoto_ok == 0
+        for: 15m
+        labels:
+          severity: info
+        annotations:
+          summary: "El servidor no consigue consultar el repositorio en GitHub"
+
   - name: monitoreo
     rules:
       - alert: Watchdog

@@ -42,7 +42,7 @@ La configuración compartida (dashboards, reglas, Loki) se cambia en `podman` y 
 | Quadlet rootless | blackbox | Apps por dentro (127.0.0.1:808x) y por fuera (dominios de Cloudflare), router y salida a internet |
 | Quadlet rootless | podman-exporter | Estado, salud, reinicios, CPU, RAM y red por contenedor |
 | Quadlet rootless | postgres-exporter | `postgres-demo` con un rol `monitoreo` (`pg_monitor`) |
-| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
+| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, GitOps (orches), Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
 
 Todos los contenedores usan `Network=host` y escuchan solo en loopback, para alcanzar node-exporter, cloudflared y las apps sin exponer nada. Corren con `ReadOnly`, `DropCapability=ALL`, `NoNewPrivileges` e imágenes fijadas por digest.
 
@@ -117,6 +117,7 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 | Seguridad | ráfaga de SSH fallidos, login root, login SSH (info), baneos de fail2ban, sudo con clave incorrecta, puerto abierto en todas las interfaces fuera de la lista permitida |
 | Ataques web (por app: krivot, minga, solarlink) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
 | Kernel | OOM kill, errores de disco |
+| GitOps | orches desincronizado con GitHub, sin revisar el repositorio, con errores, GitHub inaccesible |
 | Monitoreo | objetivo caído, recolector detenido, notificaciones fallidas, Watchdog |
 
 ## Puntos a validar en el servidor
@@ -145,6 +146,8 @@ podman run --rm -it --userns=keep-id --pid=host \
   --env XDG_RUNTIME_DIR=/run/user/$(id -u) \
   ghcr.io/orches-team/orches:0.1.0 init https://github.com/David-Coello-Suarez/monitoring.git
 ```
+
+El dashboard **GitOps (orches)** de Grafana es su interfaz: commit desplegado frente al último de GitHub, si está sincronizado, última revisión y último cambio, unidades gestionadas con su estado, enlaces a GitHub y el log de cambios y errores. Alertas: `GitOpsDesincronizado`, `GitOpsSinRevisar`, `GitOpsErrores` y `GitOpsGitHubInaccesible`.
 
 Estado y sincronización manual: `podman exec systemd-orches orches status` y `podman exec systemd-orches orches sync`. Para quitarlo: `podman exec systemd-orches orches prune`.
 

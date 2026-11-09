@@ -148,7 +148,7 @@ $latido_ruta
 
 inhibit_rules:
   - source_matchers: [alertname=~"GatewayInaccesible|SinInternet|InterfazRedCaida"]
-    target_matchers: [alertname=~"AppExternaCaida|TunelSinConexiones|TunelDegradado|NotificacionesFallidas"]
+    target_matchers: [alertname=~"AppExternaCaida|TunelSinConexiones|TunelDegradado|NotificacionesFallidas|GitOpsDesincronizado|GitOpsGitHubInaccesible|GitOpsErrores"]
   - source_matchers: [alertname="ServidorSinMetricas"]
     target_matchers: [alertname=~"ServicioSistemaAusente|RecolectorDetenido"]
   - source_matchers: [alertname="AppInternaCaida"]
