@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: mon-alloy
+  namespace: monitoreo
+spec:
+  selector:
+    matchLabels:
+      app: mon-alloy
+  template:
+    metadata:
+      labels:
+        app: mon-alloy
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      # Corre con el uid del usuario del host: install-host.sh le da ACL de lectura sobre el journal y /var/log/pods.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: alloy
+          image: docker.io/grafana/alloy@sha256:8ab871206bd2d8f89277f53abffee5f452a293980788d52f85fa183a87a505a4
+          workingDir: /
+          args:
+            - run
+            - --storage.path=/datos
+            - --server.http.listen-addr=127.0.0.1:12345
+            - /etc/alloy/config.alloy
+          readinessProbe:
+            httpGet: {host: 127.0.0.1, port: 12345, path: /-/ready}
+            periodSeconds: 15
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: datos
+              mountPath: /datos
+            - name: tmp
+              mountPath: /tmp
+            - name: config
+              mountPath: /etc/alloy/config.alloy
+              subPath: config.alloy
+            - name: journal
+              mountPath: /var/log/journal
+              readOnly: true
+            - name: pods
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: machine-id
+              mountPath: /etc/machine-id
+              readOnly: true
+      volumes:
+        - name: datos
+          hostPath:
+            path: /var/lib/monitoreo/alloy
+            type: Directory
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
+        - name: config
+          configMap:
+            name: alloy-config
+        - name: journal
+          hostPath:
+            path: /var/log/journal
+            type: Directory
+        - name: pods
+          hostPath:
+            path: /var/log/pods
+            type: Directory
+        - name: machine-id
+          hostPath:
+            path: /etc/machine-id
+            type: File

@@ -8,24 +8,22 @@ purgar=false
 
 info "Deteniendo el monitoreo"
 systemctl --user disable --now monitoreo-recolector.timer >/dev/null 2>&1 || true
-for f in "$QUADLET_DIR"/mon-*.container; do
-  [[ -e "$f" ]] || continue
-  systemctl --user stop "$(basename "${f%.container}").service" || true
-  rm -f "$f"
-done
 rm -f "$USER_UNIT_DIR"/monitoreo-recolector.{service,timer}
 systemctl --user daemon-reload
 rm -f /var/lib/prometheus/node-exporter/usuario.prom
 
-for s in mon-telegram-token mon-grafana-admin mon-pg-password; do
-  podman secret rm "$s" >/dev/null 2>&1 || true
-done
+if kubectl get namespace "$NAMESPACE" >/dev/null 2>&1; then
+  if $purgar; then
+    kubectl delete namespace "$NAMESPACE" --wait=true >/dev/null
+  else
+    # Los PVC de los StatefulSet sobreviven a su borrado: así se conservan los datos.
+    k delete statefulset,deployment,daemonset,configmap,secret,serviceaccount -l "$ETIQUETA" --wait=true >/dev/null
+  fi
+fi
+kubectl delete clusterrole,clusterrolebinding -l "$ETIQUETA" --ignore-not-found >/dev/null
 
 if $purgar; then
-  info "Borrando volúmenes y configuración"
-  for v in mon-prometheus mon-alertmanager mon-loki mon-alloy mon-grafana; do
-    podman volume rm "$v" >/dev/null 2>&1 || true
-  done
-  rm -rf "${CONF_DIR:?}"
+  info "Borrando datos y configuración"
+  rm -rf "${CONF_DIR:?}" "${ALLOY_DIR:?}"/*
 fi
-ok "Monitoreo desinstalado. Los paquetes del host (node-exporter, cockpit) siguen instalados."
+ok "Monitoreo desinstalado. Los paquetes del host (node-exporter, cockpit) y k3s siguen instalados."

@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mon-alertmanager
+  namespace: monitoreo
+spec:
+  serviceName: mon-alertmanager
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mon-alertmanager
+  template:
+    metadata:
+      labels:
+        app: mon-alertmanager
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: alertmanager
+          image: docker.io/prom/alertmanager@sha256:39d8bb3966c694a124428a3a88fbcffd40bd069129ecd47c059f8a3f17c55f3b
+          args:
+            - --config.file=/etc/alertmanager/alertmanager.yml
+            - --storage.path=/alertmanager
+            - --web.listen-address=127.0.0.1:9093
+            - --cluster.listen-address=
+          readinessProbe:
+            httpGet: {host: 127.0.0.1, port: 9093, path: /-/ready}
+            periodSeconds: 15
+          livenessProbe:
+            httpGet: {host: 127.0.0.1, port: 9093, path: /-/healthy}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 128Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: datos
+              mountPath: /alertmanager
+            - name: config
+              mountPath: /etc/alertmanager/alertmanager.yml
+              subPath: alertmanager.yml
+            - name: plantillas
+              mountPath: /etc/alertmanager/plantillas
+            - name: secretos
+              mountPath: /run/secrets
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: alertmanager-config
+        - name: plantillas
+          configMap:
+            name: alertmanager-plantillas
+        - name: secretos
+          secret:
+            secretName: telegram-token
+            defaultMode: 0440
+  volumeClaimTemplates:
+    - metadata:
+        name: datos
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 1Gi

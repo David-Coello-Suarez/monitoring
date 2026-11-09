@@ -21,9 +21,20 @@ scrape_configs:
     static_configs:
       - targets: ["127.0.0.1:9100"]
 
-  - job_name: podman
+  - job_name: kube-state-metrics
     static_configs:
       - targets: ["127.0.0.1:9882"]
+
+  - job_name: kubelet-cadvisor
+    scheme: https
+    metrics_path: /metrics/cadvisor
+    authorization:
+      credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    # El certificado del kubelet de k3s es autofirmado y no incluye 127.0.0.1.
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets: ["127.0.0.1:10250"]
 
   - job_name: cloudflared
     static_configs:

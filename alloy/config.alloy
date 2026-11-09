@@ -39,6 +39,50 @@ loki.source.journal "servidor" {
   labels        = { job = "journal" }
 }
 
+local.file_match "pods" {
+  path_targets = [{"__path__" = "/var/log/pods/*/*/*.log", "job" = "pods"}]
+}
+
+discovery.relabel "pods" {
+  targets = local.file_match.pods.targets
+
+  rule {
+    source_labels = ["__path__"]
+    regex         = "/var/log/pods/([^_]+)_([^_]+)_[^/]+/([^/]+)/.*"
+    target_label  = "namespace"
+    replacement   = "$1"
+  }
+
+  rule {
+    source_labels = ["__path__"]
+    regex         = "/var/log/pods/([^_]+)_([^_]+)_[^/]+/([^/]+)/.*"
+    target_label  = "pod"
+    replacement   = "$2"
+  }
+
+  rule {
+    source_labels = ["__path__"]
+    regex         = "/var/log/pods/([^_]+)_([^_]+)_[^/]+/([^/]+)/.*"
+    target_label  = "contenedor"
+    replacement   = "$3"
+  }
+}
+
+loki.source.file "pods" {
+  targets    = discovery.relabel.pods.output
+  forward_to = [loki.process.pods.receiver]
+}
+
+loki.process "pods" {
+  stage.cri {}
+
+  stage.label_drop {
+    values = ["filename"]
+  }
+
+  forward_to = [loki.write.local.receiver]
+}
+
 loki.write "local" {
   endpoint {
     url = "http://127.0.0.1:3100/loki/api/v1/push"

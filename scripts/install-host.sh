@@ -8,6 +8,21 @@ USUARIO="${SUDO_USER:-${1:-}}"
 id "$USUARIO" >/dev/null 2>&1 || die "no existe el usuario $USUARIO"
 TEXTFILE_DIR=/var/lib/prometheus/node-exporter
 export DEBIAN_FRONTEND=noninteractive
+HOME_USUARIO="$(getent passwd "$USUARIO" | cut -d: -f6)"
+
+info "k3s"
+systemctl is-active --quiet k3s || die "k3s no está activo. Instálalo antes (https://get.k3s.io) y vuelve a ejecutar este script."
+k3s kubectl get storageclass local-path >/dev/null 2>&1 || die "k3s no tiene la StorageClass local-path."
+if [[ ! -s "$HOME_USUARIO/.kube/config" ]]; then
+  install -d -m 0700 -o "$USUARIO" -g "$(id -gn "$USUARIO")" "$HOME_USUARIO/.kube"
+  install -m 0600 -o "$USUARIO" -g "$(id -gn "$USUARIO")" /etc/rancher/k3s/k3s.yaml "$HOME_USUARIO/.kube/config"
+  ok "kubeconfig copiado a $HOME_USUARIO/.kube/config"
+else
+  ok "$HOME_USUARIO/.kube/config ya existe"
+fi
+command -v kubectl >/dev/null 2>&1 || ln -s "$(command -v k3s)" /usr/local/bin/kubectl
+install -d -m 0750 -o "$USUARIO" -g "$(id -gn "$USUARIO")" "$ALLOY_DIR"
+ok "estado de Alloy en $ALLOY_DIR"
 
 info "Paquetes base"
 apt-get update -qq
@@ -32,12 +47,12 @@ for timer in prometheus-node-exporter-apt.timer prometheus-node-exporter-smartmo
   fi
 done
 
-info "Cockpit + cockpit-podman solo en 127.0.0.1:9090"
+info "Cockpit solo en 127.0.0.1:9090"
 codename="$(. /etc/upstream-release/lsb-release 2>/dev/null && echo "${DISTRIB_CODENAME:-}")"
-if [[ -n "$codename" ]] && apt-get install -y -qq -t "$codename-backports" cockpit cockpit-podman >/dev/null 2>&1; then
+if [[ -n "$codename" ]] && apt-get install -y -qq -t "$codename-backports" cockpit >/dev/null 2>&1; then
   ok "cockpit desde $codename-backports"
 else
-  apt-get install -y -qq cockpit cockpit-podman >/dev/null
+  apt-get install -y -qq cockpit >/dev/null
   ok "cockpit desde el repositorio principal"
 fi
 install -d /etc/systemd/system/cockpit.socket.d
@@ -53,6 +68,9 @@ systemctl restart cockpit.socket
 info "Lectura del journal completo para $USUARIO (ACL, sin cambiar grupos)"
 setfacl -Rnm "u:$USUARIO:rX,d:u:$USUARIO:rX" /var/log/journal
 ok "/var/log/journal"
+install -d -m 0755 /var/log/pods
+setfacl -Rnm "u:$USUARIO:rX,d:u:$USUARIO:rX" /var/log/pods
+ok "/var/log/pods (logs de los pods)"
 
 info "fail2ban registra en el journal"
 if command -v fail2ban-client >/dev/null 2>&1; then

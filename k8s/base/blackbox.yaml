@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mon-blackbox
+  namespace: monitoreo
+spec:
+  replicas: 1
+  # Con hostNetwork el pod nuevo no puede abrir el puerto mientras el viejo siga vivo.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mon-blackbox
+  template:
+    metadata:
+      labels:
+        app: mon-blackbox
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: blackbox
+          image: docker.io/prom/blackbox-exporter@sha256:ea1c7aa3ef3f307cd03e85f34abb604478ccb90b567fc690da0cd9776da76b13
+          args:
+            - --config.file=/etc/blackbox/blackbox.yml
+            - --web.listen-address=127.0.0.1:9115
+          readinessProbe:
+            httpGet: {host: 127.0.0.1, port: 9115, path: /-/healthy}
+            periodSeconds: 15
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {memory: 64Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/blackbox/blackbox.yml
+              subPath: blackbox.yml
+      volumes:
+        - name: config
+          configMap:
+            name: blackbox-config

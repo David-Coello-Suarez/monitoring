@@ -2,34 +2,28 @@
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib.bash"
 
-SERVICIOS=(mon-prometheus mon-alertmanager mon-loki mon-alloy mon-grafana mon-blackbox mon-podman-exporter)
 SECRETOS_DIR="$CONF_DIR/secretos"
 
 require_non_root
-require_cmd podman systemctl curl ss sed
+require_cmd kubectl systemctl curl ss sed realpath
 require_user_systemd
-require_podman
+require_kubectl
 load_env
 
 [[ -n "${TELEGRAM_CHAT_ID:-}" ]] || die "TELEGRAM_CHAT_ID está vacío en .env"
 [[ -d /var/lib/prometheus/node-exporter && -w /var/lib/prometheus/node-exporter ]] ||
   die "falta el lado host. Ejecuta primero: sudo ./scripts/install-host.sh"
+[[ -d "$ALLOY_DIR" && -w "$ALLOY_DIR" ]] || die "falta $ALLOY_DIR. Ejecuta primero: sudo ./scripts/install-host.sh"
 
+postgres_ns="${POSTGRES_NAMESPACE:-default}"
 usar_postgres=false
 if [[ -n "${POSTGRES_CONTENEDOR:-}" ]]; then
-  if podman container exists "$POSTGRES_CONTENEDOR"; then
+  if kubectl -n "$postgres_ns" get "$POSTGRES_CONTENEDOR" >/dev/null 2>&1; then
     usar_postgres=true
-    SERVICIOS+=(mon-postgres-exporter)
   else
-    warn "no existe el contenedor $POSTGRES_CONTENEDOR: no instalo postgres-exporter"
+    warn "no existe $POSTGRES_CONTENEDOR en el namespace $postgres_ns: no instalo postgres-exporter"
   fi
 fi
-
-podman_secret() {
-  local nombre="$1" archivo="$2"
-  podman secret rm "$nombre" >/dev/null 2>&1 || true
-  podman secret create "$nombre" "$archivo" >/dev/null
-}
 
 generar_clave() {
   # Con tr </dev/urandom | head, tr muere por SIGPIPE y pipefail aborta sin mensaje.
@@ -51,13 +45,10 @@ fi
 if [[ ! -s "$SECRETOS_DIR/grafana-admin" ]]; then
   (umask 077 && generar_clave 24 >"$SECRETOS_DIR/grafana-admin")
 fi
-podman_secret mon-telegram-token "$SECRETOS_DIR/telegram-token"
-podman_secret mon-grafana-admin "$SECRETOS_DIR/grafana-admin"
 ok "telegram y grafana"
 
 if $usar_postgres; then
   [[ -s "$SECRETOS_DIR/pg-password" ]] || (umask 077 && generar_clave 32 >"$SECRETOS_DIR/pg-password")
-  podman_secret mon-pg-password "$SECRETOS_DIR/pg-password"
   {
     printf "\\set clave '%s'\n" "$(cat "$SECRETOS_DIR/pg-password")"
     cat <<'SQL'
@@ -66,35 +57,29 @@ SELECT 'CREATE ROLE monitoreo LOGIN' WHERE NOT EXISTS (SELECT FROM pg_roles WHER
 ALTER ROLE monitoreo WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD :'clave';
 GRANT pg_monitor TO monitoreo;
 SQL
-  } | podman exec -i "$POSTGRES_CONTENEDOR" sh -c 'psql -q -v ON_ERROR_STOP=1 -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-${POSTGRES_USER:-postgres}}"' >/dev/null
-  ok "rol monitoreo (pg_monitor) en $POSTGRES_CONTENEDOR"
+  } | kubectl -n "$postgres_ns" exec -i "$POSTGRES_CONTENEDOR" -- sh -c 'psql -q -v ON_ERROR_STOP=1 -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-${POSTGRES_USER:-postgres}}"' >/dev/null
+  ok "rol monitoreo (pg_monitor) en $postgres_ns/$POSTGRES_CONTENEDOR"
 fi
 
 USAR_POSTGRES="$usar_postgres" "$REPO_DIR/scripts/generar-config.sh"
 
-info "Unidades"
-install -d "$QUADLET_DIR" "$USER_UNIT_DIR"
-for s in "${SERVICIOS[@]}"; do
-  install -m 0644 "$REPO_DIR/quadlet/$s.container" "$QUADLET_DIR/$s.container"
-done
-$usar_postgres || rm -f "$QUADLET_DIR/mon-postgres-exporter.container"
+info "Recolector"
+install -d "$USER_UNIT_DIR"
 install -m 0644 "$REPO_DIR/systemd/monitoreo-recolector.service" "$REPO_DIR/systemd/monitoreo-recolector.timer" "$USER_UNIT_DIR/"
-systemctl --user enable --now podman.socket >/dev/null
 systemctl --user daemon-reload
 systemctl --user enable --now monitoreo-recolector.timer >/dev/null
 systemctl --user start monitoreo-recolector.service
-ok "quadlets y recolector"
+ok "recolector"
 
-info "Imágenes"
-for s in "${SERVICIOS[@]}"; do
-  imagen="$(sed -n 's/^Image=//p' "$QUADLET_DIR/$s.container")"
-  podman image exists "$imagen" || podman pull -q "$imagen" >/dev/null
-done
-ok "imágenes descargadas"
+info "Manifiestos"
+kubectl apply --server-side --force-conflicts -k "$CONF_DIR" >/dev/null
+$usar_postgres || kubectl -n "$NAMESPACE" delete deployment mon-postgres-exporter --ignore-not-found >/dev/null
+ok "aplicados en el namespace $NAMESPACE"
 
 info "Arranque"
-for s in "${SERVICIOS[@]}"; do
-  systemctl --user restart "$s.service"
+k rollout restart statefulset,deployment,daemonset -l "$ETIQUETA" >/dev/null
+for r in $(k get statefulset,deployment,daemonset -l "$ETIQUETA" -o name); do
+  k rollout status "$r" --timeout=300s >/dev/null || warn "$r no terminó de arrancar"
 done
 
 fallos=0
@@ -104,14 +89,14 @@ wait_http http://127.0.0.1:3100/ready loki 180 || fallos=1
 wait_http http://127.0.0.1:12345/-/ready alloy || fallos=1
 wait_http http://127.0.0.1:3000/api/health grafana 180 || fallos=1
 wait_http http://127.0.0.1:9115/-/healthy blackbox || fallos=1
-wait_http http://127.0.0.1:9882/metrics podman-exporter || fallos=1
+wait_http http://127.0.0.1:9882/metrics kube-state-metrics || fallos=1
 if $usar_postgres; then
   wait_http http://127.0.0.1:9187/metrics postgres-exporter || fallos=1
 fi
 
 echo
 if ((fallos)); then
-  warn "Hay componentes sin responder. Revisa: journalctl --user -u <servicio> -n 50"
+  warn "Hay componentes sin responder. Revisa: kubectl -n $NAMESPACE logs <pod> --tail 50"
 else
   ok "Monitoreo instalado."
 fi

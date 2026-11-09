@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mon-grafana
+  namespace: monitoreo
+spec:
+  serviceName: mon-grafana
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mon-grafana
+  template:
+    metadata:
+      labels:
+        app: mon-grafana
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 472
+        runAsGroup: 472
+        fsGroup: 472
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: grafana
+          image: docker.io/grafana/grafana@sha256:9f7aa1e1e3246aade5792d35a738049f7f32f89cd51d1956cf426a4e86268a84
+          envFrom:
+            - configMapRef:
+                name: grafana-env
+          readinessProbe:
+            httpGet: {host: 127.0.0.1, port: 3000, path: /api/health}
+            periodSeconds: 15
+          livenessProbe:
+            httpGet: {host: 127.0.0.1, port: 3000, path: /api/health}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: datos
+              mountPath: /var/lib/grafana
+            - name: tmp
+              mountPath: /tmp
+            - name: datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: proveedores
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: dashboards
+              mountPath: /etc/grafana/dashboards
+            - name: secretos
+              mountPath: /run/secrets
+              readOnly: true
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
+        - name: datasources
+          configMap:
+            name: grafana-datasources
+        - name: proveedores
+          configMap:
+            name: grafana-proveedores
+        - name: dashboards
+          configMap:
+            name: grafana-dashboards
+        - name: secretos
+          secret:
+            secretName: grafana-admin
+            defaultMode: 0440
+  volumeClaimTemplates:
+    - metadata:
+        name: datos
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 1Gi

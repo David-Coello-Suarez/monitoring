@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mon-kube-state-metrics
+  namespace: monitoreo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoreo-kube-state-metrics
+rules:
+  - apiGroups: [""]
+    resources: [pods, nodes, namespaces, persistentvolumeclaims]
+    verbs: [list, watch]
+  - apiGroups: [apps]
+    resources: [deployments, statefulsets, daemonsets, replicasets]
+    verbs: [list, watch]
+  - apiGroups: [batch]
+    resources: [jobs]
+    verbs: [list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: monitoreo-kube-state-metrics
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: monitoreo-kube-state-metrics
+subjects:
+  - kind: ServiceAccount
+    name: mon-kube-state-metrics
+    namespace: monitoreo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mon-kube-state-metrics
+  namespace: monitoreo
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mon-kube-state-metrics
+  template:
+    metadata:
+      labels:
+        app: mon-kube-state-metrics
+    spec:
+      serviceAccountName: mon-kube-state-metrics
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: kube-state-metrics
+          image: registry.k8s.io/kube-state-metrics/kube-state-metrics@sha256:42cfe3723a5f058171c627537fb57a3ea0f26e4380fa18555a95cb1a1b4cfc5b
+          args:
+            - --host=127.0.0.1
+            - --port=9882
+            - --telemetry-host=127.0.0.1
+            - --telemetry-port=9883
+            - --resources=pods,nodes,namespaces,persistentvolumeclaims,deployments,statefulsets,daemonsets,replicasets,jobs
+          readinessProbe:
+            httpGet: {host: 127.0.0.1, port: 9882, path: /healthz}
+            periodSeconds: 15
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 256Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]

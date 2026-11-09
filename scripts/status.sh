@@ -5,9 +5,11 @@ set -euo pipefail
 require_non_root
 
 info "Servicios del monitoreo"
-systemctl --user --no-pager --plain --no-legend list-units 'mon-*.service' 'monitoreo-recolector.*' |
+k get pods -o wide --no-headers 2>/dev/null |
+  awk '{printf "    %-38s %s %s reinicios=%s\n", $1, $3, $2, $4}' || warn "kubectl no llega al clúster"
+systemctl --user --no-pager --plain --no-legend list-units 'monitoreo-recolector.*' |
   awk '{printf "    %-38s %s/%s\n", $1, $3, $4}'
-for s in prometheus-node-exporter cockpit.socket; do
+for s in k3s prometheus-node-exporter cockpit.socket; do
   printf '    %-38s %s\n' "$s" "$(systemctl is-active "$s" 2>/dev/null || true)"
 done
 

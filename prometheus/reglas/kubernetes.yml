@@ -1,0 +1,95 @@
+groups:
+  - name: kubernetes-registros
+    rules:
+      - record: monitoreo_contenedor_estado
+        expr: |
+          label_join(
+            ((kube_pod_container_status_running == 1) + 1)
+              or ((kube_pod_container_status_waiting == 1) - 1)
+              or ((kube_pod_container_status_terminated == 1) + 4),
+            "name", "/", "namespace", "pod", "container"
+          ) unless on (namespace, pod) (kube_pod_status_phase{phase="Succeeded"} == 1)
+      - record: monitoreo_contenedor_salud
+        expr: |
+          label_join(
+            ((kube_pod_container_status_ready == 1) - 1)
+              or ((kube_pod_container_status_ready == 0 and on (namespace, pod, container) kube_pod_container_status_running == 1) + 1)
+              or ((kube_pod_container_status_ready == 0) - 1),
+            "name", "/", "namespace", "pod", "container"
+          ) unless on (namespace, pod) (kube_pod_status_phase{phase="Succeeded"} == 1)
+      - record: monitoreo_contenedor_arranque_segundos
+        expr: label_join(kube_pod_container_state_started, "name", "/", "namespace", "pod", "container")
+      - record: monitoreo_contenedor_cpu_segundos_total
+        expr: label_join(container_cpu_usage_seconds_total{job="kubelet-cadvisor", container!="", container!="POD"}, "name", "/", "namespace", "pod", "container")
+      - record: monitoreo_contenedor_memoria_bytes
+        expr: label_join(container_memory_working_set_bytes{job="kubelet-cadvisor", container!="", container!="POD"}, "name", "/", "namespace", "pod", "container")
+      - record: monitoreo_contenedor_memoria_limite_bytes
+        expr: label_join(container_spec_memory_limit_bytes{job="kubelet-cadvisor", container!="", container!="POD"}, "name", "/", "namespace", "pod", "container")
+      - record: monitoreo_contenedor_red_recibidos_bytes_total
+        expr: |
+          label_join(
+            sum by (namespace, pod) (container_network_receive_bytes_total{job="kubelet-cadvisor", pod!=""})
+              * on (namespace, pod) group_right kube_pod_container_info,
+            "name", "/", "namespace", "pod", "container"
+          )
+
+  - name: kubernetes
+    rules:
+      - alert: NodoNoListo
+        expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "El nodo {{ $labels.node }} de Kubernetes no está Ready"
+      - alert: NodoConPresion
+        expr: kube_node_status_condition{condition=~"MemoryPressure|DiskPressure|PIDPressure",status="true"} == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El nodo {{ $labels.node }} reporta {{ $labels.condition }}"
+      - alert: PodPendiente
+        expr: kube_pod_status_phase{phase="Pending"} == 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El pod {{ $labels.namespace }}/{{ $labels.pod }} lleva más de 10 min en Pending"
+      - alert: ContenedorEnEspera
+        expr: kube_pod_container_status_waiting_reason{reason=~"CrashLoopBackOff|ImagePullBackOff|ErrImagePull|CreateContainerConfigError"} == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} en {{ $labels.reason }}"
+      - alert: ReplicasIncompletas
+        expr: |
+          (kube_deployment_spec_replicas != kube_deployment_status_replicas_available)
+            or label_replace(kube_statefulset_replicas != kube_statefulset_status_replicas_ready, "deployment", "$1", "statefulset", "(.*)")
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.namespace }}/{{ $labels.deployment }} no tiene todas sus réplicas disponibles"
+      - alert: DaemonSetIncompleto
+        expr: kube_daemonset_status_number_ready != kube_daemonset_status_desired_number_scheduled
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El DaemonSet {{ $labels.namespace }}/{{ $labels.daemonset }} no corre en todos los nodos"
+      - alert: JobFallido
+        expr: kube_job_status_failed > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El Job {{ $labels.namespace }}/{{ $labels.job_name }} falló"
+      - alert: PVCNoEnlazado
+        expr: kube_persistentvolumeclaim_status_phase{phase!="Bound"} == 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "El volumen {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} está en {{ $labels.phase }}"

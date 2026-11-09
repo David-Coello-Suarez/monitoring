@@ -40,7 +40,7 @@ EOF
 if $usar_postgres; then
   printf -- '- targets: ["127.0.0.1:9187"]\n  labels: {contenedor: "%s"}\n' "$POSTGRES_CONTENEDOR" >"$CONF_DIR/prometheus/objetivos/postgres.yml"
   cat >"$CONF_DIR/postgres-exporter.env" <<EOF
-DATA_SOURCE_URI=127.0.0.1:$POSTGRES_PUERTO/${POSTGRES_BASE:-postgres}?sslmode=disable
+DATA_SOURCE_URI=${POSTGRES_HOST:-127.0.0.1}:$POSTGRES_PUERTO/${POSTGRES_BASE:-postgres}?sslmode=disable
 DATA_SOURCE_USER=monitoreo
 DATA_SOURCE_PASS_FILE=/run/secrets/pg-password
 EOF
@@ -79,7 +79,7 @@ groups:
         annotations:
           summary: "Puerto {{ \$labels.puerto }} abierto en todas las interfaces ({{ \$labels.direccion }})"
       - alert: ContenedorDetenido
-        expr: podman_container_state{name!~\`$re_excluidos\`} != 2
+        expr: monitoreo_contenedor_estado{name!~\`$re_excluidos\`} != 2
         for: 3m
         labels:
           severity: critical
@@ -177,5 +177,89 @@ receivers:
 $latido_receptor
 EOF
 chmod 0644 "$CONF_DIR/alertmanager/alertmanager.yml"
+
+archivos() {
+  local f
+  for f in "$@"; do
+    printf '      - %s\n' "${f#"$CONF_DIR"/}"
+  done
+}
+base_rel="$(realpath --relative-to="$CONF_DIR" "$REPO_DIR/k8s")"
+uid_host="$(id -u)"
+gid_host="$(id -g)"
+{
+  cat <<EOF
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: $NAMESPACE
+resources:
+  - $base_rel/base
+generatorOptions:
+  disableNameSuffixHash: true
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: monitoreo
+patches:
+  - target:
+      kind: DaemonSet
+      name: mon-alloy
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/securityContext/runAsUser
+        value: $uid_host
+      - op: replace
+        path: /spec/template/spec/securityContext/runAsGroup
+        value: $gid_host
+configMapGenerator:
+  - name: prometheus-config
+    files:
+      - prometheus/prometheus.yml
+  - name: prometheus-reglas
+    files:
+$(archivos "$CONF_DIR"/prometheus/reglas/*.yml)
+  - name: prometheus-objetivos
+    files:
+$(archivos "$CONF_DIR"/prometheus/objetivos/*.yml)
+  - name: alertmanager-config
+    files:
+      - alertmanager/alertmanager.yml
+  - name: alertmanager-plantillas
+    files:
+$(archivos "$CONF_DIR"/alertmanager/plantillas/*)
+  - name: loki-config
+    files:
+      - loki/loki.yml
+  - name: loki-reglas
+    files:
+$(archivos "$CONF_DIR"/loki/reglas/*.yml)
+  - name: alloy-config
+    files:
+      - alloy/config.alloy
+  - name: blackbox-config
+    files:
+      - blackbox/blackbox.yml
+  - name: grafana-env
+    envs:
+      - grafana/grafana.env
+  - name: grafana-datasources
+    files:
+$(archivos "$CONF_DIR"/grafana/provisioning/datasources/*.yml)
+  - name: grafana-proveedores
+    files:
+$(archivos "$CONF_DIR"/grafana/provisioning/dashboards/*.yml)
+  - name: grafana-dashboards
+    files:
+$(archivos "$CONF_DIR"/grafana/dashboards/*.json)
+$($usar_postgres && printf '%s\n' '  - name: postgres-exporter-env' '    envs:' '      - postgres-exporter.env')
+secretGenerator:
+  - name: telegram-token
+    files:
+      - secretos/telegram-token
+  - name: grafana-admin
+    files:
+      - secretos/grafana-admin
+$($usar_postgres && printf '%s\n' '  - name: pg-password' '    files:' '      - secretos/pg-password' 'components:' "  - $base_rel/postgres")
+EOF
+} >"$CONF_DIR/kustomization.yaml"
 ok "configuración generada"
 
