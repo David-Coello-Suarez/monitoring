@@ -1,0 +1,23 @@
+[Unit]
+Description=GitOps: orches sincroniza las unidades de la raíz de la rama podman
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=systemd-orches
+Image=ghcr.io/orches-team/orches@sha256:57613405cfa399868d9f008e7fdec749fb72d207c6032e102fc911a7add45654
+Label=monitoreo.upstream=orches-team/orches:0.1.0
+Exec=run
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+Volume=%h/.config/orches:/var/lib/orches
+Volume=%h/.config/containers/systemd:/etc/containers/systemd
+Mount=type=bind,source=/run/user/%U/systemd,destination=/run/user/%U/systemd,rw=true
+UserNS=keep-id
+PodmanArgs=--pid host
+LogDriver=journald
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

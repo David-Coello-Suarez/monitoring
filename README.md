@@ -126,6 +126,28 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 - **Red por WiFi USB.** Es el punto más frágil: si cae, caen las apps, el túnel y los avisos. Conecta el cable (`eno1`) si es posible.
 - **podman-exporter v1.21.2** se eligió antes de la v2.0.0 por compatibilidad con Podman 4.9. Si no entrega métricas, revisa `journalctl --user -u mon-podman-exporter`.
 
+## GitOps con orches
+
+[orches](https://github.com/orches-team/orches) aplica en el servidor, cada 2 minutos, las unidades Quadlet y systemd que estén en la **raíz** de la rama `podman`, al estilo de Argo CD pero sin Kubernetes. Añadir, modificar o borrar un `.container` en la raíz y hacer push basta para que el servidor lo cree, lo reinicie o lo elimine.
+
+- `orches.container` es el propio orches. `prueba-orches.container` es un `whoami` de prueba en `127.0.0.1:18080`.
+- Solo gestiona las unidades de la raíz. El monitoreo (`quadlet/mon-*`) sigue instalándose con `install.sh`, porque necesita configuración generada desde `.env` y secretos.
+- No pongas en la raíz una unidad con el nombre de una que ya exista en el servidor: orches la sobrescribiría.
+
+Puesta en marcha (una vez, con tu usuario):
+
+```bash
+mkdir -p ~/.config/orches ~/.config/containers/systemd
+podman run --rm -it --userns=keep-id --pid=host \
+  --mount type=bind,source=/run/user/$(id -u)/systemd,destination=/run/user/$(id -u)/systemd \
+  -v ~/.config/orches:/var/lib/orches \
+  -v ~/.config/containers/systemd:/etc/containers/systemd \
+  --env XDG_RUNTIME_DIR=/run/user/$(id -u) \
+  ghcr.io/orches-team/orches:0.1.0 init https://github.com/David-Coello-Suarez/monitoring.git
+```
+
+Estado y sincronización manual: `podman exec systemd-orches orches status` y `podman exec systemd-orches orches sync`. Para quitarlo: `podman exec systemd-orches orches prune`.
+
 ## Desinstalar
 
 ```bash
