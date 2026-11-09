@@ -2,6 +2,11 @@
 
 Monitoreo del servidor Linux Mint 22 (Ubuntu 24.04 noble, Podman 4.9.3, usuario `david_coello` uid 1000, linger activo). Se edita en la PC Windows (`C:\Users\ELITEBOOK\Desktop\Entorno\monitoreo`) y se instala en el servidor con `git clone` + `scripts/install.sh`.
 
+## Ramas
+
+- `podman` (esta, rama por defecto), `docker` (Compose) y `kubernetes` (Kustomize sobre k3s de un nodo). Son ramas permanentes con los mismos componentes, alertas y dashboards.
+- La configuración compartida se cambia en `podman` y se lleva a las otras con `git cherry-pick`. Nunca se hace merge entre ramas: cada una reemplaza archivos de las otras.
+
 ## Arquitectura
 
 - Host (root, apt): `prometheus-node-exporter` en `127.0.0.1:9100` con colectores systemd, wifi y textfile (`/var/lib/prometheus/node-exporter`), Cockpit en `127.0.0.1:9090`. Lo instala `scripts/install-host.sh`.

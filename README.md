@@ -17,6 +17,18 @@ Servidor (24/7)                                               PC (cuando esté e
 
 Ningún componente escucha fuera de `127.0.0.1`. No se abre ningún puerto nuevo.
 
+## Ramas
+
+Cada rama es el mismo monitoreo, orientado a una plataforma. Se elige al clonar con `git clone -b <rama>`.
+
+| Rama | Plataforma | Despliegue |
+|---|---|---|
+| `podman` | Podman rootless (esta rama) | Quadlet + systemd de usuario |
+| `docker` | Docker | Docker Compose |
+| `kubernetes` | k3s de un nodo | Kustomize |
+
+La configuración compartida (dashboards, reglas, Loki) se cambia en `podman` y se lleva a las otras ramas con `git cherry-pick`. No se hace merge entre ramas: cada una reemplaza archivos de las otras.
+
 ## Componentes
 
 | Dónde | Componente | Qué vigila |
