@@ -13,7 +13,10 @@ Monitoreo del servidor Linux Mint 22 (Ubuntu 24.04 noble, Podman 4.9.3, usuario 
 - Solo toca las unidades que aparecen en su checkout (compara versión anterior y nueva). `quadlet/`, `systemd/` y las unidades de las apps no le afectan. No subas a la raíz una unidad con el nombre de una existente (`mon-*`, apps): orches la sobrescribiría.
 - El stack `mon-*` sigue desplegándose con `install.sh`: orches no genera configuración desde `.env` ni crea secretos.
 - Tiene `--pid host` y el bus de systemd del usuario: quien hace push a `podman` controla las unidades de usuario del servidor.
-- Comandos: `podman exec systemd-orches orches status|sync`; `--dry` para simular; `orches prune` borra lo que gestiona.
+- Comandos: `podman exec systemd-orches orches status|sync`; `orches prune` borra lo que gestiona.
+- Probado el 2026-11-09 con Podman 4.9.3: alta, cambio y baja de una unidad por push, aplicados en 1,5–2 min, sin tocar otras unidades.
+- En 0.1.0, `--dry` no copia archivos pero **sí ejecuta** `systemctl` (`daemon-reload`, `start`, ...): no es una simulación segura.
+- Al borrar una unidad, su servicio puede quedar `failed` (el contenedor sale con código distinto de 0 al pararlo) y eso dispara `UnidadUsuarioFallida` al minuto. Tras una baja, ejecuta `systemctl --user reset-failed <unidad>.service`.
 
 ## Arquitectura
 

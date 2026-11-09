@@ -130,7 +130,7 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 
 [orches](https://github.com/orches-team/orches) aplica en el servidor, cada 2 minutos, las unidades Quadlet y systemd que estén en la **raíz** de la rama `podman`, al estilo de Argo CD pero sin Kubernetes. Añadir, modificar o borrar un `.container` en la raíz y hacer push basta para que el servidor lo cree, lo reinicie o lo elimine.
 
-- `orches.container` es el propio orches. `prueba-orches.container` es un `whoami` de prueba en `127.0.0.1:18080`.
+- `orches.container` es el propio orches. Hoy es la única unidad de la raíz: la prueba con `whoami` (crear, modificar y borrar por push) se hizo el 2026-11-09 y se retiró.
 - Solo gestiona las unidades de la raíz. El monitoreo (`quadlet/mon-*`) sigue instalándose con `install.sh`, porque necesita configuración generada desde `.env` y secretos.
 - No pongas en la raíz una unidad con el nombre de una que ya exista en el servidor: orches la sobrescribiría.
 
