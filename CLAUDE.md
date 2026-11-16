@@ -24,7 +24,7 @@ Monitoreo de un servidor Linux (Ubuntu 24.04 o derivado) con Docker Engine y Com
 
 - `scripts/generar-config.sh`: copia la configuración a `~/.config/monitoreo`, genera `objetivos/*.yml`, `reglas/especificas.yml`, `alertmanager.yml` y `compose.env` desde `.env`. Se prueba en Windows con `MONITOREO_ENV` y `MONITOREO_CONF_DIR`.
 - Grupo `ataques-web` de `loki/reglas/seguridad.yml`: se filtra por la etiqueta `contenedor` (nombre del contenedor en el journal). Viene con los nombres del servidor de la rama `podman`; en un servidor sin esos contenedores queda silencioso.
-- `grafana/dashboards/`: `resumen`, `caracteristicas`, `contenedores`, `logs`, `seguridad` (propios) y `servidor-node-exporter` (1860), `postgresql` (9628), `blackbox` (13659) de grafana.com, con el datasource fijado a uid `prometheus`.
+- `grafana/dashboards/`: `resumen`, `caracteristicas`, `contenedores`, `logs`, `seguridad`, `trafico` (propios) y `servidor-node-exporter` (1860), `postgresql` (9628), `blackbox` (13659) de grafana.com, con el datasource fijado a uid `prometheus`.
 
 ## Validar antes de subir
 
