@@ -42,7 +42,7 @@ La configuración compartida (dashboards, reglas, Loki) se cambia en `podman` y 
 | Quadlet rootless | blackbox | Apps por dentro (127.0.0.1:808x) y por fuera (dominios de Cloudflare), router y salida a internet |
 | Quadlet rootless | podman-exporter | Estado, salud, reinicios, CPU, RAM y red por contenedor |
 | Quadlet rootless | postgres-exporter | `postgres-demo` con un rol `monitoreo` (`pg_monitor`) |
-| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, GitOps (orches), Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
+| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
 
 Todos los contenedores usan `Network=host` y escuchan solo en loopback, para alcanzar node-exporter, cloudflared y las apps sin exponer nada. Corren con `ReadOnly`, `DropCapability=ALL`, `NoNewPrivileges` e imágenes fijadas por digest.
 
@@ -117,7 +117,6 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 | Seguridad | ráfaga de SSH fallidos, login root, login SSH (info), baneos de fail2ban, sudo con clave incorrecta, puerto abierto en todas las interfaces fuera de la lista permitida |
 | Ataques web (por app: krivot, minga, solarlink) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
 | Kernel | OOM kill, errores de disco |
-| GitOps | orches desincronizado con GitHub, sin revisar el repositorio, con errores, GitHub inaccesible |
 | Monitoreo | objetivo caído, recolector detenido, notificaciones fallidas, Watchdog |
 
 ## Puntos a validar en el servidor
@@ -126,30 +125,6 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 - **fail2ban y el puerto 97.** La jail `sshd` por defecto protege el 22. Si sshd escucha en el 97, define `port = 97` en `/etc/fail2ban/jail.local`. El SSH que entra por cloudflared llega desde `127.0.0.1` y fail2ban lo ignora: protégelo con una política de Cloudflare Access.
 - **Red por WiFi USB.** Es el punto más frágil: si cae, caen las apps, el túnel y los avisos. Conecta el cable (`eno1`) si es posible.
 - **podman-exporter v1.21.2** se eligió antes de la v2.0.0 por compatibilidad con Podman 4.9. Si no entrega métricas, revisa `journalctl --user -u mon-podman-exporter`.
-
-## GitOps con orches
-
-[orches](https://github.com/orches-team/orches) aplica en el servidor, cada 2 minutos, las unidades Quadlet y systemd que estén en la **raíz** de la rama `podman`, al estilo de Argo CD pero sin Kubernetes. Añadir, modificar o borrar un `.container` en la raíz y hacer push basta para que el servidor lo cree, lo reinicie o lo elimine.
-
-- `orches.container` es el propio orches. Hoy es la única unidad de la raíz: la prueba con `whoami` (crear, modificar y borrar por push) se hizo el 2026-11-09 y se retiró.
-- Solo gestiona las unidades de la raíz. El monitoreo (`quadlet/mon-*`) sigue instalándose con `install.sh`, porque necesita configuración generada desde `.env` y secretos.
-- No pongas en la raíz una unidad con el nombre de una que ya exista en el servidor: orches la sobrescribiría.
-
-Puesta en marcha (una vez, con tu usuario):
-
-```bash
-mkdir -p ~/.config/orches ~/.config/containers/systemd
-podman run --rm -it --userns=keep-id --pid=host \
-  --mount type=bind,source=/run/user/$(id -u)/systemd,destination=/run/user/$(id -u)/systemd \
-  -v ~/.config/orches:/var/lib/orches \
-  -v ~/.config/containers/systemd:/etc/containers/systemd \
-  --env XDG_RUNTIME_DIR=/run/user/$(id -u) \
-  ghcr.io/orches-team/orches:0.1.0 init https://github.com/David-Coello-Suarez/monitoring.git
-```
-
-El dashboard **GitOps (orches)** de Grafana es su interfaz: commit desplegado frente al último de GitHub, si está sincronizado, última revisión y último cambio, unidades gestionadas con su estado, enlaces a GitHub y el log de cambios y errores. Alertas: `GitOpsDesincronizado`, `GitOpsSinRevisar`, `GitOpsErrores` y `GitOpsGitHubInaccesible`.
-
-Estado y sincronización manual: `podman exec systemd-orches orches status` y `podman exec systemd-orches orches sync`. Para quitarlo: `podman exec systemd-orches orches prune`.
 
 ## Desinstalar
 
