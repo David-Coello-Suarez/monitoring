@@ -230,6 +230,34 @@ groups:
         annotations:
           summary: "podman-exporter no ve todos los contenedores (diferencia de {{ $value }} con podman ps) y el reinicio automático no lo corrigió: las alertas de contenedores no son fiables"
 
+  - name: postgres
+    rules:
+      # PITR del PostgreSQL del servidor (configuraciones/servicios/postgres): lo escribe pgbackrest.sh.
+      # Umbral = periodo del timer + margen: diff 50 h (no corre el domingo: 48 h de sábado a lunes), full 8 d.
+      - alert: PostgresRespaldoVencido
+        expr: |
+          (time() - servidor_tarea_ultimo_exito_timestamp_seconds{tarea="pitr_diff"} > 50 * 3600)
+            or (time() - servidor_tarea_ultimo_exito_timestamp_seconds{tarea="pitr_full"} > 8 * 86400)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "El respaldo {{ $labels.tarea }} de PostgreSQL no termina bien desde hace más de lo esperado: ~/servicios/postgres/bin/pgbackrest.sh info"
+      - alert: PostgresRespaldoFallo
+        expr: servidor_tarea_ultima_ejecucion_correcta{tarea=~"pitr_.*"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Falló la última ejecución de {{ $labels.tarea }}: journalctl --user -u postgres-{{ $labels.tarea | reReplaceAll \"_\" \"-\" }}"
+      - alert: PostgresArchivadoWalFalla
+        expr: increase(pg_stat_archiver_failed_count[15m]) > 0
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL no logra archivar WAL con pgBackRest: pg_wal crece y el PITR se degrada"
+
   - name: usuario
     rules:
       - alert: RecolectorDetenido

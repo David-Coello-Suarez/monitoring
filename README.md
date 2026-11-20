@@ -125,6 +125,7 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/sotenet.y
 | Ataques web (por app: krivot, minga, sotenet) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones; en sotenet también ráfaga de 429 (límite de tasa) por IP. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
 | Sotenet (Traefik) | Traefik caído (sin métricas), servicio backend o frontend caído para Traefik, inalcanzable (502/503/504), 5xx por encima del 5 % y 5xx sostenidos, latencia p95 por encima de 1 s y de 3 s |
 | Sotenet (backend) | errores (nivel pino ≥ 50) y fatales (≥ 60) en el log, ráfaga de 401/429 en `/v1/auth/*` |
+| PostgreSQL del servidor | respaldo PITR (pgBackRest) vencido o fallido, archivado de WAL que falla |
 | Kernel | OOM kill, errores de disco |
 | Monitoreo | objetivo caído, recolector detenido, notificaciones fallidas, Watchdog |
 
