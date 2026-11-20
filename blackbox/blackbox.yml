@@ -6,6 +6,13 @@ modules:
       preferred_ip_protocol: ip4
       follow_redirects: true
       valid_status_codes: []
+  http_api_401:
+    prober: http
+    timeout: 10s
+    http:
+      preferred_ip_protocol: ip4
+      follow_redirects: false
+      valid_status_codes: [401]
   icmp:
     prober: icmp
     timeout: 5s

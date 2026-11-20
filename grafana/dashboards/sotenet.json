@@ -1,0 +1,906 @@
+{
+ "uid": "mon-sotenet",
+ "title": "Sotenet",
+ "description": "Consola y API de Sotenet: métricas de Traefik (Prometheus), logs del backend y registro de acceso (Loki).",
+ "tags": [
+  "servidor",
+  "apps",
+  "sotenet"
+ ],
+ "timezone": "browser",
+ "schemaVersion": 39,
+ "refresh": "30s",
+ "time": {
+  "from": "now-6h",
+  "to": "now"
+ },
+ "editable": false,
+ "annotations": {
+  "list": []
+ },
+ "links": [
+  {
+   "title": "Tráfico",
+   "type": "link",
+   "url": "/d/mon-trafico",
+   "icon": "dashboard"
+  },
+  {
+   "title": "Seguridad",
+   "type": "link",
+   "url": "/d/mon-seguridad",
+   "icon": "dashboard"
+  }
+ ],
+ "templating": {
+  "list": [
+   {
+    "type": "query",
+    "name": "servicio",
+    "label": "Servicio",
+    "datasource": {
+     "type": "prometheus",
+     "uid": "prometheus"
+    },
+    "query": {
+     "query": "label_values(traefik_service_requests_total{service=~\"(backend|frontend)@.*\"}, service)",
+     "refId": "servicio"
+    },
+    "refresh": 2,
+    "multi": true,
+    "includeAll": true,
+    "allValue": "(backend|frontend)@.*",
+    "current": {
+     "selected": true,
+     "text": [
+      "All"
+     ],
+     "value": [
+      "$__all"
+     ]
+    }
+   },
+   {
+    "type": "textbox",
+    "name": "correlationId",
+    "label": "correlationId",
+    "query": "",
+    "current": {
+     "selected": false,
+     "text": "",
+     "value": ""
+    }
+   },
+   {
+    "type": "custom",
+    "name": "estado",
+    "label": "Estado HTTP",
+    "query": "Todos : .+,4xx : 4..,5xx : 5..,401 y 429 : 401|429",
+    "multi": false,
+    "includeAll": false,
+    "current": {
+     "selected": true,
+     "text": "Todos",
+     "value": ".+"
+    }
+   },
+   {
+    "type": "custom",
+    "name": "origen",
+    "label": "Origen",
+    "query": "Solo externo : no,Todo (con sondas e internas) : si|no",
+    "multi": false,
+    "includeAll": false,
+    "current": {
+     "selected": true,
+     "text": "Solo externo",
+     "value": "no"
+    }
+   }
+  ]
+ },
+ "panels": [
+  {
+   "type": "row",
+   "title": "Tráfico (métricas de Traefik)",
+   "collapsed": false,
+   "panels": [],
+   "id": 1,
+   "gridPos": {
+    "x": 0,
+    "y": 0,
+    "w": 24,
+    "h": 1
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Peticiones por segundo",
+   "description": "Tasa de peticiones de los servicios elegidos.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(rate(traefik_service_requests_total{service=~\"$servicio\"}[$__rate_interval]))",
+     "refId": "A",
+     "legendFormat": "",
+     "instant": true,
+     "range": false,
+     "queryType": "instant"
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "values": false
+    },
+    "colorMode": "value",
+    "graphMode": "none",
+    "textMode": "value",
+    "justifyMode": "center",
+    "orientation": "auto"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps",
+     "noValue": "0",
+     "color": {
+      "mode": "thresholds"
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "blue",
+        "value": null
+       }
+      ]
+     }
+    },
+    "overrides": []
+   },
+   "id": 2,
+   "gridPos": {
+    "x": 0,
+    "y": 1,
+    "w": 6,
+    "h": 4
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Errores 5xx",
+   "description": "Porcentaje de respuestas 5xx sobre el total.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "100 * sum(rate(traefik_service_requests_total{service=~\"$servicio\",code=~\"5..\"}[$__rate_interval])) / sum(rate(traefik_service_requests_total{service=~\"$servicio\"}[$__rate_interval]))",
+     "refId": "A",
+     "legendFormat": "",
+     "instant": true,
+     "range": false,
+     "queryType": "instant"
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "values": false
+    },
+    "colorMode": "value",
+    "graphMode": "none",
+    "textMode": "value",
+    "justifyMode": "center",
+    "orientation": "auto"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percent",
+     "noValue": "0",
+     "color": {
+      "mode": "thresholds"
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       },
+       {
+        "color": "orange",
+        "value": 1
+       },
+       {
+        "color": "red",
+        "value": 5
+       }
+      ]
+     }
+    },
+    "overrides": []
+   },
+   "id": 3,
+   "gridPos": {
+    "x": 6,
+    "y": 1,
+    "w": 6,
+    "h": 4
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Latencia p95",
+   "description": "Percentil 95 de la duración de las peticiones.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le) (rate(traefik_service_request_duration_seconds_bucket{service=~\"$servicio\"}[$__rate_interval])))",
+     "refId": "A",
+     "legendFormat": "",
+     "instant": true,
+     "range": false,
+     "queryType": "instant"
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "values": false
+    },
+    "colorMode": "value",
+    "graphMode": "none",
+    "textMode": "value",
+    "justifyMode": "center",
+    "orientation": "auto"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s",
+     "noValue": "sin datos",
+     "color": {
+      "mode": "thresholds"
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       },
+       {
+        "color": "orange",
+        "value": 1
+       },
+       {
+        "color": "red",
+        "value": 3
+       }
+      ]
+     }
+    },
+    "overrides": []
+   },
+   "id": 4,
+   "gridPos": {
+    "x": 12,
+    "y": 1,
+    "w": 6,
+    "h": 4
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Servicios caídos",
+   "description": "Servidores que Traefik marca caídos (requiere healthCheck en el servicio).",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "count(traefik_service_server_up{service=~\"(backend|frontend)@.*\"} == 0) or vector(0)",
+     "refId": "A",
+     "legendFormat": "",
+     "instant": true,
+     "range": false,
+     "queryType": "instant"
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "values": false
+    },
+    "colorMode": "value",
+    "graphMode": "none",
+    "textMode": "value",
+    "justifyMode": "center",
+    "orientation": "auto"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "short",
+     "noValue": "0",
+     "color": {
+      "mode": "thresholds"
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       },
+       {
+        "color": "red",
+        "value": 1
+       }
+      ]
+     }
+    },
+    "overrides": []
+   },
+   "id": 5,
+   "gridPos": {
+    "x": 18,
+    "y": 1,
+    "w": 6,
+    "h": 4
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Peticiones por segundo",
+   "description": "Por servicio de Traefik.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (service) (rate(traefik_service_requests_total{service=~\"$servicio\"}[$__rate_interval]))",
+     "refId": "A",
+     "legendFormat": "{{service}}",
+     "range": true
+    }
+   ],
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps",
+     "custom": {
+      "drawStyle": "line",
+      "lineWidth": 1,
+      "fillOpacity": 15,
+      "showPoints": "never",
+      "spanNulls": false,
+      "stacking": {
+       "mode": "none",
+       "group": "A"
+      }
+     },
+     "color": {
+      "mode": "palette-classic"
+     }
+    },
+    "overrides": []
+   },
+   "id": 6,
+   "gridPos": {
+    "x": 0,
+    "y": 5,
+    "w": 12,
+    "h": 8
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Respuestas por código",
+   "description": "Por código HTTP.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (code) (rate(traefik_service_requests_total{service=~\"$servicio\"}[$__rate_interval]))",
+     "refId": "A",
+     "legendFormat": "{{code}}",
+     "range": true
+    }
+   ],
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps",
+     "custom": {
+      "drawStyle": "line",
+      "lineWidth": 1,
+      "fillOpacity": 15,
+      "showPoints": "never",
+      "spanNulls": false,
+      "stacking": {
+       "mode": "none",
+       "group": "A"
+      }
+     },
+     "color": {
+      "mode": "palette-classic"
+     }
+    },
+    "overrides": []
+   },
+   "id": 7,
+   "gridPos": {
+    "x": 12,
+    "y": 5,
+    "w": 12,
+    "h": 8
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Errores 5xx por servicio",
+   "description": "Respuestas 5xx por segundo.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (service) (rate(traefik_service_requests_total{service=~\"$servicio\",code=~\"5..\"}[$__rate_interval]))",
+     "refId": "A",
+     "legendFormat": "{{service}}",
+     "range": true
+    }
+   ],
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps",
+     "custom": {
+      "drawStyle": "line",
+      "lineWidth": 1,
+      "fillOpacity": 15,
+      "showPoints": "never",
+      "spanNulls": false,
+      "stacking": {
+       "mode": "none",
+       "group": "A"
+      }
+     },
+     "color": {
+      "mode": "palette-classic"
+     }
+    },
+    "overrides": []
+   },
+   "id": 8,
+   "gridPos": {
+    "x": 0,
+    "y": 13,
+    "w": 12,
+    "h": 8
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Latencia p95 por servicio",
+   "description": "Percentil 95 (y p50) de la duración por servicio.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le, service) (rate(traefik_service_request_duration_seconds_bucket{service=~\"$servicio\"}[$__rate_interval])))",
+     "refId": "A",
+     "legendFormat": "p95 {{service}}",
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.5, sum by (le, service) (rate(traefik_service_request_duration_seconds_bucket{service=~\"$servicio\"}[$__rate_interval])))",
+     "refId": "B",
+     "legendFormat": "p50 {{service}}",
+     "range": true
+    }
+   ],
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s",
+     "custom": {
+      "drawStyle": "line",
+      "lineWidth": 1,
+      "fillOpacity": 15,
+      "showPoints": "never",
+      "spanNulls": false,
+      "stacking": {
+       "mode": "none",
+       "group": "A"
+      }
+     },
+     "color": {
+      "mode": "palette-classic"
+     }
+    },
+    "overrides": []
+   },
+   "id": 9,
+   "gridPos": {
+    "x": 12,
+    "y": 13,
+    "w": 12,
+    "h": 8
+   }
+  },
+  {
+   "type": "row",
+   "title": "Backend (logs de pino)",
+   "collapsed": false,
+   "panels": [],
+   "id": 10,
+   "gridPos": {
+    "x": 0,
+    "y": 21,
+    "w": 24,
+    "h": 1
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Registros del backend por nivel",
+   "description": "Niveles pino: 40 aviso, 50 error, 60 fatal.",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum by (level) (count_over_time({contenedor=\"sotenet-backend\"} | json | __error__=\"\" | level >= 40 [$__auto]))",
+     "refId": "A",
+     "legendFormat": "nivel {{level}}",
+     "range": true,
+     "queryType": "range"
+    }
+   ],
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "short",
+     "custom": {
+      "drawStyle": "line",
+      "lineWidth": 1,
+      "fillOpacity": 15,
+      "showPoints": "never",
+      "spanNulls": false,
+      "stacking": {
+       "mode": "none",
+       "group": "A"
+      }
+     },
+     "color": {
+      "mode": "palette-classic"
+     }
+    },
+    "overrides": []
+   },
+   "id": 11,
+   "gridPos": {
+    "x": 0,
+    "y": 22,
+    "w": 12,
+    "h": 8
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Respuestas 401 y 429 en /auth",
+   "description": "Ráfagas de credenciales rechazadas o límite de tasa.",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "sum by (res_statusCode) (count_over_time({contenedor=\"sotenet-backend\"} | json | __error__=\"\" | res_statusCode=~`401|429` | req_url=~`/v1/auth/.*` [$__auto]))",
+     "refId": "A",
+     "legendFormat": "{{res_statusCode}}",
+     "range": true,
+     "queryType": "range"
+    }
+   ],
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "short",
+     "custom": {
+      "drawStyle": "line",
+      "lineWidth": 1,
+      "fillOpacity": 15,
+      "showPoints": "never",
+      "spanNulls": false,
+      "stacking": {
+       "mode": "none",
+       "group": "A"
+      }
+     },
+     "color": {
+      "mode": "palette-classic"
+     }
+    },
+    "overrides": []
+   },
+   "id": 12,
+   "gridPos": {
+    "x": 12,
+    "y": 22,
+    "w": 12,
+    "h": 8
+   }
+  },
+  {
+   "type": "logs",
+   "title": "Errores del backend",
+   "description": "Nivel 50 o más. Filtra con la variable correlationId (req.id).",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{contenedor=\"sotenet-backend\"} | json | __error__=\"\" | level >= 50 | req_id=~\"(?i).*$correlationId.*\" | line_format `{{.level}} {{.req_id}} {{.req_method}} {{.req_url}} {{.res_statusCode}} {{.msg}}`",
+     "refId": "A",
+     "legendFormat": "",
+     "range": true,
+     "queryType": "range"
+    }
+   ],
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": false,
+    "sortOrder": "Descending",
+    "enableLogDetails": true,
+    "dedupStrategy": "none",
+    "prettifyLogMessage": false
+   },
+   "id": 13,
+   "gridPos": {
+    "x": 0,
+    "y": 30,
+    "w": 24,
+    "h": 12
+   }
+  },
+  {
+   "type": "logs",
+   "title": "Traza por correlationId",
+   "description": "Todas las peticiones del backend con ese correlationId (escribe el id en la variable).",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{contenedor=\"sotenet-backend\"} | json | __error__=\"\" | req_id=~\"(?i).*$correlationId.*\" | line_format `{{.level}} {{.req_id}} {{.req_method}} {{.req_url}} {{.res_statusCode}} {{.msg}}`",
+     "refId": "A",
+     "legendFormat": "",
+     "range": true,
+     "queryType": "range"
+    }
+   ],
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": false,
+    "sortOrder": "Descending",
+    "enableLogDetails": true,
+    "dedupStrategy": "none",
+    "prettifyLogMessage": false
+   },
+   "id": 14,
+   "gridPos": {
+    "x": 0,
+    "y": 42,
+    "w": 24,
+    "h": 12
+   }
+  },
+  {
+   "type": "row",
+   "title": "Registro de acceso (Traefik)",
+   "collapsed": false,
+   "panels": [],
+   "id": 15,
+   "gridPos": {
+    "x": 0,
+    "y": 54,
+    "w": 24,
+    "h": 1
+   }
+  },
+  {
+   "type": "logs",
+   "title": "Peticiones",
+   "description": "Estado, método, ruta, IP real, router y duración en ns. Filtros: origen y estado.",
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent,duracion=Duration,router=RouterName,servicio=ServiceName | label_format interno=`{{ if or (hasPrefix \"Blackbox\" .ua) (hasPrefix \"10.\" .ip) (hasPrefix \"127.\" .ip) (eq .ip \"::1\") (eq .ip \"-\") (eq .ip \"\") }}si{{ else }}no{{ end }}` | interno=~\"$origen\" | estado=~\"$estado\" | line_format `{{.estado}} {{.metodo | printf \"%-6s\"}} {{.ruta}} {{.ip}} {{.router}} {{.duracion}}ns [{{.ua}}]`",
+     "refId": "A",
+     "legendFormat": "",
+     "range": true,
+     "queryType": "range"
+    }
+   ],
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": false,
+    "sortOrder": "Descending",
+    "enableLogDetails": true,
+    "dedupStrategy": "none",
+    "prettifyLogMessage": false
+   },
+   "id": 16,
+   "gridPos": {
+    "x": 0,
+    "y": 55,
+    "w": 24,
+    "h": 14
+   }
+  }
+ ]
+}

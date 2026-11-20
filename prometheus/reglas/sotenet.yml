@@ -1,0 +1,61 @@
+groups:
+  - name: sotenet
+    rules:
+      - alert: SotenetTraefikCaido
+        expr: up{job="sotenet"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          app: sotenet
+        annotations:
+          summary: "Prometheus no alcanza las métricas de Traefik de Sotenet ({{ $labels.instance }}): la entrada de Sotenet puede estar caída"
+      - alert: SotenetServicioCaido
+        expr: traefik_service_server_up{service=~"(backend|frontend)@.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Traefik marca caído el servicio {{ $labels.service }} de Sotenet ({{ $labels.url }})"
+      - alert: SotenetServicioInalcanzable
+        expr: sum by (app, service) (increase(traefik_service_requests_total{service=~"(backend|frontend)@.*",code=~"502|503|504"}[3m])) > 3
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Traefik no logra alcanzar {{ $labels.service }} de Sotenet: respuestas 502/503/504"
+      - alert: SotenetErrores5xx
+        expr: |
+          sum by (app, service) (rate(traefik_service_requests_total{service=~"(backend|frontend)@.*",code=~"5.."}[5m]))
+            / sum by (app, service) (rate(traefik_service_requests_total{service=~"(backend|frontend)@.*"}[5m])) > 0.05
+          and sum by (app, service) (rate(traefik_service_requests_total{service=~"(backend|frontend)@.*"}[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Más del 5% de las respuestas de {{ $labels.service }} son 5xx ({{ $value | humanizePercentage }})"
+      - alert: SotenetErrores5xxLeves
+        expr: |
+          sum by (app, service) (rate(traefik_service_requests_total{service=~"(backend|frontend)@.*",code=~"5.."}[10m])) > 0.02
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.service }} devuelve 5xx de forma sostenida ({{ $value | printf \"%.2f\" }} por segundo)"
+      - alert: SotenetLatenciaP95Alta
+        expr: |
+          histogram_quantile(0.95, sum by (app, service, le) (rate(traefik_service_request_duration_seconds_bucket{service=~"(backend|frontend)@.*"}[5m]))) > 1
+          and sum by (app, service) (rate(traefik_service_requests_total{service=~"(backend|frontend)@.*"}[5m])) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "La latencia p95 de {{ $labels.service }} supera 1 s ({{ $value | printf \"%.2f\" }} s)"
+      - alert: SotenetLatenciaP95Critica
+        expr: |
+          histogram_quantile(0.95, sum by (app, service, le) (rate(traefik_service_request_duration_seconds_bucket{service=~"(backend|frontend)@.*"}[5m]))) > 3
+          and sum by (app, service) (rate(traefik_service_requests_total{service=~"(backend|frontend)@.*"}[5m])) > 0.05
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "La latencia p95 de {{ $labels.service }} supera 3 s ({{ $value | printf \"%.2f\" }} s)"

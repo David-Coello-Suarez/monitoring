@@ -29,6 +29,10 @@ scrape_configs:
     static_configs:
       - targets: ["127.0.0.1:__CLOUDFLARED_PUERTO__"]
 
+  - job_name: sotenet
+    file_sd_configs:
+      - files: ["/etc/prometheus/objetivos/sotenet.yml"]
+
   - job_name: postgres
     file_sd_configs:
       - files: ["/etc/prometheus/objetivos/postgres.yml"]
@@ -60,6 +64,9 @@ scrape_configs:
     file_sd_configs:
       - files: ["/etc/prometheus/objetivos/apps.yml"]
     relabel_configs:
+      - source_labels: [modulo]
+        regex: (.+)
+        target_label: __param_module
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
