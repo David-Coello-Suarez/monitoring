@@ -35,7 +35,7 @@ La configuración compartida (dashboards, reglas, Loki) se cambia en `podman` y 
 |---|---|---|
 | Host (apt, root) | `prometheus-node-exporter` + colectores apt y smartmon | CPU, RAM, swap, disco, I/O, red, WiFi, temperatura, SMART, servicios systemd del sistema, paquetes pendientes, reinicio requerido |
 | Host (apt, root) | Cockpit + cockpit-podman | Ver y reiniciar servicios y contenedores, logs, terminal |
-| Usuario (timer) | `monitoreo-recolector` | Servicios systemd de usuario (Quadlet) y puertos en escucha |
+| Usuario (timer) | `monitoreo-recolector` | Servicios systemd de usuario (Quadlet), puertos en escucha y vigilancia de podman-exporter |
 | Quadlet rootless | Prometheus (30 días) | Métricas y reglas de alerta |
 | Quadlet rootless | Alertmanager | Avisos a Telegram y latido externo opcional |
 | Quadlet rootless | Loki (14 días) + Alloy | Journal completo del sistema y del usuario, contenedores, sshd, fail2ban, kernel |
@@ -120,7 +120,7 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/sotenet.y
 | Red | interfaz caída, señal WiFi débil, errores de red, router inaccesible, sin internet, adaptador WiFi que se desconecta |
 | Túnel | sin conexiones, degradado, errores hacia las apps |
 | Apps | caída interna, caída solo por Cloudflare, lentitud, certificado por vencer |
-| Contenedores | detenido, unhealthy, reinicios en bucle, memoria cerca del límite |
+| Contenedores | detenido, unhealthy, reinicios en bucle, memoria cerca del límite, podman-exporter que no ve todos los contenedores |
 | Seguridad | ráfaga de SSH fallidos, login root, login SSH (info), baneos de fail2ban, sudo con clave incorrecta, puerto abierto en todas las interfaces fuera de la lista permitida |
 | Ataques web (por app: krivot, minga, sotenet) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones; en sotenet también ráfaga de 429 (límite de tasa) por IP. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
 | Sotenet (Traefik) | Traefik caído (sin métricas), servicio backend o frontend caído para Traefik, inalcanzable (502/503/504), 5xx por encima del 5 % y 5xx sostenidos, latencia p95 por encima de 1 s y de 3 s |
@@ -133,7 +133,7 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/sotenet.y
 - **Puerto de métricas de cloudflared.** Sin `metrics:` fijo en `/etc/cloudflared/config.yml`, cloudflared elige otro puerto al reiniciar y Prometheus pierde el túnel. `install-host.sh` lo revisa.
 - **fail2ban y el puerto 97.** La jail `sshd` por defecto protege el 22. Si sshd escucha en el 97, define `port = 97` en `/etc/fail2ban/jail.local`. El SSH que entra por cloudflared llega desde `127.0.0.1` y fail2ban lo ignora: protégelo con una política de Cloudflare Access.
 - **Red por WiFi USB.** Es el punto más frágil: si cae, caen las apps, el túnel y los avisos. Conecta el cable (`eno1`) si es posible.
-- **podman-exporter v1.21.2** se eligió antes de la v2.0.0 por compatibilidad con Podman 4.9. Si no entrega métricas, revisa `journalctl --user -u mon-podman-exporter`.
+- **podman-exporter v1.21.2** se eligió antes de la v2.0.0 por compatibilidad con Podman 4.9. Si arranca antes que los contenedores (por ejemplo, al reiniciar el servidor) puede quedarse con la lista vacía sin dar error: el dashboard Contenedores sale vacío y `ContenedorDetenido` deja de avisar. El recolector compara cada minuto su cuenta con `podman ps -a` y, si no coinciden en dos pasadas seguidas, lo reinicia (como mucho una vez cada 10 min). Si aun así sigue mal 10 min, salta `PodmanExporterIncompleto`. Si no entrega métricas, revisa `journalctl --user -u mon-podman-exporter`.
 
 ## Pendiente
 

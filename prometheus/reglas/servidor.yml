@@ -222,6 +222,13 @@ groups:
           severity: warning
         annotations:
           summary: "El contenedor {{ $labels.name }} usa más del 90% de su límite de memoria"
+      - alert: PodmanExporterIncompleto
+        expr: max(monitoreo_contenedores_podman) - (count(podman_container_info) or vector(0)) != 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "podman-exporter no ve todos los contenedores (diferencia de {{ $value }} con podman ps) y el reinicio automático no lo corrigió: las alertas de contenedores no son fiables"
 
   - name: usuario
     rules:

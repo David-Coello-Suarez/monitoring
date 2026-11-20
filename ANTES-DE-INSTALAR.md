@@ -181,7 +181,7 @@ Las retenciones son fijas: 30 días de métricas y 14 días de logs. Para cambia
 
 | Riesgo | Qué pasa | Qué hacer |
 |---|---|---|
-| podman-exporter v1.21.2 con Podman 4.9 | Se eligió antes de la v2.0.0 por compatibilidad, pero no se probó contra 4.9 | Si `status.sh` muestra `podman` caído, revisa `journalctl --user -u mon-podman-exporter -n 50` |
+| podman-exporter v1.21.2 con Podman 4.9 | Se eligió antes de la v2.0.0 por compatibilidad. Comprobado en el servidor: si arranca antes que los contenedores puede quedarse con la lista vacía sin dar error (el recolector lo reinicia solo) | Si `status.sh` muestra `podman` caído, revisa `journalctl --user -u mon-podman-exporter -n 50` |
 | Directivas Quadlet en Podman 4.9 | `Secret=`, `Tmpfs=` y `UserNS=keep-id:uid=` deberían funcionar en 4.9, pero solo se validaron en Podman 6 | Si un servicio no arranca: `/usr/libexec/podman/quadlet -dryrun -user` muestra el error |
 | Cockpit desde backports | Si Mint no tiene `noble-backports` habilitado, se instala la versión del repositorio principal (más antigua) | Funciona igual; solo cambia la versión |
 | Primera carga del journal | Alloy envía hasta 12 h de logs antiguos al arrancar | Puede disparar alertas de seguridad por eventos de esas 12 h; se resuelven solas |

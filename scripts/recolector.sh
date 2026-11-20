@@ -10,6 +10,47 @@ escape() {
   printf '%s' "${v//\"/\\\"}"
 }
 
+estado="${XDG_STATE_HOME:-$HOME/.local/state}/monitoreo"
+exporter_url="${PODMAN_EXPORTER_URL:-http://127.0.0.1:9882/metrics}"
+pausa_reinicio=600
+
+# podman-exporter v1.21 con Podman 4.9 puede quedarse con la lista de contenedores vacía
+# si arranca antes que ellos (p. ej. tras reiniciar el servidor) y no se recupera solo.
+# Se reinicia cuando su cuenta no coincide con la de Podman en dos pasadas seguidas.
+revisar_podman_exporter() {
+  local podman_n exporter_n=-1 metricas antes ultimo=0 ahora
+  podman_n="$(podman ps -a -q 2>/dev/null | wc -l)" || return 0
+  # -1 = exporter inalcanzable: lo cubren Restart=always y ObjetivoCaido, no este reinicio.
+  if metricas="$(curl -fsS --max-time 10 "$exporter_url" 2>/dev/null)"; then
+    exporter_n="$(grep -c '^podman_container_info{' <<<"$metricas" || true)"
+  fi
+  ahora="$(date +%s)"
+  mkdir -p "$estado"
+  [[ -r "$estado/podman-exporter.ultimo-reinicio" ]] && ultimo="$(<"$estado/podman-exporter.ultimo-reinicio")"
+  [[ "$ultimo" =~ ^[0-9]+$ ]] || ultimo=0
+
+  if ((exporter_n >= 0 && exporter_n != podman_n)); then
+    antes="$(cat "$estado/podman-exporter.desfase" 2>/dev/null || true)"
+    if [[ -n "$antes" ]] && ((ahora - ultimo >= pausa_reinicio)); then
+      systemctl --user restart --no-block mon-podman-exporter.service || true
+      echo "$ahora" >"$estado/podman-exporter.ultimo-reinicio"
+      ultimo="$ahora"
+      rm -f "$estado/podman-exporter.desfase"
+    else
+      echo "$podman_n $exporter_n" >"$estado/podman-exporter.desfase"
+    fi
+  else
+    rm -f "$estado/podman-exporter.desfase"
+  fi
+
+  echo '# HELP monitoreo_contenedores_podman Contenedores que lista podman ps -a.'
+  echo '# TYPE monitoreo_contenedores_podman gauge'
+  printf 'monitoreo_contenedores_podman %s\n' "$podman_n"
+  echo '# HELP monitoreo_podman_exporter_ultimo_reinicio_segundos Momento del último reinicio automático de podman-exporter (0 = ninguno).'
+  echo '# TYPE monitoreo_podman_exporter_ultimo_reinicio_segundos gauge'
+  printf 'monitoreo_podman_exporter_ultimo_reinicio_segundos %s\n' "$ultimo"
+}
+
 {
   echo '# HELP monitoreo_unidad_usuario Estado de cada servicio systemd del usuario.'
   echo '# TYPE monitoreo_unidad_usuario gauge'
@@ -39,6 +80,8 @@ escape() {
   ss -Htln | awk '{print $4}' | sort -u | while read -r local; do
     printf 'monitoreo_puerto_escucha{direccion="%s",puerto="%s"} 1\n' "$(escape "${local%:*}")" "${local##*:}"
   done
+
+  revisar_podman_exporter
 } >"$tmp"
 
 chmod 644 "$tmp"

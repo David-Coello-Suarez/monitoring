@@ -15,6 +15,7 @@ Monitoreo del servidor Linux Mint 22 (Ubuntu 24.04 noble, Podman 4.9.3, usuario 
 - Alloy lee `/var/log/journal` gracias a una ACL que pone `install-host.sh`. No se toca el grupo `systemd-journal` para no reiniciar `user@1000.service`, que tumbaría las apps.
 - Alloy corre con `UserNS=keep-id:uid=473,gid=473` (uid de alloy en la imagen) y podman-exporter con `HOME=/tmp`: sin eso no arrancan en Podman 4.9.
 - El recolector ignora las unidades transitorias de healthcheck de Podman (`<64 hex>.service`); la salud de contenedores la mide podman-exporter.
+- El recolector vigila podman-exporter: publica `monitoreo_contenedores_podman` (`podman ps -a`) y `monitoreo_podman_exporter_ultimo_reinicio_segundos`, y reinicia `mon-podman-exporter` si su número de `podman_container_info` difiere del de Podman en dos pasadas seguidas (pausa de 10 min entre reinicios; estado en `~/.local/state/monitoreo/`). Motivo: la v1.21.2 con Podman 4.9 puede quedarse con la lista vacía si arranca antes que los contenedores, sin error y con `podman_scrape_collector_success` a 1. `PodmanExporterIncompleto` avisa si la diferencia dura 10 min.
 - Secretos: archivos 600 en `~/.config/monitoreo/secretos/` y `podman secret` (`mon-telegram-token`, `mon-grafana-admin`, `mon-pg-password`).
 
 ## Archivos
