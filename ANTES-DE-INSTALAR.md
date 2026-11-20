@@ -64,12 +64,14 @@ El monitoreo usa estos puertos, **todos en 127.0.0.1** (no se abre nada hacia la
 | 9091 | Prometheus |
 | 9093 | Alertmanager |
 | 9100 | node-exporter |
+| 9102 | Traefik de Sotenet (métricas y `/ping`; lo publica el deploy de Sotenet, no el monitoreo) |
 | 9115 | blackbox |
 | 9187 | postgres-exporter |
 | 9882 | podman-exporter |
 | 12345 | Alloy |
 
 - [ ] Ninguno está ocupado. El 2026-11-07 estaban libres; vuelve a revisarlo si instalaste algo después.
+- [ ] El 9102 queda reservado para Traefik de Sotenet: debe estar ocupado por `sotenet-traefik` (`ss -Htlnp | grep :9102`) y coincidir con `SOTENET_METRICAS_PUERTO`. Ningún otro servicio debe usarlo.
 
 ### 2.2 Puerto de métricas de cloudflared
 
@@ -98,14 +100,16 @@ La jail `sshd` de fail2ban protege por defecto el puerto 22. Tu sshd escucha en 
 Las listas de `.env` deciden qué servicios disparan alerta **critical** si se caen o desaparecen.
 
 - [ ] `UNIDADES_SISTEMA_CRITICAS` contiene solo servicios que existen (`systemctl list-units --type=service`). Uno inexistente dispara `ServicioSistemaAusente` para siempre.
-- [ ] `UNIDADES_USUARIO_CRITICAS` contiene solo servicios de usuario que existen (`systemctl --user list-units --type=service`). Hoy: `minga`, `frontend`, `solarlink-frontend`, `postgres-demo`.
-- [ ] Los servicios oneshot (como `solarlink-frontend-autodeploy`) **no** van en la lista: terminan y quedan inactivos a propósito.
-- [ ] `CONTENEDORES_EXCLUIDOS` incluye los contenedores que se detienen a propósito (migraciones, tareas de una sola vez). Si no, saltará `ContenedorDetenido`.
+- [ ] `UNIDADES_USUARIO_CRITICAS` contiene solo servicios de usuario que existen (`systemctl --user list-units --type=service`). Hoy: `minga`, `frontend`, `sotenet-traefik`, `sotenet-backend`, `sotenet-frontend`, `postgres-demo`.
+- [ ] Los servicios oneshot (como `sotenet-migrate` o `sotenet-autodeploy`) **no** van en la lista: terminan y quedan inactivos a propósito.
+- [ ] `CONTENEDORES_EXCLUIDOS` incluye los contenedores que se detienen a propósito (migraciones, tareas de una sola vez). Hoy: `^sotenet-migrate$`. Si no, saltará `ContenedorDetenido`.
 - [ ] `PUERTOS_PUBLICOS_PERMITIDOS` tiene los puertos que pueden escuchar en `0.0.0.0`. Hoy: `97` (sshd) y `5432` (postgres-demo, solo LAN).
 
 ### 2.6 Apps
 
 - [ ] Cada entrada de `APPS` responde con 2xx o 3xx: `curl -sI http://127.0.0.1:8081` (y 8082, 8083), `curl -sI https://otsmart.circutbytes.tech` (y los otros dominios).
+- [ ] La API de Sotenet responde 401 sin sesión, por dentro y por fuera (módulo `http_api_401`): `curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8083/api/v1/me` y `curl -s -o /dev/null -w '%{http_code}\n' https://preprod.sotenet.com.ec/api/v1/me` deben imprimir `401`.
+- [ ] Las métricas de Traefik de Sotenet responden: `curl -s http://127.0.0.1:9102/ping` imprime `OK`.
 - [ ] Si alguna app pública está detrás de Cloudflare Access, la sonda externa recibe la página de login (200) y la marca como disponible. Eso confirma que el túnel funciona, no que la app responda. Para esas apps la sonda interna es la que importa.
 
 ### 2.7 PostgreSQL
@@ -141,7 +145,7 @@ No reinicia `user@1000.service`, cloudflared, sshd ni tus contenedores.
 - Crea `~/.config/monitoreo/` (configuración y secretos) y los Quadlet `~/.config/containers/systemd/mon-*.container`.
 - Crea los secretos de Podman `mon-telegram-token`, `mon-grafana-admin` y `mon-pg-password`.
 - Activa `podman.socket` de usuario (lo necesitan podman-exporter y Cockpit).
-- Ejecuta `systemctl --user daemon-reload`. Esto regenera **todas** tus unidades Quadlet, también las de minga, krivot y solarlink, pero **no las reinicia**. Si alguna tiene un cambio pendiente sin aplicar en su `.container`, quedará cargada la versión nueva y se aplicará en su próximo reinicio.
+- Ejecuta `systemctl --user daemon-reload`. Esto regenera **todas** tus unidades Quadlet, también las de minga, krivot y sotenet, pero **no las reinicia**. Si alguna tiene un cambio pendiente sin aplicar en su `.container`, quedará cargada la versión nueva y se aplicará en su próximo reinicio.
 - Descarga unos 1,2 GB de imágenes.
 - Solo reinicia los servicios `mon-*`.
 
@@ -189,7 +193,7 @@ Las retenciones son fijas: 30 días de métricas y 14 días de logs. Para cambia
 ## 7. Lo que el monitoreo no cubre
 
 - **Servidor apagado o sin internet:** sin `HEALTHCHECKS_URL` no llega ningún aviso. Con él, avisa el servicio externo.
-- **Métricas internas de las apps:** no se miden peticiones, errores ni tiempos dentro de minga, krivot o solarlink. Solo se ve si responden, cuánto tardan y sus logs.
+- **Métricas internas de las apps:** no se miden peticiones, errores ni tiempos dentro de minga o krivot. Solo se ve si responden, cuánto tardan y sus logs. En sotenet sí se ven peticiones, 5xx y latencia p95 por servicio gracias a las métricas de su Traefik.
 - **Backups:** no se verifica que existan ni que funcionen.
 - **Otros equipos de la LAN:** solo se vigila este servidor y el router.
 
@@ -219,10 +223,11 @@ Copy-Item acceso\ssh_config.ejemplo -Destination $env:USERPROFILE\.ssh\config-mo
 - [ ] Llegó el mensaje de `probar-alerta.sh` a Telegram.
 - [ ] `status.sh` muestra todos los objetivos en `ok`.
 - [ ] Grafana abre en `http://localhost:13000` (usuario `admin`, clave en `~/.config/monitoreo/secretos/grafana-admin`).
-- [ ] El dashboard **Resumen** muestra las tres apps en OK, por dentro y por fuera.
+- [ ] El dashboard **Resumen** muestra las apps en OK (minga, krivot, sotenet y sotenet-api), por dentro y por fuera.
+- [ ] El dashboard **Sotenet** muestra peticiones de Traefik y logs del backend.
 - [ ] El dashboard **Logs** muestra entradas de `sshd`, `kernel` y de tus contenedores. Si está vacío, falta la ACL del journal: vuelve a ejecutar `install-host.sh`.
 - [ ] Cockpit abre en `http://localhost:19090` y la pestaña **Podman containers** lista tus contenedores.
-- [ ] Prueba real: `systemctl --user stop solarlink-frontend` → en 2–3 min llega `ServicioUsuarioCaido` y `AppInternaCaida` → `systemctl --user start solarlink-frontend` → llega el aviso de resuelto.
+- [ ] Prueba real: `systemctl --user stop sotenet-frontend` → en 2–3 min llega `ServicioUsuarioCaido`, `SotenetServicioCaido` y `AppInternaCaida` → `systemctl --user start sotenet-frontend` → llega el aviso de resuelto.
 - [ ] Reinicia el servidor en un horario tranquilo y confirma que todo vuelve solo y que llega `ServidorReiniciado`.
 - [ ] Al día siguiente llegó el `Watchdog` diario (en silencio).
 
