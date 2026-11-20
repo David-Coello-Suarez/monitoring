@@ -9,7 +9,7 @@ groups:
         annotations:
           summary: "node-exporter no responde: no hay métricas del host"
       - alert: ObjetivoCaido
-        expr: up{job!~"node|apps|red"} == 0
+        expr: up{job!~"node|apps|red|sotenet"} == 0
         for: 5m
         labels:
           severity: warning

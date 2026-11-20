@@ -24,11 +24,18 @@ fi
 
 {
   for app in "${APPS[@]}"; do
-    IFS='|' read -r nombre interna externa <<<"$app"
-    printf -- '- targets: ["%s"]\n  labels: {app: "%s", tipo: interna}\n' "$interna" "$nombre"
-    [[ -z "$externa" ]] || printf -- '- targets: ["%s"]\n  labels: {app: "%s", tipo: externa}\n' "$externa" "$nombre"
+    IFS='|' read -r nombre interna externa modulo <<<"$app"
+    modulo="${modulo:-http_app}"
+    printf -- '- targets: ["%s"]\n  labels: {app: "%s", tipo: interna, modulo: "%s"}\n' "$interna" "$nombre" "$modulo"
+    [[ -z "$externa" ]] || printf -- '- targets: ["%s"]\n  labels: {app: "%s", tipo: externa, modulo: "%s"}\n' "$externa" "$nombre" "$modulo"
   done
 } >"$CONF_DIR/prometheus/objetivos/apps.yml"
+
+if [[ -n "${SOTENET_METRICAS_PUERTO:-}" ]]; then
+  printf -- '- targets: ["127.0.0.1:%s"]\n  labels: {app: "sotenet"}\n' "$SOTENET_METRICAS_PUERTO" >"$CONF_DIR/prometheus/objetivos/sotenet.yml"
+else
+  echo "[]" >"$CONF_DIR/prometheus/objetivos/sotenet.yml"
+fi
 
 cat >"$CONF_DIR/prometheus/objetivos/red.yml" <<EOF
 - targets: ["$GATEWAY_LAN"]
@@ -133,7 +140,7 @@ templates:
 
 route:
   receiver: telegram
-  group_by: [alertname, app, name, unit, unidad, device, mountpoint]
+  group_by: [alertname, app, service, name, unit, unidad, device, mountpoint]
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 4h

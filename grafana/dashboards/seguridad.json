@@ -420,8 +420,8 @@
       "type": "loki",
       "uid": "loki"
      },
-     "expr": "sum by (clase) (count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | label_format clase=`{{substr 0 1 .estado}}xx` [$__auto]))",
-     "legendFormat": "solarlink {{clase}}",
+     "expr": "sum by (clase) (count_over_time({contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | label_format clase=`{{substr 0 1 .estado}}xx` [$__auto]))",
+     "legendFormat": "sotenet {{clase}}",
      "refId": "C"
     }
    ],
@@ -490,8 +490,8 @@
       "type": "loki",
       "uid": "loki"
      },
-     "expr": "sum(count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | metodo=\"POST\" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` | estado=~`401|429` [$__auto]))",
-     "legendFormat": "solarlink",
+     "expr": "sum(count_over_time({contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | metodo=\"POST\" | ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` | estado=~`401|429` [$__auto]))",
+     "legendFormat": "sotenet",
      "refId": "C"
     }
    ],
@@ -560,8 +560,8 @@
       "type": "loki",
       "uid": "loki"
      },
-     "expr": "sum(count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__auto]))",
-     "legendFormat": "solarlink",
+     "expr": "sum(count_over_time({contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__auto]))",
+     "legendFormat": "sotenet",
      "refId": "C"
     }
    ],
@@ -634,8 +634,8 @@
       "type": "loki",
       "uid": "loki"
      },
-     "expr": "topk(10, sum by (ip) (count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` [$__range])))",
-     "legendFormat": "solarlink: {{ip}}",
+     "expr": "topk(10, sum by (ip) (count_over_time({contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` [$__range])))",
+     "legendFormat": "sotenet: {{ip}}",
      "refId": "C",
      "instant": true,
      "queryType": "instant"
@@ -696,8 +696,8 @@
       "type": "loki",
       "uid": "loki"
      },
-     "expr": "topk(10, sum by (ruta) (count_over_time({contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__range])))",
-     "legendFormat": "solarlink: {{ruta}}",
+     "expr": "topk(10, sum by (ruta) (count_over_time({contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` [$__range])))",
+     "legendFormat": "sotenet: {{ruta}}",
      "refId": "C",
      "instant": true,
      "queryType": "instant"
@@ -754,7 +754,7 @@
       "type": "loki",
       "uid": "loki"
      },
-     "expr": "{contenedor=\"solarlink-frontend\"} | pattern `<_> - - [<_>] \"<metodo> <ruta> <_>\" <estado> <_> \"<_>\" \"<ua>\" \"<ip>\"` | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` or (metodo=\"POST\" and ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` and estado=~`401|429`)",
+     "expr": "{contenedor=\"sotenet-traefik\"} |= `RequestPath` | json | __error__=\"\" | label_format ip=request_Cf_Connecting_Ip,ruta=RequestPath,estado=DownstreamStatus,metodo=RequestMethod,ua=request_User_Agent | ip != \"\" | ip != \"-\" | ip !~ `10\\..*` | ip !~ `127\\..*` | ip != \"::1\" | ua !~ `Blackbox.*` | ruta=~`(?i).*(\\.env|\\.git|/wp-|phpmyadmin|\\.php|/cgi-bin|\\.\\./|/admin(istrator)?(/|$|\\?)).*` or (metodo=\"POST\" and ruta=~`(?i).*/(login|signin|auth/token|sessions?)(/.*|\\?.*)?` and estado=~`401|429`)",
      "legendFormat": "",
      "refId": "C"
     }
