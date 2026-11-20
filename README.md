@@ -42,7 +42,7 @@ La configuración compartida (dashboards, reglas, Loki) se cambia en `podman` y 
 | Quadlet rootless | blackbox | Apps por dentro (127.0.0.1:808x) y por fuera (dominios de Cloudflare), router y salida a internet |
 | Quadlet rootless | podman-exporter | Estado, salud, reinicios, CPU, RAM y red por contenedor |
 | Quadlet rootless | postgres-exporter | `postgres-demo` con un rol `monitoreo` (`pg_monitor`) |
-| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad |
+| Quadlet rootless | Grafana | Dashboards: Resumen, Características del servidor, Node Exporter Full, Contenedores, PostgreSQL, Blackbox, Logs, Seguridad, Tráfico, Sotenet |
 
 Todos los contenedores usan `Network=host` y escuchan solo en loopback, para alcanzar node-exporter, cloudflared y las apps sin exponer nada. Corren con `ReadOnly`, `DropCapability=ALL`, `NoNewPrivileges` e imágenes fijadas por digest.
 
@@ -54,6 +54,7 @@ Todos los contenedores usan `Network=host` y escuchan solo en loopback, para alc
 | 9091 | Prometheus |
 | 9093 | Alertmanager |
 | 9100 | node-exporter |
+| 9102 | Traefik de Sotenet (métricas y `/ping`, lo publica su deploy; reservado) |
 | 9115 | blackbox |
 | 9187 | postgres-exporter |
 | 9882 | podman-exporter |
@@ -84,6 +85,12 @@ Secretos (fuera del repo, permisos 600, también cargados como `podman secret`):
 
 Para cambiar el token de Telegram: borra su archivo y vuelve a ejecutar `install.sh`.
 
+### Apps y Sotenet en `.env`
+
+- `APPS`: entradas `"nombre|url-interna|url-externa|módulo"`. La url externa y el módulo de blackbox son opcionales; el módulo por defecto es `http_app` (2xx/3xx). `sotenet-api` usa `http_api_401`: sondea `/api/v1/me` y espera 401 sin sesión, porque `/api/health` está bloqueado desde fuera.
+- `SOTENET_METRICAS_PUERTO` (`9102`): `METRICS_PORT` del deploy de Sotenet. Genera el job `sotenet` contra `127.0.0.1:9102`; vacío = sin job.
+- `CONTENEDORES_EXCLUIDOS` (`^sotenet-migrate$`): las migraciones de Sotenet son un contenedor oneshot que termina a propósito.
+
 ### Telegram
 
 1. Habla con `@BotFather`, crea el bot y guarda el token.
@@ -104,7 +111,7 @@ Abre Grafana en `http://localhost:13000` y Cockpit en `http://localhost:19090`. 
 
 ## Alertas
 
-Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especificas.yml` (generada desde `.env`) y `loki/reglas/seguridad.yml` (LogQL).
+Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/sotenet.yml` (métricas de Traefik de Sotenet), `prometheus/reglas/especificas.yml` (generada desde `.env`) y `loki/reglas/seguridad.yml` (LogQL).
 
 | Grupo | Alertas |
 |---|---|
@@ -115,7 +122,9 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 | Apps | caída interna, caída solo por Cloudflare, lentitud, certificado por vencer |
 | Contenedores | detenido, unhealthy, reinicios en bucle, memoria cerca del límite |
 | Seguridad | ráfaga de SSH fallidos, login root, login SSH (info), baneos de fail2ban, sudo con clave incorrecta, puerto abierto en todas las interfaces fuera de la lista permitida |
-| Ataques web (por app: krivot, minga, solarlink) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
+| Ataques web (por app: krivot, minga, sotenet) | fuerza bruta en el login (por IP y distribuida), escaneo de rutas, ráfaga de errores 4xx, ráfaga de peticiones; en sotenet también ráfaga de 429 (límite de tasa) por IP. La API de minga (`/api/*`) no está cubierta: Caddy no la registra |
+| Sotenet (Traefik) | Traefik caído (sin métricas), servicio backend o frontend caído para Traefik, inalcanzable (502/503/504), 5xx por encima del 5 % y 5xx sostenidos, latencia p95 por encima de 1 s y de 3 s |
+| Sotenet (backend) | errores (nivel pino ≥ 50) y fatales (≥ 60) en el log, ráfaga de 401/429 en `/v1/auth/*` |
 | Kernel | OOM kill, errores de disco |
 | Monitoreo | objetivo caído, recolector detenido, notificaciones fallidas, Watchdog |
 
@@ -125,6 +134,11 @@ Reglas en `prometheus/reglas/servidor.yml` (fijas), `prometheus/reglas/especific
 - **fail2ban y el puerto 97.** La jail `sshd` por defecto protege el 22. Si sshd escucha en el 97, define `port = 97` en `/etc/fail2ban/jail.local`. El SSH que entra por cloudflared llega desde `127.0.0.1` y fail2ban lo ignora: protégelo con una política de Cloudflare Access.
 - **Red por WiFi USB.** Es el punto más frágil: si cae, caen las apps, el túnel y los avisos. Conecta el cable (`eno1`) si es posible.
 - **podman-exporter v1.21.2** se eligió antes de la v2.0.0 por compatibilidad con Podman 4.9. Si no entrega métricas, revisa `journalctl --user -u mon-podman-exporter`.
+
+## Pendiente
+
+- Llevar los commits de la integración de Sotenet a las ramas `docker` y `kubernetes` con `git cherry-pick`, adaptando en cada una el job de Prometheus, `generar-config.sh` y el `.env`.
+- Recomendaciones de la auditoría, sin aplicar: límites de recursos en los contenedores `mon-*`, Loki sin autenticación (`auth_enabled: false`), Prometheus con `--web.enable-lifecycle` y el socket de Podman montado en podman-exporter.
 
 ## Desinstalar
 
